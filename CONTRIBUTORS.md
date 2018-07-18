@@ -8,7 +8,7 @@
 
 # Contributors
 * Corey Shields (cshields@gmail.com)
-* LongHairedHacker(sebastian@sebastians-site.de)
+* Sebastian Schumb (sebastian@sebastians-site.de)
 * Nikos Karamolegkos (nkaramolegos@csd.uoc.g)
 * Mark Jessop (vk5qi@rfhead.net)
 * Fabian P. Schmidt (kerel-fs@gmx.de)

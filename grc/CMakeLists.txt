@@ -55,6 +55,7 @@ list(APPEND enabled_blocks
     satnogs_waterfall_sink.block.yml
     satnogs_whitening_ccsds.block.yml
     satnogs_whitening.block.yml
+    satnogs_sstv_pd120_sink.block.yml
     satnogs.tree.yml
 )
 

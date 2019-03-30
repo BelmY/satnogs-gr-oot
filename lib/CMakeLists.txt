@@ -68,6 +68,7 @@ list(APPEND satnogs_sources
     udp_msg_source_impl.cc
     waterfall_sink_impl.cc
     whitening.cc
+    sstv_pd120_sink_impl.cc
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})
@@ -150,4 +151,3 @@ foreach(qa_file ${test_satnogs_sources})
         ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
     )
 endforeach(qa_file)
-

@@ -24,7 +24,7 @@
 add_subdirectory(libfec)
 
 list(APPEND DEBUG_HEADER_FILES
-    cw_encoder.h 
+    cw_encoder.h
     debug_msg_source_raw.h
     debug_msg_source.h
     morse_debug_source.h
@@ -78,6 +78,7 @@ list(APPEND HEADER_FILES
     utils.h
     waterfall_sink.h
     whitening.h
+    sstv_pd120_sink.h
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

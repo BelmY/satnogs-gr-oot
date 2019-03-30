@@ -31,10 +31,10 @@
   - satnogs_waterfall_sink
   - satnogs_whitening_ccsds
   - satnogs_whitening
+  - satnogs_sstv_pd120_sink
   - Debug:
     - satnogs_cw_encoder
     - satnogs_debug_msg_source_raw
     - satnogs_debug_msg_source
     - satnogs_morse_debug_source
     - satnogs_multi_format_msg_sink
-

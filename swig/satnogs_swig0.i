@@ -38,6 +38,7 @@
 #include "satnogs/ogg_encoder.h"
 #include "satnogs/ogg_source.h"
 #include "satnogs/noaa_apt_sink.h"
+#include "satnogs/sstv_pd120_sink.h"
 #include "satnogs/frame_file_sink.h"
 #include "satnogs/iq_sink.h"
 #include "satnogs/json_converter.h"
@@ -103,6 +104,9 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, ogg_source);
 
 %include "satnogs/noaa_apt_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, noaa_apt_sink);
+
+%include "satnogs/sstv_pd120_sink.h"
+GR_SWIG_BLOCK_MAGIC2(satnogs, sstv_pd120_sink);
 
 %include "satnogs/frame_file_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, frame_file_sink);

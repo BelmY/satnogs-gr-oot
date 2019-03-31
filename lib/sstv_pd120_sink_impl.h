@@ -24,6 +24,9 @@
 
 #include <satnogs/sstv_pd120_sink.h>
 
+#define PNG_DEBUG 3
+#include <png++/png.hpp>
+
 namespace gr {
   namespace satnogs {
 
@@ -33,11 +36,20 @@ namespace gr {
       std::string d_filename_png;
       bool d_split;
       bool d_has_sync;
+      bool d_initial_sync;
 
       float *d_line;
+      size_t d_line_pos;
+      size_t d_image_y;
+
+      png::image<png::rgb_pixel> d_image;
 
       float to_frequency(float sample);
+      int to_color(float sample);
+      void ycbcr_to_rgb(int ycbcr[3], int rgb[3]);
       bool is_sync(size_t pos, const float *samples);
+
+      void render_line();
 
      public:
       sstv_pd120_sink_impl(const char *filename_png, bool split);

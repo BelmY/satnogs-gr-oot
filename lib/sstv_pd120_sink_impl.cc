@@ -29,6 +29,7 @@ namespace gr {
   namespace satnogs {
 
     const size_t image_width = 640;
+    const size_t image_height = 496;
     const size_t sync_length = 105;
     const size_t sync_thresh = 100;
     const size_t porch_length = 10;
@@ -59,7 +60,10 @@ namespace gr {
               gr::io_signature::make (0, 0, 0)),
         d_filename_png (filename_png),
         d_split (split),
-        d_has_sync(false)
+        d_has_sync(false),
+        d_initial_sync(true),
+        d_line_pos(0),
+        d_image_y (0)
     {
         set_history(sync_length);
         d_line = new float[line_length];
@@ -81,6 +85,33 @@ namespace gr {
         return freq;
     }
 
+    int
+    sstv_pd120_sink_impl::to_color(float sample) {
+        sample = (sample - color_low) / (color_high - color_low);
+        int color = int(sample * 255);
+        color = std::max(color, 0);
+        color = std::min(color, 255);
+        return color;
+    }
+
+    void
+    ycbcr_to_rgb(int ycbcr[3], int rgb[3]) {
+        int y = ycbcr[0];
+        int cb = ycbcr[1];
+        int cr = ycbcr[2];
+
+        //https://stackoverflow.com/questions/4041840/function-to-convert-ycbcr-to-rgb/15333019#15333019
+        cr = cr - 128;
+        cb = cb - 128;
+        int r = y + 45 * cr / 32;
+        int g = y - (11 * cb + 23 * cr) / 32;
+        int b = y + 113 * cb / 64;
+
+        rgb[0] = r;
+        rgb[1] = g;
+        rgb[2] = b;
+    }
+
     bool
     sstv_pd120_sink_impl::is_sync(size_t pos, const float *samples) {
         size_t count = 0;
@@ -91,12 +122,40 @@ namespace gr {
             }
         }
 
-        bool res = count > sync_length && !d_has_sync;
-        d_has_sync = count > sync_length;
+        bool res = count > sync_thresh && !d_has_sync;
+        d_has_sync = count > sync_thresh;
 
-        std::cout << "Count: " << count << " " << d_has_sync << std::endl;
+        d_initial_sync = false;
 
         return res;
+    }
+
+
+    void
+    sstv_pd120_sink_impl::render_line() {
+        int start_pos = d_line_pos - sync_length - 4 * image_width;
+        if(start_pos < 0) {
+            return;
+        }
+
+        for(size_t x = 0; x < image_width; x++) {
+            int y0 = to_color(d_line[start_pos + x]);
+            int cr = to_color(d_line[start_pos + image_width + x]);
+            int cb = to_color(d_line[start_pos + 2 * image_width + x]);
+            int y1 = to_color(d_line[start_pos + 3 * image_width + x]);
+
+            int rgb0[3];
+            int ycrcb0[] = {y0, cr, cb};
+            ycbcr_to_rgb(ycrcb0, rgb0);
+
+            int rgb1[3];
+            int ycrcb1[] = {y1, cr, cb};
+            ycbcr_to_rgb(ycrcb1, rgb1);
+
+            //Todo: Write pixels
+        }
+
+        d_image_y += 2;
     }
 
     int
@@ -106,12 +165,21 @@ namespace gr {
     {
         const float *in = (const float *) input_items[0];
 
-        std::cout << "foo" << std::endl;
         for (size_t i = sync_length - 1;
             i < noutput_items + sync_length - 1; i++) {
 
-            if(is_sync(i, in)) {
-                std::cout << "Sync: " << i << std::endl;
+            float sample = to_frequency(in[i]);
+            d_line[d_line_pos] = sample;
+            d_line_pos++;
+
+            if(is_sync(i, in) || d_line_pos >= line_length) {
+                if(d_initial_sync) {
+                    d_image_y = 0;
+                }
+                else if(!d_initial_sync && d_line_pos > line_length - porch_length) {
+                    std::cout << "Rendering after: " << d_line_pos << std::endl;
+                }
+                d_line_pos = 0;
             }
         }
 

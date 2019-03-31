@@ -107,9 +107,9 @@ namespace gr {
         int g = y - (11 * cb + 23 * cr) / 32;
         int b = y + 113 * cb / 64;
 
-        rgb[0] = r;
-        rgb[1] = g;
-        rgb[2] = b;
+        rgb[0] = std::min(255, std::max(r, 0));
+        rgb[1] = std::min(255, std::max(g, 0));
+        rgb[2] = std::min(255, std::max(b, 0));
     }
 
     bool
@@ -117,6 +117,7 @@ namespace gr {
         size_t count = 0;
         for(size_t i = 0; i < sync_length; i++) {
             float sample = to_frequency(samples[pos - (sync_length - 1) + i]);
+            //std::cout << sample << std::endl;
             if(sample < color_low) {
                 count += 1;
             }
@@ -125,7 +126,9 @@ namespace gr {
         bool res = count > sync_thresh && !d_has_sync;
         d_has_sync = count > sync_thresh;
 
-        d_initial_sync = false;
+        if(res) {
+            d_initial_sync = false;
+        }
 
         return res;
     }

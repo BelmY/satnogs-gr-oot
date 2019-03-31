@@ -47,7 +47,7 @@ namespace gr {
        * class. satnogs::sstv_pd120_sink::make is the public interface for
        * creating new instances.
        */
-      static sptr make(const char *filename_png, bool split);
+      static sptr make(const char *filename_png);
     };
 
   } // namespace satnogs

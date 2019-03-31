@@ -6,11 +6,6 @@ parameters:
   label: Output PNG Filename
   dtype: file_save
 
-- id: split
-  label: Flip Image
-  dtype: bool
-  default: False
-
 inputs:
 - label: in
   domain: stream
@@ -18,6 +13,6 @@ inputs:
 
 templates:
   imports: import satnogs
-  make: satnogs.sstv_pd120_sink(${filename_png}, ${split})
+  make: satnogs.sstv_pd120_sink(${filename_png})
 
 file_format: 1

@@ -45,21 +45,20 @@ namespace gr {
 
 
     sstv_pd120_sink::sptr
-    sstv_pd120_sink::make(const char *filename_png, bool split)
+    sstv_pd120_sink::make(const char *filename_png)
     {
       return gnuradio::get_initial_sptr
-        (new sstv_pd120_sink_impl(filename_png, split));
+        (new sstv_pd120_sink_impl(filename_png));
     }
 
     /*
      * The private constructor
      */
-    sstv_pd120_sink_impl::sstv_pd120_sink_impl(const char *filename_png, bool split)
+    sstv_pd120_sink_impl::sstv_pd120_sink_impl(const char *filename_png)
       : gr::sync_block("sstv_pd120_sink",
               gr::io_signature::make (1, 1, sizeof(float)),
               gr::io_signature::make (0, 0, 0)),
         d_filename_png (filename_png),
-        d_split (split),
         d_has_sync(false),
         d_initial_sync(true),
         d_line_pos(0),
@@ -67,6 +66,7 @@ namespace gr {
     {
         set_history(sync_length);
         d_line = new float[line_length];
+        d_image = png::image<png::rgb_pixel>(image_width, image_height);
     }
 
     /*
@@ -88,14 +88,14 @@ namespace gr {
     int
     sstv_pd120_sink_impl::to_color(float sample) {
         sample = (sample - color_low) / (color_high - color_low);
-        int color = int(sample * 255);
-        color = std::max(color, 0);
-        color = std::min(color, 255);
-        return color;
+        sample = sample * 255.0f;
+        sample = std::max(sample, 0.0f);
+        sample = std::min(sample, 255.0f);
+        return int(sample);
     }
 
     void
-    ycbcr_to_rgb(int ycbcr[3], int rgb[3]) {
+    sstv_pd120_sink_impl::ycbcr_to_rgb(int ycbcr[3], int rgb[3]) {
         int y = ycbcr[0];
         int cb = ycbcr[1];
         int cr = ycbcr[2];
@@ -144,18 +144,22 @@ namespace gr {
             int cb = to_color(d_line[start_pos + 2 * image_width + x]);
             int y1 = to_color(d_line[start_pos + 3 * image_width + x]);
 
-            int rgb0[3];
-            int ycrcb0[] = {y0, cr, cb};
+            int rgb0[3] = {0, 0, 0};
+            int ycrcb0[] = {y0, cb, cr};
             ycbcr_to_rgb(ycrcb0, rgb0);
 
-            int rgb1[3];
-            int ycrcb1[] = {y1, cr, cb};
-            ycbcr_to_rgb(ycrcb1, rgb1);
+            d_image.set_pixel(x, d_image_y, png::rgb_pixel(rgb0[0], rgb0[1], rgb0[2]));
 
-            //Todo: Write pixels
+            int rgb1[] = {0, 0, 0};
+            int ycrcb1[] = {y1, cb, cr};
+            ycbcr_to_rgb(ycrcb1, rgb1);
+            d_image.set_pixel(x, d_image_y + 1, png::rgb_pixel(rgb1[0], rgb1[1], rgb1[2]));
         }
 
         d_image_y += 2;
+
+        std::cout << "Writing " << d_filename_png << std::endl;
+        d_image.write(d_filename_png);
     }
 
     int
@@ -178,6 +182,7 @@ namespace gr {
                 }
                 else if(!d_initial_sync && d_line_pos > line_length - porch_length) {
                     std::cout << "Rendering after: " << d_line_pos << std::endl;
+                    render_line();
                 }
                 d_line_pos = 0;
             }

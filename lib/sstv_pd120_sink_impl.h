@@ -34,7 +34,6 @@ namespace gr {
     {
      private:
       std::string d_filename_png;
-      bool d_split;
       bool d_has_sync;
       bool d_initial_sync;
 
@@ -52,7 +51,7 @@ namespace gr {
       void render_line();
 
      public:
-      sstv_pd120_sink_impl(const char *filename_png, bool split);
+      sstv_pd120_sink_impl(const char *filename_png);
       ~sstv_pd120_sink_impl();
 
       // Where all the action really happens

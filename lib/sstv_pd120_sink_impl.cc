@@ -62,7 +62,8 @@ namespace gr {
         d_has_sync(false),
         d_initial_sync(true),
         d_line_pos(0),
-        d_image_y (0)
+        d_image_y (0),
+        d_num_image(0)
     {
         set_history(sync_length);
         d_line = new float[line_length];
@@ -159,10 +160,20 @@ namespace gr {
             d_image.set_pixel(x, d_image_y + 1, png::rgb_pixel(rgb1[0], rgb1[1], rgb1[2]));
         }
 
+        std::string file_name = std::string(d_filename_png) + "_" + std::to_string(d_num_image) + ".png";
+        std::cout << "Writing " << file_name << std::endl;
+        d_image.write(file_name.c_str());
+
+        std::cout << "Line number: " << d_image_y << std::endl;
+
         d_image_y += 2;
 
-        std::cout << "Writing " << d_filename_png << std::endl;
-        d_image.write(d_filename_png);
+        if(d_image_y >= image_height){
+            std::cout << "Finished image, resetting." << std::endl;
+            d_image_y = 0;
+            d_initial_sync = true;
+            d_num_image++;
+        }
     }
 
     int

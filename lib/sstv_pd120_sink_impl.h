@@ -40,6 +40,7 @@ namespace gr {
       float *d_line;
       size_t d_line_pos;
       size_t d_image_y;
+      size_t d_num_image;
 
       png::image<png::rgb_pixel> d_image;
 

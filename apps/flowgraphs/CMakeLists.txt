@@ -26,10 +26,11 @@ set(flowgraphs
     example_flowgraph.grc
     fsk_ax25.grc
     iq_receiver.grc
+    sstv_pd120_demod.grc
 )
 message(“Compiling GRC SatNOGS flowgraphs…”)
 foreach(grc_file ${flowgraphs})
-    
+
     message("Compiling " ${grc_file})
     execute_process(COMMAND grcc ${grc_file}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -44,5 +45,6 @@ GR_PYTHON_INSTALL(
     satnogs_example_flowgraph.py
     satnogs_fsk_ax25.py
     satnogs_iq_receiver.py
+    satnogs_sstv_pd120_demod.py
     DESTINATION bin
 )

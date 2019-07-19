@@ -48,14 +48,14 @@ public:
   golay24 ();
   ~golay24 ();
 
+  static const std::vector<uint32_t>          G_P;
+  static const std::vector<uint32_t>          G_I;
+
   uint32_t
-  encode12(uint16_t in);
+  encode12(uint16_t in, bool lsb_parity = true);
 
   bool
-  decode24(uint16_t *out, uint32_t in);
-private:
-  std::vector<uint32_t>          d_H;
-  std::vector<uint32_t>          d_X;
+  decode24(uint32_t *out, uint32_t in);
 
 };
 

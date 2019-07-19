@@ -116,6 +116,32 @@ include(GrMiscUtils)
 GR_LIBRARY_FOO(gnuradio-satnogs RUNTIME_COMPONENT "satnogs_runtime" DEVEL_COMPONENT "satnogs_devel")
 
 ########################################################################
+# Build and register unit test
+########################################################################
+include(GrTest)
+
+include_directories(${CPPUNIT_INCLUDE_DIRS})
+
+list(APPEND test_satnogs_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_golay24.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_satnogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_satnogs.cc
+)
+
+add_executable(test-satnogs ${test_satnogs_sources})
+
+target_link_libraries(
+  test-satnogs
+  ${GNURADIO_RUNTIME_LIBRARIES}
+  ${GNURADIO_BLOCKS_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${CPPUNIT_LIBRARIES}
+  gnuradio-satnogs
+)
+
+GR_ADD_TEST(test_satnogs test-satnogs)
+
+########################################################################
 # Print summary
 ########################################################################
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")

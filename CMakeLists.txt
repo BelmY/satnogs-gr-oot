@@ -51,6 +51,22 @@ set(VERSION_INFO_API_COMPAT    5)
 set(VERSION_INFO_MINOR_VERSION 1)
 set(VERSION_INFO_MAINT_VERSION git)
 
+# Set cmake policies.
+# This will suppress developer warnings during the cmake process that can occur
+# if a newer cmake version than the minimum is used.
+
+if(POLICY CMP0026)
+    cmake_policy(SET CMP0026 OLD)
+endif()
+if(POLICY CMP0043)
+    cmake_policy(SET CMP0043 OLD)
+endif()
+if(POLICY CMP0045)
+    cmake_policy(SET CMP0045 OLD)
+endif()
+if(POLICY CMP0046)
+    cmake_policy(SET CMP0046 OLD)
+endif()
 
 ########################################################################
 # Compiler specific setup
@@ -216,7 +232,6 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_ALL_INCLUDE_DIRS}
-    ${NOVA_INCLUDE_DIRS}
 )
 
 link_directories(

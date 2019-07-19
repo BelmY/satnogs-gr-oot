@@ -244,6 +244,7 @@ frame_acquisition_impl::searching_sync (const uint8_t* in, int len)
           d_state = DECODING_GENERIC_FRAME_LEN;
           break;
         case GOLAY24_CODED_FRAME_LEN:
+          LOG_WARN("Found!");
           d_state = DECODING_GOLAY24_FRAME_LEN;
           break;
       }
@@ -319,6 +320,7 @@ frame_acquisition_impl::dec_golay24_frame_len (const uint8_t* in, int len)
 {
   /* Golay24 needs 3 bytes to decode */
   const int s = std::min(len / 8, 3);
+  d_frame_len = 0;
   for(int i = 0; i < s; i++) {
     uint8_t b = 0x0;
     b |= in[i * 8] << 7;
@@ -335,16 +337,19 @@ frame_acquisition_impl::dec_golay24_frame_len (const uint8_t* in, int len)
 
     /* Try to decode the frame length */
     if (d_cnt == 3) {
+      LOG_WARN("Len coded %u", d_frame_len);
       if(d_whitening) {
         uint32_t descrambled = 0x0;
-        d_whitening->descramble((uint8_t *)&descrambled,
+        d_whitening->descramble((uint8_t *) &descrambled,
                                 (const uint8_t *)&d_frame_len, 3, false);
         d_frame_len = descrambled;
       }
+      d_frame_len = ((d_frame_len & 0xFFF) << 12) | (d_frame_len >> 12);
       golay24 g = golay24 ();
-      uint16_t tmp = 0;
+      uint32_t tmp = 0;
       if (g.decode24 (&tmp, d_frame_len)) {
-        d_frame_len = tmp;
+        d_frame_len = tmp >> 12;
+        LOG_WARN("Len %u", d_frame_len);
 
         /* Append the CRC length if any */
         d_frame_len += d_crc_len;
@@ -448,7 +453,7 @@ frame_acquisition_impl::check_crc ()
       crc16_c = crc16_ibm(d_pdu, d_frame_len - 2);
       memcpy(&crc16_received, d_pdu + d_frame_len - 2, 2);
       crc16_received = ntohs(crc16_received);
-      LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+      LOG_WARN("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
       if(crc16_c == crc16_received) {
         return true;
       }

@@ -70,8 +70,11 @@ namespace gr {
       pmt::pmt_t pmt_data = pmt::dict_ref(m, pmt::intern("data"), pmt::PMT_NIL);
       pmt::pmt_t pmt_erasures = pmt::dict_ref(m, pmt::intern("erasures"),
                                               pmt::PMT_NIL);
+      /* Check if the message contains erasure info. Otherwise handle it as
+       * a blob
+       */
       if (pmt::equal (pmt::PMT_NIL, pmt_data)) {
-        LOG_ERROR("Invalid message format.");
+        pmt_data  = m;
       }
 
       data_ref = pmt::u8vector_elements(pmt_data, data_len);

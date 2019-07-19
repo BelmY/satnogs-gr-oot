@@ -33,27 +33,56 @@ namespace gr
 namespace satnogs
 {
 
+/*
+ * Matrix P was retrieved by:
+ * Lin & Costello, pg 128, Ch4, "Error Control Coding", 2nd ed, Pearson.
+ *
+ * Matrix mentioned by Morelos-Zaragoza, Robert H. "The art of error correcting coding."
+ * John Wiley & Sons, 2006 was not suitable.
+ */
+const std::vector<uint32_t> golay24::G_P =
+  {0x8ED, 0x1DB, 0x3B5, 0x769, 0xED1, 0xDA3, 0xB47, 0x68F, 0xD1D, 0xA3B, 0x477,
+      0xFFE};
+
+const std::vector<uint32_t> golay24::G_I =
+  { 0x800, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004, 0x002,
+      0x001 };
+
 golay24::golay24 ()
 {
-
-  d_H = { 0x7ff, 0xee2, 0xdc5, 0xb8b, 0xf16, 0xe2d, 0xc5b, 0x8b7, 0x96e, 0xadc,
-      0xdb8, 0xb71 };
-  d_X = {0x800, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004,
-      0x002, 0x001};
 }
 
 golay24::~golay24 ()
 {
 }
 
+static inline uint32_t
+weight(uint32_t x)
+{
+  return bit_count(x & 0xFFF);
+}
+
+static inline uint32_t
+syndrome(uint16_t x, uint16_t y)
+{
+  uint32_t s = 0;
+  for(size_t i = 0; i < 12; i++) {
+    s = (s << 1) | (weight(y & golay24::G_P[i]) % 2);
+  }
+  s ^= x;
+  return s;
+}
+
 /**
  * Encodes a 12-bit message
  * @param in the input 12-bit message. The message should be placed at the
  * 12 LS bits
+ * @param lsb_parity if set to true, the parity part is placed on the 12 LSB,
+ * whereas if set to false it is placed on the 12 MSB of the 24 bit coded word
  * @return the coded 24-bit message. The message is placed at the 24 LS bits
  */
 uint32_t
-golay24::encode12 (uint16_t in)
+golay24::encode12 (uint16_t in, bool lsb_parity)
 {
   uint32_t c[2] =
     { 0x0, 0x0 };
@@ -61,106 +90,68 @@ golay24::encode12 (uint16_t in)
   for (size_t i = 0; i < 12; i++) {
     uint32_t tmp = 0;
     for (size_t j = 0; j < 12; j++) {
-      tmp ^= (((c[0] & d_H[i]) >> j) & 0x01);
+      tmp ^= (((c[0] & G_P[i]) >> j) & 0x01);
     }
     c[1] = (c[1] << 1) ^ tmp;
   }
-  return ((c[0] & 0xFFF) << 12) | (c[1] & 0xFFF);
-}
-
-static inline uint32_t
-ham_dist(uint32_t x)
-{
-  return bit_count(x & 0xFFF);
+  if(lsb_parity) {
+    return ((c[0] & 0xFFF) << 12) | (c[1] & 0xFFF);
+  }
+  return ((c[1] & 0xFFF) << 12) | (c[0] & 0xFFF);
 }
 
 /**
  * Decodes a single Golay (24, 12, 8) codeword
  *
- * @param out the 12-bit decoded message. The message is placed at the 12 LS bits
+ * @param out the 24-bit decoded message. The placement of the parity is
+ * implementation specific.
+ *
  * @param in the coded 24 bit code word. The message should be placed at the
  * 24 LS bits
  * @return true if the decoding was successful, false in case the error correction
  * could not be performed
  */
 bool
-golay24::decode24(uint16_t *out, const uint32_t in)
+golay24::decode24(uint32_t *out, const uint32_t in)
 {
   uint32_t e[2] = {0x0, 0x0};
   uint32_t r[2] = {0x0, 0x0};
   uint32_t c[2] = {0x0, 0x0};
-  uint32_t syndrome = 0x0;
-  bool found = false;
-  uint32_t col = 0;
-  uint32_t q = 0;
-
+  uint32_t s = 0x0;
   r[0] = (in >> 12) & 0xFFF;
   r[1] = in & 0xFFF;
-
-  for(size_t j = 0; j < 12; j++) {
-    uint32_t tmp = 0x0;
-    for(size_t i = 0; i < 12; i++) {
-      tmp ^= (((d_X[j] & r[0]) >> i) & 0x1);
-    }
-
-    for(size_t i = 0; i < 12; i++) {
-      tmp ^= (((d_H[j] & r[1]) >> i) & 0x1);
-    }
-    syndrome = (syndrome << 1) ^ tmp;
+  s = syndrome(r[0], r[1]);
+  if(weight(s) <= 3) {
+    *out = ((r[0] ^ s) << 12) | (r[1]);
+    return true;
   }
 
-  if(ham_dist(syndrome) <= 3) {
-    e[0] = syndrome;
-    e[1] = 0x0;
-  }
-  else{
-    do {
-      if (ham_dist (syndrome ^ d_H[col]) <= 2) {
-        e[0] = syndrome ^ d_H[col];
-        e[1] = d_X[col];
-        found = 1;
-      }
-      col++;
-    }
-    while ((col < 12) && !found);
-
-    if ((col == 12) && !found) {
-      for (size_t j = 0; j < 12; j++) {
-        uint32_t tmp = 0x0;
-        for (size_t i = 0; i < 12; i++) {
-          tmp ^= (((d_H[j] & syndrome) >> i) & 0x1);
-        }
-        q = (q << 1) ^ tmp;
-      }
-    }
-
-    if (ham_dist (q) <= 3) {
-      e[0] = 0;
-      e[1] = q;
-    }
-    else {
-      col = 0;
-      found = 0;
-      do {
-        if (ham_dist (q ^ d_H[col]) <= 2) {
-          e[0] = d_X[col];
-          e[1] = q ^ d_H[col];
-          found = 1;
-        }
-        col++;
-      }
-      while ((col < 12) && !found);
-
-      if (col == 12 && !found) {
-        return false;
-      }
+  for(size_t i = 0; i < 12; i++) {
+    const uint16_t tmp = s ^ G_P[i];
+    if(weight(tmp) <= 2) {
+      *out = ((r[0] ^ tmp) << 12) | (r[1] ^ G_I[i]);
+      return true;
     }
   }
-  c[0] = r[0] ^ e[0];
-  c[1] = r[1] ^ e[1];
-  /* Return the message part only, not the parity */
-  *out = c[0];
-  return true;
+
+  /* Compute the sP vector */
+  uint32_t sP = 0;
+  for(size_t i = 0; i < 12; i++) {
+    sP = (sP << 1) | (weight(s & G_P[i]) % 2);
+  }
+  if(weight(sP) == 2 || weight(sP) == 3) {
+    *out = (r[0] << 12) | (r[1] ^ sP);
+    return true;
+  }
+
+  for(size_t i = 0; i < 12; i++) {
+    const uint16_t tmp = sP ^ G_P[i];
+    if(weight(tmp) == 2) {
+      *out = ((r[0] ^ G_I[i]) << 12) | (r[1] ^ tmp);
+      return true;
+    }
+  }
+  return false;
 }
 
 } /* namespace satnogs */

@@ -10,7 +10,8 @@
 
 
 %template(whitening_sptr) boost::shared_ptr<gr::satnogs::whitening>;
-
+%nodefaultctor gr::satnogs::decoder;
+%template(decoder_sptr) boost::shared_ptr<gr::satnogs::decoder>;
 
 %{
 #include "satnogs/morse_tree.h"
@@ -19,7 +20,9 @@
 #include "satnogs/cw_to_symbol.h"
 #include "satnogs/udp_msg_source.h"
 #include "satnogs/tcp_rigctl_msg_source.h"
+#include "satnogs/decoder.h"
 #include "satnogs/doppler_correction_cc.h"
+#include "satnogs/frame_decoder.h"
 #include "satnogs/frame_encoder.h"
 #include "satnogs/upsat_fsk_frame_acquisition.h"
 #include "satnogs/upsat_fsk_frame_encoder.h"
@@ -46,6 +49,7 @@
 
 
 %include "satnogs/morse_tree.h"
+%include "satnogs/decoder.h"
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);
@@ -61,6 +65,9 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, udp_msg_source);
 
 %include "satnogs/tcp_rigctl_msg_source.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, tcp_rigctl_msg_source);
+
+%include "satnogs/frame_decoder.h"
+GR_SWIG_BLOCK_MAGIC2(satnogs, frame_decoder);
 
 %include "satnogs/frame_encoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, frame_encoder);

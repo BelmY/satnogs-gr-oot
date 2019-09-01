@@ -42,6 +42,8 @@ list(APPEND HEADER_FILES
     utils.h
     udp_msg_source.h
     tcp_rigctl_msg_source.h
+    decoder.h
+    frame_decoder.h
     frame_encoder.h
     doppler_correction_cc.h
     doppler_fit.h

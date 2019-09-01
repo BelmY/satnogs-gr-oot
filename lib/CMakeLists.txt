@@ -48,7 +48,9 @@ list(APPEND satnogs_sources
     cw_to_symbol_impl.cc
     udp_msg_source_impl.cc
     tcp_rigctl_msg_source_impl.cc
+    decoder.cc
     doppler_correction_cc_impl.cc
+    frame_decoder_impl.cc
     frame_encoder_impl.cc
     doppler_fit.cc
     freq_drift.cc

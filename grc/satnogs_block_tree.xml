@@ -43,4 +43,5 @@
   <block>satnogs_decoder_8b10b</block>
   <block>variable_whitening</block>
   <block>satnogs_frame_acquisition</block>
+  <block>satnogs_frame_decoder</block>
 </cat>

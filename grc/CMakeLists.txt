@@ -34,6 +34,7 @@ list(APPEND enabled_blocks
     satnogs_ccsds_rs_decoder_mm.xml
     satnogs_decoder_8b10b.xml
     satnogs_fox_telem_mm.xml
+    satnogs_frame_decoder.xml
     satnogs_frame_file_sink.xml
     satnogs_iq_sink.xml
     satnogs_lrpt_decoder.xml 

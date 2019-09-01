@@ -14,6 +14,7 @@
 %template(decoder_sptr) boost::shared_ptr<gr::satnogs::decoder>;
 
 %{
+#include "satnogs/amsat_duv_decoder.h"
 #include "satnogs/ax25_decoder.h"
 #include "satnogs/morse_tree.h"
 #include "satnogs/morse_decoder.h"
@@ -52,6 +53,7 @@
 
 %include "satnogs/morse_tree.h"
 %include "satnogs/decoder.h"
+%include "satnogs/amsat_duv_decoder.h"
 %include "satnogs/ax25_decoder.h"
 
 %include "satnogs/morse_decoder.h"

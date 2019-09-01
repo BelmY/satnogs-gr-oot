@@ -47,7 +47,7 @@ public:
  * and converts it a PMT containing the same message in JSON form.
  * This can be used for debugging and stream operations.
  *
- * @param exta every JSON frame can contain an arbitrary amount of extra information.
+ * @param extra every JSON frame can contain an arbitrary amount of extra information.
  * Use this fill to provide a JSON-valid string with such information.
  *
  * @return shared pointer of the block instance

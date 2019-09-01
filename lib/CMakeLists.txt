@@ -42,6 +42,7 @@ list(APPEND satnogs_debug_sources
     cw_encoder_impl.cc
 )
 list(APPEND satnogs_sources
+    amsat_duv_decoder.cc
     metadata.cc
     morse_tree.cc
     morse_decoder_impl.cc

@@ -3,6 +3,7 @@
   <cat>
     <name>Decoders</name>
     <block>variable_ax25_decoder</block>
+    <block>variable_amsat_duv_decoder</block>
   </cat>
   <cat>
     <name>Satellites</name>

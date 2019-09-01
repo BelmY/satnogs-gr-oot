@@ -37,13 +37,11 @@ namespace satnogs
 class decoder_status
 {
 public:
-  bool                  packed;         /**< Indicates if the output is packed bits or unpacked */
   int                   consumed;       /**< The number of input items consumed */
   bool                  decode_success; /**< Indicated if there was a successful decoding */
   pmt::pmt_t            data;           /**< a dictionary with the PDU with of decoded data and the corresponding metadata for the decoded frame */
 
   decoder_status () :
-    packed(false),
     consumed(0),
     decode_success(false),
     data(pmt::make_dict())

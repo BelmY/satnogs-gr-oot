@@ -28,6 +28,7 @@ list(APPEND DEBUG_HEADER_FILES
 )
 
 list(APPEND HEADER_FILES
+    amsat_duv_decoder.h
     api.h
     ax25.h
     base64.h

@@ -29,6 +29,7 @@ list(APPEND debug_blocks
 
 list(APPEND enabled_blocks
     satnogs_block_tree.xml
+    satnogs_amsat_duv_decoder.xml
     satnogs_ax25_decoder_bm.xml
     satnogs_ax25_encoder_mb.xml
     satnogs_ax25_decoder.xml

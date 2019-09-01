@@ -101,6 +101,7 @@ public:
    * @param promisc if set to yes, the Callsign check is disabled
    * @param descramble if set to yes, the data will be descrambled prior
    * decoding using the G3RUH self-synchronizing descrambler.
+   * @param crc_check bypass the CRC check of the frame
    * @param max_frame_len the maximum allowed frame length
    */
   ax25_decoder (const std::string &addr, uint8_t ssid, bool promisc = false,

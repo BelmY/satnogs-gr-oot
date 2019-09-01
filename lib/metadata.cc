@@ -97,6 +97,18 @@ metadata::add_sample_cnt(pmt::pmt_t &m, uint64_t cnt)
   m = pmt::dict_add(m, pmt::mp(value(SAMPLE_CNT)), pmt::from_uint64(cnt));
 }
 
+void
+metadata::add_symbol_erasures(pmt::pmt_t &m, uint32_t cnt)
+{
+  m = pmt::dict_add(m, pmt::mp(value(SYMBOL_ERASURES)), pmt::from_uint64(cnt));
+}
+
+void
+metadata::add_corrected_bits(pmt::pmt_t &m, uint32_t cnt)
+{
+  m = pmt::dict_add(m, pmt::mp(value(CORRECTED_BITS)), pmt::from_uint64(cnt));
+}
+
 Json::Value
 metadata::to_json(const pmt::pmt_t& m)
 {
@@ -119,6 +131,16 @@ metadata::to_json(const pmt::pmt_t& m)
   }
 
   v = pmt::dict_ref (m, pmt::mp (value (SAMPLE_START)), pmt::PMT_NIL);
+  if (!pmt::equal (v, pmt::PMT_NIL)) {
+    root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
+  }
+
+  v = pmt::dict_ref (m, pmt::mp (value (SYMBOL_ERASURES)), pmt::PMT_NIL);
+  if (!pmt::equal (v, pmt::PMT_NIL)) {
+    root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
+  }
+
+  v = pmt::dict_ref (m, pmt::mp (value (CORRECTED_BITS)), pmt::PMT_NIL);
   if (!pmt::equal (v, pmt::PMT_NIL)) {
     root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
   }

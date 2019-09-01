@@ -40,7 +40,8 @@ public:
     CORRECTED_BITS,
     TIME,
     SAMPLE_START,
-    SAMPLE_CNT
+    SAMPLE_CNT,
+    SYMBOL_ERASURES
   } key_t;
 
   static std::string
@@ -60,6 +61,12 @@ public:
 
   static void
   add_sample_cnt(pmt::pmt_t &m, uint64_t cnt);
+
+  static void
+  add_symbol_erasures(pmt::pmt_t &m, uint32_t cnt);
+
+  static void
+  add_corrected_bits(pmt::pmt_t &m, uint32_t cnt);
 
   static Json::Value
   to_json(const pmt::pmt_t& m);

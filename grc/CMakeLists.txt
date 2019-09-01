@@ -38,6 +38,7 @@ list(APPEND enabled_blocks
     satnogs_frame_decoder.xml
     satnogs_frame_file_sink.xml
     satnogs_iq_sink.xml
+    satnogs_json_converter.xml
     satnogs_lrpt_decoder.xml 
     satnogs_lrpt_sync.xml 
     satnogs_morse_decoder.xml

@@ -18,28 +18,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _QA_AX25_DECODER_H_
-#define _QA_AX25_DECODER_H_
+#ifndef _QA_JSON_CONVERTER_H_
+#define _QA_JSON_CONVERTER_H_
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-namespace gr {
-  namespace satnogs {
+namespace gr
+{
+namespace satnogs
+{
 
-    class qa_ax25_decoder : public CppUnit::TestCase
-    {
-    public:
-      CPPUNIT_TEST_SUITE(qa_ax25_decoder);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST_SUITE_END();
+class qa_json_converter : public CppUnit::TestCase
+{
+public:CPPUNIT_TEST_SUITE(qa_json_converter);
+  CPPUNIT_TEST(t1);CPPUNIT_TEST_SUITE_END()
+  ;
 
-    private:
-      void t1();
-    };
+private:
+  void
+  t1 ();
+};
 
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 
-#endif /* _QA_AX25_DECODER_H_ */
+#endif /* _QA_JSON_CONVERTER_H_ */
 

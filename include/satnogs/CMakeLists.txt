@@ -30,6 +30,7 @@ list(APPEND DEBUG_HEADER_FILES
 list(APPEND HEADER_FILES
     api.h
     ax25.h
+    base64.h
     config.h
     convolutional_deinterleaver.h
     log.h
@@ -71,7 +72,8 @@ list(APPEND HEADER_FILES
     frame_acquisition.h
     shift_reg.h
     golay24.h
-    ax25_decoder.h 
+    ax25_decoder.h
+    json_converter.h
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})
@@ -80,5 +82,5 @@ endif()
 
 install(FILES
     ${HEADER_FILES}
-	DESTINATION include/satnogs
+    DESTINATION include/satnogs
 )

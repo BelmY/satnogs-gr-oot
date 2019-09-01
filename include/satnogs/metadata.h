@@ -22,6 +22,8 @@
 #define INCLUDE_SATNOGS_METADATA_H_
 
 #include <string>
+#include <pmt/pmt.h>
+#include <json/json.h>
 
 namespace gr {
 
@@ -35,11 +37,32 @@ public:
     PDU,
     CRC_VALID,
     FREQ_OFFSET,
-    CORRECTED_BITS
+    CORRECTED_BITS,
+    TIME,
+    SAMPLE_START,
+    SAMPLE_CNT
   } key_t;
 
   static std::string
   value(const key_t& k);
+
+  static std::string
+  time_iso8601();
+
+  static void
+  add_time_iso8601(pmt::pmt_t &m);
+
+  static void
+  add_crc_valid(pmt::pmt_t &m, bool valid);
+
+  static void
+  add_sample_start(pmt::pmt_t &m, uint64_t idx);
+
+  static void
+  add_sample_cnt(pmt::pmt_t &m, uint64_t cnt);
+
+  static Json::Value
+  to_json(const pmt::pmt_t& m);
 };
 
 }  // namespace satnogs

@@ -30,6 +30,7 @@ include_directories(
     ${PNG_INCLUDE_DIR}
     ${png++_INCLUDE_DIRS}
     ${FEC_INCLUDE_DIRS}
+    ${JSONCPP_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
@@ -78,7 +79,8 @@ list(APPEND satnogs_sources
     frame_acquisition_impl.cc
     shift_reg.cc
     golay24.cc
-    ax25_decoder.cc)
+    ax25_decoder.cc
+    json_converter_impl.cc)
 
 if(${INCLUDE_DEBUG_BLOCKS})
 	list(APPEND satnogs_sources ${satnogs_debug_sources})
@@ -103,6 +105,7 @@ target_link_libraries(gnuradio-satnogs
     ${PNG_LIBRARIES}
     ${png++_LIBRARIES}
     ${FEC_LIBRARIES}
+    ${JSONCPP_LIBRARY}
 )
 
 set_target_properties(gnuradio-satnogs PROPERTIES DEFINE_SYMBOL "gnuradio_satnogs_EXPORTS")
@@ -130,6 +133,7 @@ list(APPEND test_satnogs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_golay24.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/test_satnogs.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_satnogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_json_converter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_ax25_decoder.cc
 )
 

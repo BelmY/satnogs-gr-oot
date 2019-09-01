@@ -58,7 +58,8 @@ ax25_decoder::ax25_decoder (const std::string &addr, uint8_t ssid, bool promisc,
         d_frame_buffer (
             new uint8_t[max_frame_len + AX25_MAX_ADDR_LEN + AX25_MAX_CTRL_LEN
                 + sizeof(uint16_t)]),
-        d_start_idx (0)
+        d_start_idx (0),
+        d_frame_start(0)
 {
 }
 
@@ -113,6 +114,7 @@ ax25_decoder::_decode (decoder_status_t& status)
             d_bitstream.erase (d_bitstream.begin (),
                                d_bitstream.begin () + i + 1);
             enter_sync_state ();
+            d_frame_start = i;
             d_start_idx = 0;
             cont = true;
             break;
@@ -268,17 +270,22 @@ ax25_decoder::enter_frame_end (decoder_status_t& status)
    * Using this field also try to correct up to 2 error bits
    */
   if (frame_check ()) {
-    pmt::dict_add(status.data,
-                  pmt::mp(metadata::value(metadata::PDU)),
-                  pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    status.data = pmt::dict_add (
+        status.data, pmt::mp (metadata::value (metadata::PDU)),
+        pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    metadata::add_time_iso8601(status.data);
+    metadata::add_crc_valid(status.data, true);
+    metadata::add_sample_start(status.data, d_frame_start);
     status.decode_success = true;
     reset_state ();
     return true;
   }
   else if(!d_crc_check){
-    pmt::dict_add(status.data,
-                  pmt::mp(metadata::value(metadata::PDU)),
-                  pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    status.data = pmt::dict_add (
+        status.data, pmt::mp (metadata::value (metadata::PDU)),
+        pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    metadata::add_time_iso8601(status.data);
+    metadata::add_crc_valid(status.data, false);
     status.decode_success = true;
     LOG_DEBUG("Wrong crc");
     reset_state ();

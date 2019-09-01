@@ -39,6 +39,7 @@
 #include "satnogs/noaa_apt_sink.h"
 #include "satnogs/frame_file_sink.h"
 #include "satnogs/iq_sink.h"
+#include "satnogs/json_converter.h"
 #include "satnogs/quad_demod_filter_ff.h"
 #include "satnogs/decoder_8b10b.h"
 #include "satnogs/ccsds_rs_decoder_mm.h"
@@ -117,6 +118,9 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, frame_file_sink);
 
 %include "satnogs/iq_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, iq_sink);
+
+%include "satnogs/json_converter.h"
+GR_SWIG_BLOCK_MAGIC2(satnogs, json_converter);
 
 %include "satnogs/quad_demod_filter_ff.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, quad_demod_filter_ff);

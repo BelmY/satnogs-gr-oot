@@ -21,6 +21,7 @@
 #include "qa_satnogs.h"
 #include "qa_golay24.h"
 #include "qa_ax25_decoder.h"
+#include "qa_json_converter.h"
 
 CppUnit::TestSuite *
 qa_satnogs::suite()
@@ -28,5 +29,6 @@ qa_satnogs::suite()
   CppUnit::TestSuite *s = new CppUnit::TestSuite("satnogs");
   s->addTest(gr::satnogs::qa_golay24::suite());
   s->addTest(gr::satnogs::qa_ax25_decoder::suite());
+  s->addTest(gr::satnogs::qa_json_converter::suite());
   return s;
 }

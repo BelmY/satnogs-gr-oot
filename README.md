@@ -13,6 +13,7 @@ for decoding signals from various scientific and academic sattelites.
 * libvorbis
 * libpng
 * libpng++
+* libjsoncpp
 * git
 * swig
 
@@ -25,7 +26,7 @@ for decoding signals from various scientific and academic sattelites.
 apt install -y build-essential cmake gnuradio g++    \
                python-mako python-six libogg-dev     \
                libvorbis-dev libpng-dev libpng++-dev \
-               swig
+               swig libjsoncpp-dev
 cd /tmp
 git clone https://github.com/gnuradio/volk.git
 cd volk

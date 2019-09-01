@@ -18,28 +18,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _QA_AX25_DECODER_H_
-#define _QA_AX25_DECODER_H_
+#include <gnuradio/attributes.h>
+#include <cppunit/TestAssert.h>
+#include "qa_json_converter.h"
+#include <satnogs/json_converter.h>
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+namespace gr
+{
+namespace satnogs
+{
 
-namespace gr {
-  namespace satnogs {
+void
+qa_json_converter::t1 ()
+{
+  // Put test here
+}
 
-    class qa_ax25_decoder : public CppUnit::TestCase
-    {
-    public:
-      CPPUNIT_TEST_SUITE(qa_ax25_decoder);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST_SUITE_END();
-
-    private:
-      void t1();
-    };
-
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
-
-#endif /* _QA_AX25_DECODER_H_ */
 

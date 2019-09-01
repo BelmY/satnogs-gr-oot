@@ -31,6 +31,7 @@ list(APPEND enabled_blocks
     satnogs_block_tree.xml
     satnogs_ax25_decoder_bm.xml
     satnogs_ax25_encoder_mb.xml
+    satnogs_ax25_decoder.xml
     satnogs_ccsds_rs_decoder_mm.xml
     satnogs_decoder_8b10b.xml
     satnogs_fox_telem_mm.xml

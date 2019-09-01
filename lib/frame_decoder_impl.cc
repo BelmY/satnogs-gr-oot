@@ -49,13 +49,11 @@ frame_decoder_impl::frame_decoder_impl (decoder::decoder_sptr decoder_object,
 {
   if (input_size != decoder_object->sizeof_input_item ()) {
     throw std::invalid_argument (
-        "Size mismatch between the block input and the decoder");
+        "frame_decoder: Size mismatch between the block input and the decoder");
   }
 
   message_port_register_in (pmt::mp ("reset"));
   message_port_register_out (pmt::mp ("out"));
-
-  d_frame = new uint8_t[decoder_object->max_frame_len () * 8];
 
   set_msg_handler (pmt::mp ("reset"),
           boost::bind (&frame_decoder_impl::reset, this, _1));
@@ -80,21 +78,10 @@ frame_decoder_impl::work (int noutput_items,
                           gr_vector_void_star &output_items)
 {
   const void *in = input_items[0];
-  pmt::pmt_t res = pmt::make_dict();
 
-  decoder_status_t status = d_decoder->decode (d_frame, in, noutput_items);
-  if (status.decoded_bits > 0) {
-    if (status.packed) {
-      res = pmt::dict_add(res, pmt::mp("pdu"),
-                          pmt::make_blob (d_frame, (size_t)status.decoded_bits / 8));
-    }
-    else {
-      res = pmt::dict_add (
-          res, pmt::mp ("pdu"),
-          pmt::make_blob (d_frame, (size_t) status.decoded_bits));
-    }
-    res = pmt::dict_add (res, pmt::mp ("metadata"), status.metadata);
-    message_port_pub (pmt::mp ("out"), res);
+  decoder_status_t status = d_decoder->decode (in, noutput_items);
+  if (status.decode_success) {
+    message_port_pub (pmt::mp ("out"), status.data);
   }
 
   // Tell runtime system how many output items we produced.

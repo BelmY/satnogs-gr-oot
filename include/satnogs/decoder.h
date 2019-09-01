@@ -39,14 +39,14 @@ class decoder_status
 public:
   bool                  packed;         /**< Indicates if the output is packed bits or unpacked */
   int                   consumed;       /**< The number of input items consumed */
-  ssize_t               decoded_bits;   /**< The number of the decoded bits. */
-  pmt::pmt_t            metadata;       /**< Metadata for the decoded frame */
+  bool                  decode_success; /**< Indicated if there was a successful decoding */
+  pmt::pmt_t            data;           /**< a dictionary with the PDU with of decoded data and the corresponding metadata for the decoded frame */
 
   decoder_status () :
     packed(false),
     consumed(0),
-    decoded_bits(-1),
-    metadata(pmt::PMT_NIL)
+    decode_success(false),
+    data(pmt::make_dict())
   {
   }
 };
@@ -97,7 +97,7 @@ public:
    * If an error occurred an appropriate negative error code is returned
    */
   virtual decoder_status_t
-  decode (uint8_t *out, const void *in, int len) = 0;
+  decode (const void *in, int len) = 0;
 
 
   /**

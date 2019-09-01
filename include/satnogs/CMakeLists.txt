@@ -33,6 +33,7 @@ list(APPEND HEADER_FILES
     config.h
     convolutional_deinterleaver.h
     log.h
+    metadata.h
     morse_tree.h
     morse.h
     morse_decoder.h
@@ -61,14 +62,6 @@ list(APPEND HEADER_FILES
     noaa_apt_sink.h
     frame_file_sink.h
     iq_sink.h
-)
-
-if(${INCLUDE_DEBUG_BLOCKS})
-	list(APPEND HEADER_FILES ${DEBUG_HEADER_FILES})
-endif()
-
-install(FILES
-    ${HEADER_FILES}
     quad_demod_filter_ff.h
     decoder_8b10b.h
     ccsds_rs_decoder_mm.h
@@ -77,5 +70,15 @@ install(FILES
     lrpt_decoder.h
     frame_acquisition.h
     shift_reg.h
-    golay24.h DESTINATION include/satnogs
+    golay24.h
+    ax25_decoder.h 
+)
+
+if(${INCLUDE_DEBUG_BLOCKS})
+	list(APPEND HEADER_FILES ${DEBUG_HEADER_FILES})
+endif()
+
+install(FILES
+    ${HEADER_FILES}
+	DESTINATION include/satnogs
 )

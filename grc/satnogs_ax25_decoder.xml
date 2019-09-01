@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<block>
+  <name>AX.25 Decoder Definition</name>
+  <key>variable_ax25_decoder</key>
+  <import>import satnogs</import>
+  <var_make>self.$(id) = $(id) = satnogs.ax25_decoder_make($addr, $ssid, $promisc, $descrambling, $crc_check, $frame_len)</var_make>
+  <var_value>satnogs.ax25_decoder_make($addr, $ssid, $promisc, $descrambling, $crc_check, $frame_len)</var_value>
+  <make></make>
+  <param>
+      <name>Ignore Me</name>
+      <key>value</key>
+      <value>'ok'</value>
+      <type>raw</type>
+      <hide>all</hide>
+  </param>
+  
+  <param>
+    <name>Receiver Callsign</name>
+    <key>addr</key>
+    <value>'GND'</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Receiver SSID</name>
+    <key>ssid</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+
+
+  <param>
+    <name>Promiscuous mode</name>
+    <key>promisc</key>
+    <type>enum</type>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <param>
+    <name>G3RUH descrambling</name>
+    <key>descrambling</key>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+  
+  <param>
+    <name>Perform CRC</name>
+    <key>crc_check</key>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+  
+  <param>
+    <name>Maximum Frame Length</name>
+    <key>frame_len</key>
+    <value>512</value>
+    <type>int</type>
+  </param>
+</block>

@@ -18,38 +18,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H
-#define INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H
+#ifndef INCLUDE_SATNOGS_METADATA_H_
+#define INCLUDE_SATNOGS_METADATA_H_
 
-#include <satnogs/frame_decoder.h>
+#include <string>
 
-namespace gr
+namespace gr {
+
+namespace satnogs {
+
+
+class metadata
 {
-namespace satnogs
-{
-
-class frame_decoder_impl : public frame_decoder
-{
-
 public:
-  frame_decoder_impl (decoder::decoder_sptr decoder_object, int input_size);
-  ~frame_decoder_impl ();
+  typedef enum {
+    PDU,
+    CRC_VALID,
+    FREQ_OFFSET,
+    CORRECTED_BITS
+  } key_t;
 
-  // Where all the action really happens
-  int
-  work (int noutput_items, gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items);
-
-
-private:
-  decoder::decoder_sptr d_decoder;
-
-  void
-  reset(pmt::pmt_t m);
+  static std::string
+  value(const key_t& k);
 };
 
-} // namespace satnogs
-} // namespace gr
+}  // namespace satnogs
 
-#endif /* INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H */
+}  // namespace gr
 
+
+#endif /* INCLUDE_SATNOGS_METADATA_H_ */

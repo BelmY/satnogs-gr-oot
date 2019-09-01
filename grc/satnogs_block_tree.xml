@@ -1,6 +1,10 @@
 <cat>
   <name>[SatNOGS]</name>
   <cat>
+    <name>Decoders</name>
+    <block>variable_ax25_decoder</block>
+  </cat>
+  <cat>
     <name>Satellites</name>
     <cat>
       <name>NOAA</name>

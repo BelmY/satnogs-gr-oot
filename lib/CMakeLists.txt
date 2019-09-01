@@ -41,6 +41,7 @@ list(APPEND satnogs_debug_sources
     cw_encoder_impl.cc
 )
 list(APPEND satnogs_sources
+    metadata.cc
     morse_tree.cc
     morse_decoder_impl.cc
     multi_format_msg_sink_impl.cc
@@ -76,7 +77,8 @@ list(APPEND satnogs_sources
     lrpt_decoder_impl.cc
     frame_acquisition_impl.cc
     shift_reg.cc
-    golay24.cc)
+    golay24.cc
+    ax25_decoder.cc)
 
 if(${INCLUDE_DEBUG_BLOCKS})
 	list(APPEND satnogs_sources ${satnogs_debug_sources})
@@ -128,6 +130,7 @@ list(APPEND test_satnogs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_golay24.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/test_satnogs.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_satnogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_ax25_decoder.cc
 )
 
 add_executable(test-satnogs ${test_satnogs_sources})

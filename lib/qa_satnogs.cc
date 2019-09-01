@@ -20,11 +20,13 @@
 
 #include "qa_satnogs.h"
 #include "qa_golay24.h"
+#include "qa_ax25_decoder.h"
 
 CppUnit::TestSuite *
 qa_satnogs::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("satnogs");
   s->addTest(gr::satnogs::qa_golay24::suite());
+  s->addTest(gr::satnogs::qa_ax25_decoder::suite());
   return s;
 }

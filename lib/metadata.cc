@@ -18,38 +18,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H
-#define INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H
+#include <satnogs/metadata.h>
+#include <stdexcept>
+namespace gr {
 
-#include <satnogs/frame_decoder.h>
+namespace satnogs {
 
-namespace gr
+std::string
+metadata::value(const key_t& k)
 {
-namespace satnogs
-{
+  switch(k) {
+    case PDU:
+      return "PDU";
+    case CRC_VALID:
+      return "CRC_VALID";
+    case FREQ_OFFSET:
+      return "FREQ_OFFSET";
+    case CORRECTED_BITS:
+      return "CORRECTED_BITS";
+    default:
+      throw std::invalid_argument("metadata: invalid key");
+  }
+}
 
-class frame_decoder_impl : public frame_decoder
-{
+}  // namespace satnogs
 
-public:
-  frame_decoder_impl (decoder::decoder_sptr decoder_object, int input_size);
-  ~frame_decoder_impl ();
-
-  // Where all the action really happens
-  int
-  work (int noutput_items, gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items);
-
-
-private:
-  decoder::decoder_sptr d_decoder;
-
-  void
-  reset(pmt::pmt_t m);
-};
-
-} // namespace satnogs
-} // namespace gr
-
-#endif /* INCLUDED_SATNOGS_FRAME_DECODER_IMPL_H */
-
+}  // namespace gr

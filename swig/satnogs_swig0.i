@@ -14,6 +14,7 @@
 %template(decoder_sptr) boost::shared_ptr<gr::satnogs::decoder>;
 
 %{
+#include "satnogs/ax25_decoder.h"
 #include "satnogs/morse_tree.h"
 #include "satnogs/morse_decoder.h"
 #include "satnogs/multi_format_msg_sink.h"
@@ -50,6 +51,7 @@
 
 %include "satnogs/morse_tree.h"
 %include "satnogs/decoder.h"
+%include "satnogs/ax25_decoder.h"
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);

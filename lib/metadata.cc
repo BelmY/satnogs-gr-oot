@@ -29,6 +29,25 @@ namespace gr {
 namespace satnogs {
 
 std::string
+metadata::keys()
+{
+  std::string s = "[";
+  for(size_t i = 0; i < KEYS_NUM - 1; i++) {
+    s.append(value((key_t) i));
+    s.append(", ");
+  }
+  s.append(value((key_t)(KEYS_NUM - 1)));
+  s.append("]");
+  return s;
+}
+
+/**
+ * Return the string representation of the @a k.
+ * This string can be
+ * @param k the key enumeration
+ * @return string corresponding to the key @a k value
+ */
+std::string
 metadata::value(const key_t& k)
 {
   switch(k) {
@@ -46,6 +65,8 @@ metadata::value(const key_t& k)
       return "sample_start";
     case SAMPLE_CNT:
       return "sample_cnt";
+    case SYMBOL_ERASURES:
+      return "symbol_erasures";
     default:
       throw std::invalid_argument("metadata: invalid key");
   }
@@ -73,6 +94,12 @@ void
 metadata::add_time_iso8601(pmt::pmt_t &m)
 {
   m = pmt::dict_add(m, pmt::mp(value(TIME)), pmt::mp(time_iso8601()));
+}
+
+void
+metadata::add_pdu(pmt::pmt_t &m, const uint8_t *in, size_t len)
+{
+  m = pmt::dict_add(m, pmt::mp(value(PDU)), pmt::make_blob(in, len));
 }
 
 /**
@@ -137,12 +164,12 @@ metadata::to_json(const pmt::pmt_t& m)
 
   v = pmt::dict_ref (m, pmt::mp (value (SYMBOL_ERASURES)), pmt::PMT_NIL);
   if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
+    root[value (SYMBOL_ERASURES)] = Json::Value::UInt64(pmt::to_uint64 (v));
   }
 
   v = pmt::dict_ref (m, pmt::mp (value (CORRECTED_BITS)), pmt::PMT_NIL);
   if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
+    root[value (CORRECTED_BITS)] = Json::Value::UInt64(pmt::to_uint64 (v));
   }
   return root;
 }

@@ -21,37 +21,46 @@
 #ifndef INCLUDE_SATNOGS_METADATA_H_
 #define INCLUDE_SATNOGS_METADATA_H_
 
+#include <satnogs/api.h>
 #include <string>
 #include <pmt/pmt.h>
 #include <json/json.h>
+#include <cstdint>
 
 namespace gr {
 
 namespace satnogs {
 
 
-class metadata
+class SATNOGS_API metadata
 {
 public:
-  typedef enum {
-    PDU,
+  typedef enum key{
+    PDU = 0,
     CRC_VALID,
     FREQ_OFFSET,
     CORRECTED_BITS,
     TIME,
     SAMPLE_START,
     SAMPLE_CNT,
-    SYMBOL_ERASURES
+    SYMBOL_ERASURES,
+    KEYS_NUM
   } key_t;
 
   static std::string
   value(const key_t& k);
 
   static std::string
+  keys();
+
+  static std::string
   time_iso8601();
 
   static void
   add_time_iso8601(pmt::pmt_t &m);
+
+  static void
+  add_pdu(pmt::pmt_t &m, const uint8_t *in, size_t len);
 
   static void
   add_crc_valid(pmt::pmt_t &m, bool valid);

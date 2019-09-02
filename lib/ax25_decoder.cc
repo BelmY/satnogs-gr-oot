@@ -270,9 +270,7 @@ ax25_decoder::enter_frame_end (decoder_status_t& status)
    * Using this field also try to correct up to 2 error bits
    */
   if (frame_check ()) {
-    status.data = pmt::dict_add (
-        status.data, pmt::mp (metadata::value (metadata::PDU)),
-        pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    metadata::add_pdu(status.data, d_frame_buffer, d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, true);
     metadata::add_sample_start(status.data, d_frame_start);
@@ -281,9 +279,7 @@ ax25_decoder::enter_frame_end (decoder_status_t& status)
     return true;
   }
   else if(!d_crc_check){
-    status.data = pmt::dict_add (
-        status.data, pmt::mp (metadata::value (metadata::PDU)),
-        pmt::make_blob (d_frame_buffer, d_received_bytes - sizeof(uint16_t)));
+    metadata::add_pdu(status.data, d_frame_buffer, d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, false);
     status.decode_success = true;

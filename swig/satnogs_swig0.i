@@ -48,6 +48,7 @@
 #include "satnogs/lrpt_decoder.h"
 #include "satnogs/lrpt_sync.h"
 #include "satnogs/frame_acquisition.h"
+#include "satnogs/metadata.h"
 %}
 
 
@@ -55,6 +56,7 @@
 %include "satnogs/decoder.h"
 %include "satnogs/amsat_duv_decoder.h"
 %include "satnogs/ax25_decoder.h"
+%include "satnogs/metadata.h"
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);

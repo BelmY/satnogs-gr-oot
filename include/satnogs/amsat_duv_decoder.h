@@ -24,6 +24,7 @@
 #include <satnogs/api.h>
 #include <satnogs/decoder.h>
 #include <string>
+#include <deque>
 
 namespace gr
 {
@@ -37,6 +38,13 @@ namespace satnogs
 class SATNOGS_API amsat_duv_decoder : public decoder
 {
 public:
+
+  static const size_t
+  amsat_fox_duv_frame_size;
+
+  static const uint8_t
+  amsat_fox_spacecraft_id[];
+
   static decoder::decoder_sptr
   make(const std::string& control_symbol, size_t max_frame_len = 96);
 
@@ -52,7 +60,7 @@ public:
 private:
   typedef enum
   {
-    IN_SYNC, DECODING
+    SEARCH_SYNC, DECODING
   } d_state_t;
 
   size_t d_erasure_cnt;
@@ -68,12 +76,17 @@ private:
   uint8_t *d_8b_words;
   int *d_erasures_indexes;
   d_state_t d_state;
+  size_t d_bitstream_idx;
+  std::deque<uint8_t> d_bitstream;
 
   bool
   set_access_code (const std::string &control_symbol);
 
   void
-  process_10b (uint16_t word, int write_pos);
+  process_10b (uint16_t word, size_t write_pos);
+
+  inline uint16_t
+  pack_10b_word(size_t idx);
 
   int d_lookup_8b10b[2][256] =
     {

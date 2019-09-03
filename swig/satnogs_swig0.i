@@ -32,7 +32,6 @@
 #include "satnogs/udp_msg_sink.h"
 #include "satnogs/coarse_doppler_correction_cc.h"
 #include "satnogs/ax25_encoder_mb.h"
-#include "satnogs/ax25_decoder_bm.h"
 #include "satnogs/qb50_deframer.h"
 #include "satnogs/waterfall_sink.h"
 #include "satnogs/ogg_encoder.h"
@@ -41,10 +40,6 @@
 #include "satnogs/frame_file_sink.h"
 #include "satnogs/iq_sink.h"
 #include "satnogs/json_converter.h"
-#include "satnogs/quad_demod_filter_ff.h"
-#include "satnogs/decoder_8b10b.h"
-#include "satnogs/ccsds_rs_decoder_mm.h"
-#include "satnogs/fox_telem_mm.h"
 #include "satnogs/lrpt_decoder.h"
 #include "satnogs/lrpt_sync.h"
 #include "satnogs/frame_acquisition.h"
@@ -99,9 +94,6 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, coarse_doppler_correction_cc);
 %include "satnogs/ax25_encoder_mb.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, ax25_encoder_mb);
 
-%include "satnogs/ax25_decoder_bm.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, ax25_decoder_bm);
-
 %include "satnogs/qb50_deframer.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, qb50_deframer);
 
@@ -125,18 +117,6 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, iq_sink);
 
 %include "satnogs/json_converter.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, json_converter);
-
-%include "satnogs/quad_demod_filter_ff.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, quad_demod_filter_ff);
-
-%include "satnogs/decoder_8b10b.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, decoder_8b10b);
-
-%include "satnogs/ccsds_rs_decoder_mm.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, ccsds_rs_decoder_mm);
-
-%include "satnogs/fox_telem_mm.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, fox_telem_mm);
 
 %include "satnogs/lrpt_sync.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, lrpt_sync);

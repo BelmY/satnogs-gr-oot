@@ -57,17 +57,12 @@ list(APPEND HEADER_FILES
     udp_msg_sink.h
     coarse_doppler_correction_cc.h
     ax25_encoder_mb.h
-    ax25_decoder_bm.h
     qb50_deframer.h
     waterfall_sink.h
     ogg_source.h
     noaa_apt_sink.h
     frame_file_sink.h
     iq_sink.h
-    quad_demod_filter_ff.h
-    decoder_8b10b.h
-    ccsds_rs_decoder_mm.h
-    fox_telem_mm.h
     lrpt_sync.h
     lrpt_decoder.h
     frame_acquisition.h

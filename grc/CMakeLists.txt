@@ -30,12 +30,8 @@ list(APPEND debug_blocks
 list(APPEND enabled_blocks
     satnogs_block_tree.xml
     satnogs_amsat_duv_decoder.xml
-    satnogs_ax25_decoder_bm.xml
     satnogs_ax25_encoder_mb.xml
     satnogs_ax25_decoder.xml
-    satnogs_ccsds_rs_decoder_mm.xml
-    satnogs_decoder_8b10b.xml
-    satnogs_fox_telem_mm.xml
     satnogs_frame_decoder.xml
     satnogs_frame_file_sink.xml
     satnogs_iq_sink.xml
@@ -52,7 +48,6 @@ list(APPEND enabled_blocks
     satnogs_udp_msg_sink.xml
     satnogs_coarse_doppler_correction_cc.xml
     satnogs_waterfall_sink.xml
-    satnogs_quad_demod_filter_ff.xml
     satnogs_ogg_source.xml
     satnogs_noaa_apt_sink.xml
     satnogs_whitening.xml

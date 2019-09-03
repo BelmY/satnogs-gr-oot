@@ -63,17 +63,12 @@ list(APPEND satnogs_sources
     udp_msg_sink_impl.cc
     coarse_doppler_correction_cc_impl.cc
     ax25_encoder_mb_impl.cc
-    ax25_decoder_bm_impl.cc
     qb50_deframer_impl.cc
     waterfall_sink_impl.cc
     ogg_source_impl.cc
     noaa_apt_sink_impl.cc
     frame_file_sink_impl.cc
     iq_sink_impl.cc
-    quad_demod_filter_ff_impl.cc
-    decoder_8b10b_impl.cc
-    ccsds_rs_decoder_mm_impl.cc
-    fox_telem_mm_impl.cc
     lrpt_sync_impl.cc
     convolutional_deinterleaver.cc
     lrpt_decoder_impl.cc

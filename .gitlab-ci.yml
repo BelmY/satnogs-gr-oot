@@ -1,9 +1,19 @@
 variables:
   GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
 stages:
+  - style 
   - test
   - build
   - deploy
+
+style:
+  stage: style
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq astyle git
+  script:
+    - test $(astyle --dry-run --project --formatted lib/*.cc | wc -l) -ne 0 && exit 1
+    - test $(astyle --dry-run --project --formatted lib/*.h | wc -l) -ne 0 && exit 1
+    - test $(astyle --dry-run --project --formatted include/satnogs/*.h | wc -l) -ne 0 && exit 1
 
 test:
   stage: test

@@ -57,7 +57,6 @@ list(APPEND satnogs_sources
     frame_encoder_impl.cc
     doppler_fit.cc
     freq_drift.cc
-    upsat_fsk_frame_acquisition_impl.cc
     upsat_fsk_frame_encoder_impl.cc
     whitening.cc
     udp_msg_sink_impl.cc
@@ -72,11 +71,12 @@ list(APPEND satnogs_sources
     lrpt_sync_impl.cc
     convolutional_deinterleaver.cc
     lrpt_decoder_impl.cc
-    frame_acquisition_impl.cc
     shift_reg.cc
     golay24.cc
     ax25_decoder.cc
-    json_converter_impl.cc)
+    json_converter_impl.cc
+    ieee802_15_4_variant_decoder.cc
+    crc.cc)
 
 if(${INCLUDE_DEBUG_BLOCKS})
 	list(APPEND satnogs_sources ${satnogs_debug_sources})
@@ -129,6 +129,8 @@ list(APPEND test_satnogs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_golay24.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/test_satnogs.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_satnogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_crc.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_ieee802_15_4_variant_decoder.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_json_converter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_ax25_decoder.cc
 )

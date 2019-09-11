@@ -1,0 +1,71 @@
+/* -*- c++ -*- */
+/*
+ * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
+ *
+ *  Copyright (C) 2019, Libre Space Foundation <http://libre.space>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef INCLUDED_SATNOGS_CRC_H
+#define INCLUDED_SATNOGS_CRC_H
+
+#include <satnogs/api.h>
+
+namespace gr
+{
+namespace satnogs
+{
+
+/*!
+ * CRC class providing a range of different CRC calculation static methods
+ *
+ */
+class SATNOGS_API crc
+{
+public:
+  typedef enum crc_type {
+    PDU = 0,
+    CRC_VALID,
+    FREQ_OFFSET,
+    CORRECTED_BITS,
+    TIME,
+    SAMPLE_START,
+    SAMPLE_CNT,
+    SYMBOL_ERASURES,
+    KEYS_NUM
+  } crc_t;
+
+  static uint16_t
+  crc16_ccitt_reversed(const uint8_t *data, size_t len);
+
+  static uint16_t
+  crc16_ccitt(const uint8_t *data, size_t len);
+
+  static uint16_t
+  crc16_ax25(const uint8_t *data, size_t len);
+
+  static uint16_t
+  crc16_ibm(const uint8_t *data, size_t len);
+
+private:
+  static const uint16_t crc16_ccitt_table_reverse[256];
+  static const uint16_t crc16_ccitt_table[256];
+};
+
+} // namespace satnogs
+} // namespace gr
+
+#endif /* INCLUDED_SATNOGS_CRC_H */
+

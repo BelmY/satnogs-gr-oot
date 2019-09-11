@@ -23,7 +23,6 @@ list(APPEND debug_blocks
     satnogs_morse_debug_source.xml
     satnogs_debug_msg_source.xml
     satnogs_debug_msg_source_raw.xml
-    satnogs_leo_channel.xml
     satnogs_cw_encoder.xml 
 )
 
@@ -51,7 +50,6 @@ list(APPEND enabled_blocks
     satnogs_ogg_source.xml
     satnogs_noaa_apt_sink.xml
     satnogs_whitening.xml
-    satnogs_frame_acquisition.xml
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

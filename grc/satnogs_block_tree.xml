@@ -13,7 +13,6 @@
     </cat>
     <cat>
       <name>UPSat</name>
-      <block>satnogs_upsat_fsk_frame_acquisition</block>
       <block>satnogs_upsat_fsk_frame_encoder</block>
       <block>satnogs_upsat_transmitter</block>
       <block>satnogs_qb50_deframer</block>
@@ -40,6 +39,5 @@
   <block>satnogs_ax25_encoder_mb</block>
   <block>satnogs_waterfall_sink</block>
   <block>variable_whitening</block>
-  <block>satnogs_frame_acquisition</block>
   <block>satnogs_frame_decoder</block>
 </cat>

@@ -21,7 +21,7 @@
 #ifndef INCLUDE_SATNOGS_AX25_H_
 #define INCLUDE_SATNOGS_AX25_H_
 
-#include <satnogs/utils.h>
+#include <satnogs/crc.h>
 #include <satnogs/log.h>
 #include <limits.h>
 #include <stdint.h>
@@ -85,11 +85,7 @@ namespace gr
     static inline uint16_t
     ax25_fcs (uint8_t *buffer, size_t len)
     {
-      uint16_t fcs = 0xFFFF;
-      while (len--) {
-        fcs = (fcs >> 8) ^ crc16_ccitt_table_reverse[(fcs ^ *buffer++) & 0xFF];
-      }
-      return fcs ^ 0xFFFF;
+      return crc::crc16_ax25(buffer, len);
     }
 
     /**

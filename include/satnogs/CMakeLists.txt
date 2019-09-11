@@ -51,7 +51,6 @@ list(APPEND HEADER_FILES
     doppler_correction_cc.h
     doppler_fit.h
     freq_drift.h
-    upsat_fsk_frame_acquisition.h
     upsat_fsk_frame_encoder.h
     whitening.h
     udp_msg_sink.h
@@ -65,11 +64,12 @@ list(APPEND HEADER_FILES
     iq_sink.h
     lrpt_sync.h
     lrpt_decoder.h
-    frame_acquisition.h
     shift_reg.h
     golay24.h
     ax25_decoder.h
     json_converter.h
+    ieee802_15_4_variant_decoder.h
+    crc.h
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

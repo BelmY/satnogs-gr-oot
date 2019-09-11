@@ -26,7 +26,6 @@
 #include "satnogs/doppler_correction_cc.h"
 #include "satnogs/frame_decoder.h"
 #include "satnogs/frame_encoder.h"
-#include "satnogs/upsat_fsk_frame_acquisition.h"
 #include "satnogs/upsat_fsk_frame_encoder.h"
 #include "satnogs/whitening.h"
 #include "satnogs/udp_msg_sink.h"
@@ -42,8 +41,8 @@
 #include "satnogs/json_converter.h"
 #include "satnogs/lrpt_decoder.h"
 #include "satnogs/lrpt_sync.h"
-#include "satnogs/frame_acquisition.h"
 #include "satnogs/metadata.h"
+#include "satnogs/crc.h"
 %}
 
 
@@ -52,6 +51,8 @@
 %include "satnogs/amsat_duv_decoder.h"
 %include "satnogs/ax25_decoder.h"
 %include "satnogs/metadata.h"
+%include "satnogs/crc.h"
+
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);
@@ -76,9 +77,6 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, frame_encoder);
 
 %include "satnogs/doppler_correction_cc.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, doppler_correction_cc);
-
-%include "satnogs/upsat_fsk_frame_acquisition.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, upsat_fsk_frame_acquisition);
 
 %include "satnogs/upsat_fsk_frame_encoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, upsat_fsk_frame_encoder);
@@ -123,6 +121,3 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, lrpt_sync);
 
 %include "satnogs/lrpt_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, lrpt_decoder);
-
-%include "satnogs/frame_acquisition.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, frame_acquisition);

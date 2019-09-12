@@ -149,6 +149,27 @@ crc::crc16_ibm(const uint8_t *data, size_t len)
   return crc;
 }
 
+/**
+ *
+ * @param t the CRC method
+ * @return the size of the specified CRC in bytes
+ */
+size_t
+crc::crc_size(crc_t t)
+{
+  switch (t) {
+  case CRC_NONE:
+    return 0;
+  case CRC16_CCITT:
+  case CRC16_CCITT_REVERSED:
+  case CRC16_AX25:
+  case CRC16_IBM:
+    return sizeof(uint16_t);
+  default:
+    throw std::invalid_argument("crc: Invalid CRC method");
+  }
+}
+
 } /* namespace satnogs */
 } /* namespace gr */
 

@@ -4,6 +4,7 @@
     <name>Decoders</name>
     <block>variable_ax25_decoder</block>
     <block>variable_amsat_duv_decoder</block>
+    <block>variable_ieee802_15_4_variant_decoder</block>
   </cat>
   <cat>
     <name>Satellites</name>

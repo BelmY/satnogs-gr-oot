@@ -98,6 +98,35 @@ Before submitting a new merge request, rebase the `master` branch and
 confirm that the automated CI tests have successfully completed for all platforms
 mandated by the `.gitlab-ci.yml` recipe.
 
+### Coding style
+For the C++ code, `gr-satnogs` uses a slightly modified version of the 
+**Stroustrup** style, which is a nicer adaptation of the well known K&R style.
+In addition, we decided to decrease the indentation from 4 to 2 spaces.
+This choice was made mainly to avoid braking statements with long namespaces.
+We also found ourselves, that with smaller indentation we use more descriptive
+variable names, avoiding frustrating abbreviations without phoenixes etc. 
+
+At the root directory of the project there is the `astyle` options 
+file `.astylerc` containing the proper configuration.
+Developers can import this configuration to their favorite editor. 
+In addition the `hooks/pre-commit` file contains a Git hook, 
+that can be used to perform before every commit, code style formatting
+with `astyle` and the `.astylerc` parameters.
+To enable this hook developers should copy the hook at their `.git/hooks` 
+directory. 
+Failing to comply with the coding style described by the `.astylerc` 
+will result to failure of the automated tests running on our CI services. 
+So make sure that you either import on your editor the coding style rules 
+or use the `pre-commit` Git hook.
+
+
+Regarding the naming of files and variables, we use the underscore naming 
+convention (`do_this`) instead of camel cases (`DoNotDoThis`). 
+Exception to this rule is the CMake module filenames. In addition,
+all private variables of a C++ class, should start with the prefix 
+`d_` allowing the developers to spot easily private members of the object.
+
+
 ### Adding a new Satellite Demodulator
 Demodulators are responsible for filtering, resampling and demodulating an
 analog signal and converting it into suitable form, for a decoder to be able 
@@ -125,15 +154,16 @@ The `satnogs::decoder` class, is a virtual class providing a generic API that
 every derived decoder class should implement. 
 The core of this class is the
 
-```
-decoder_status_t decode (const void *in, int len)
+```cpp
+decoder_status_t 
+decode(const void *in, int len)
 ```
 method. This method accepts an input buffer `in`. The type of the items depends
 on the implementation. It also takes the `len` argument specifying the number
 of items available in the `in` buffer.
 The method returns a `decoder_status_t` class object.
 
-```
+```cpp
 class decoder_status
 {
 public:
@@ -164,32 +194,6 @@ decoded and its data are available on the `data` field.
 information regarding it, using the `gr-satnogs` metadata format. More about them
 in the [Metadata](#metadata) section
 
-### Coding style
-For the C++ code, `gr-satnogs` uses a slightly modified version of the 
-**Stroustrup** style, which is a nicer adaptation of the well known K&R style.
-In addition, we decided to decrease the indentation from 4 to 2 spaces.
-This choice was made mainly to avoid braking statements with long namespaces.
-We also found ourselves, that with smaller indentation we use more descriptive
-variable names, avoiding frustrating abbreviations without phoenixes etc. 
-
-At the root directory of the project there is the `astyle` options 
-file `.astylerc` containing the proper configuration.
-Developers can import this configuration to their favorite editor. 
-In addition the `hooks/pre-commit` file contains a Git hook, 
-that can be used to perform before every commit, code style formatting
-with `astyle` and the `.astylerc` parameters.
-To enable this hook developers should copy the hook at their `.git/hooks` 
-directory. 
-Failing to comply with the coding style described by the `.astylerc` 
-will result to failure of the automated tests running on our CI services. 
-So make sure that you either import on your editor the coding style rules 
-or use the `pre-commit` Git hook.
-
-
-Regarding the naming of files and variables, we use the underscore naming convention (`do_this`) instead of
-camel cases (`DoNotDoThis`). 
-Exception to this rule is the CMake module filenames. In addition, all private variables of a C++ class, should start with the prefix `d_` allowing the developers to spot easily private members of the object.
-
 
 ### Metadata
 Each decoder generates a `pmt::pmt_t` dictionary containing the decoded data and
@@ -216,7 +220,7 @@ metadata::keys()` static method which returns a list with the available
 metadata keys. This method is also available in Python through the Swig interface.
  For example:
 
-```
+```python
 $ python
 >>> import satnogs
 >>> satnogs.metadata.keys()
@@ -230,7 +234,24 @@ containing the raw bytes of the JSON string, which then can be passed to a UDP
 sink targeting the `satnogs-client`.
 The `json_converter` block accepts also a string that may be used to inject 
 an arbitrary number of additional information under the `extra` JSON field.
-Of course, this string should be in a JSON valid format. 
+Of course, this string should be in a JSON valid format.
+
+For example, such a JSON string with information on the extra field could be like
+
+```json
+{
+    "corrected_bits" : 0,
+    "extra" : 
+    {
+        "x" : 3,
+        "y" : "test"
+    },
+    "pdu" : "igAg7nRAOCAniUMAtIoAAAAAAAAAAAAAAABNJ4kfAFD4wwAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+    "symbol_erasures" : 0,
+    "time" : "2019-09-11T15:39:13.514138Z"
+}
+```
+
 
 ### Release Policy
 The `gr-satnogs` OOT module uses the `major.api-compatibility.minor`

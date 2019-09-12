@@ -43,16 +43,18 @@
 #include "satnogs/lrpt_sync.h"
 #include "satnogs/metadata.h"
 #include "satnogs/crc.h"
+#include "satnogs/ieee802_15_4_variant_decoder.h"
 %}
 
 
+%include "satnogs/whitening.h"
 %include "satnogs/morse_tree.h"
 %include "satnogs/decoder.h"
 %include "satnogs/amsat_duv_decoder.h"
 %include "satnogs/ax25_decoder.h"
 %include "satnogs/metadata.h"
 %include "satnogs/crc.h"
-
+%include "satnogs/ieee802_15_4_variant_decoder.h"
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);
@@ -80,8 +82,6 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, doppler_correction_cc);
 
 %include "satnogs/upsat_fsk_frame_encoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, upsat_fsk_frame_encoder);
-
-%include "satnogs/whitening.h"
 
 %include "satnogs/udp_msg_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, udp_msg_sink);

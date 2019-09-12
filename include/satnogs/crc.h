@@ -33,15 +33,12 @@ namespace satnogs {
 class SATNOGS_API crc {
 public:
   typedef enum crc_type {
-    PDU = 0,
-    CRC_VALID,
-    FREQ_OFFSET,
-    CORRECTED_BITS,
-    TIME,
-    SAMPLE_START,
-    SAMPLE_CNT,
-    SYMBOL_ERASURES,
-    KEYS_NUM
+    CRC_NONE = 0,
+    CRC16_CCITT,
+    CRC16_CCITT_REVERSED,
+    CRC16_AX25,
+    CRC16_IBM,
+    CRC_METHODS_NUM
   } crc_t;
 
   static uint16_t
@@ -55,6 +52,9 @@ public:
 
   static uint16_t
   crc16_ibm(const uint8_t *data, size_t len);
+
+  static size_t
+  crc_size(crc_t t);
 
 private:
   static const uint16_t crc16_ccitt_table_reverse[256];

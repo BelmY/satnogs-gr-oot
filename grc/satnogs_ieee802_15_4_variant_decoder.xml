@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<block>
+  <name>IEEE 802.15.4 Decoder Definition</name>
+  <key>variable_ieee802_15_4_variant_decoder</key>
+  <import>import satnogs</import>
+  <var_make>self.$(id) = $(id) = satnogs.ieee802_15_4_variant_decoder_make($preamble, $preamble_thrsh, $sync_word, $sync_thrsh, $crc, $whitening, $var_len, $frame_len)</var_make>
+  <var_value>satnogs.ieee802_15_4_variant_decoder_make($preamble, $preamble_thrsh, $sync_word, $sync_thrsh, $crc, $whitening, $var_len, $frame_len)</var_value>
+  <make></make>
+  <param>
+      <name>Ignore Me</name>
+      <key>value</key>
+      <value>'ok'</value>
+      <type>raw</type>
+      <hide>all</hide>
+  </param>
+  
+  <param>
+    <name>Variable Length</name>
+    <key>var_len</key>
+    <type>enum</type>
+    <option>
+      <name>Variable Frame Length</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Constant Frame Length</name>
+      <key>False</key>
+    </option>
+  </param>
+  
+  <param>
+    <name>Frame Preamble</name>
+    <key>preamble</key>
+    <value>[0x55, 0x55, 0x55, 0x55, 0x55]</value>
+    <type>raw</type>
+  </param>
+  
+  <param>
+    <name>Preamble Threshold</name>
+    <key>preamble_thrsh</key>
+    <value>5</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Synchronization Word</name>
+    <key>sync_word</key>
+    <value>[0x31, 0xe5]</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Synchronization Word Threshold</name>
+    <key>sync_thrsh</key>
+    <value>3</value>
+    <type>int</type>
+  </param>
+  
+  <param>
+    <name>Maximum Frame Length</name>
+    <key>frame_len</key>
+    <value>254</value>
+    <type>int</type>
+  </param>
+  
+  <param>
+    <name>CRC</name>
+    <key>crc</key>
+    <value>None</value>
+    <type>raw</type>
+  </param>
+  
+  <param>
+    <name>Whitening</name>
+    <key>whitening</key>
+    <value>None</value>
+    <type>raw</type>
+  </param>
+  
+</block>

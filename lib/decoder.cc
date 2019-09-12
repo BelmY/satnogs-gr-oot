@@ -56,6 +56,22 @@ decoder::~decoder()
 }
 
 /**
+ * By default, the number of input items can be arbitrary (multiple of 1).
+ * Decoders that require the number of input items to be a multiple of a
+ * specific number, should override this method.
+ *
+ * The frame_decoder block, will use the number returned from this method
+ * to properly alter the behavior of the GNU Radio scheduler
+ *
+ * @return the number that input items should be multiple
+ */
+size_t
+decoder::input_multiple() const
+{
+  return 1;
+}
+
+/**
  *
  * @return the maximum allowed frame length
  */

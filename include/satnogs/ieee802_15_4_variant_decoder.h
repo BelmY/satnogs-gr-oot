@@ -22,8 +22,11 @@
 #define INCLUDED_SATNOGS_IEEE802_15_4_VARIANT_DECODER_H
 
 #include <satnogs/api.h>
+#include <satnogs/decoder.h>
 #include <satnogs/whitening.h>
 #include <satnogs/crc.h>
+#include <satnogs/shift_reg.h>
+
 
 namespace gr {
 namespace satnogs {
@@ -38,15 +41,114 @@ namespace satnogs {
  * scheme.
  *
  */
-class SATNOGS_API ieee802_15_4_variant_decoder {
+class SATNOGS_API ieee802_15_4_variant_decoder : public decoder {
 public:
+
+  /**
+   *
+   * @param preamble the preamble should be a repeated word. Note that due to AGC
+   * settling, the receiver may not receive the whole preamble. If the preamble
+   * is indeed a repeated pattern, a portion of it can be given as parameter.
+   * The block should be able to deal with this. However, a quite small subset
+   * may lead to a larger number of false alarms
+   *
+   * @param preamble_threshold the maximum number of bits that are
+   * allowed to be wrong at the preamble
+   *
+   * @param sync the synchronization work following the preamble
+   *
+   * @param sync_threshold the maximum number of bits that are
+   * allowed to be wrong at the synchronization word
+   *
+   * @param crc the CRC scheme to use
+   *
+   * @param descrambler if set, data will be first descrambled by this descrambling
+   * method
+   *
+   * @param var_len if set to true, variable length decoding is used. Otherwise,
+   * the \p max_len parameter indicates the fixed frame size
+   *
+   * @param max_len the maximum allowed decode-able frame length
+   *
+   * @return shared pointer of the decoder
+   */
+  static decoder::decoder_sptr
+  make(const std::vector<uint8_t> &preamble,
+       size_t preamble_threshold,
+       const std::vector<uint8_t> &sync,
+       size_t sync_threshold,
+       crc::crc_t crc,
+       whitening::whitening_sptr descrambler, bool var_len = true,
+       size_t max_len = 1024);
+
   ieee802_15_4_variant_decoder(const std::vector<uint8_t> &preamble,
                                size_t preamble_threshold,
                                const std::vector<uint8_t> &sync,
+                               size_t sync_threshold,
                                crc::crc_t crc,
-                               whitening::whitening_sptr descrambler);
+                               whitening::whitening_sptr descrambler,
+                               bool var_len = true,
+                               size_t max_len = 1024);
   ~ieee802_15_4_variant_decoder();
+
+  decoder_status_t
+  decode(const void *in, int len);
+
+  void
+  reset();
+
+  size_t
+  input_multiple() const;
+
 private:
+  /**
+   * Decoding FSM
+   */
+  typedef enum {
+    SEARCHING,                  //!< when searching for the start of the preamble
+    SEARCHING_SYNC,             //!< We have preamble, search for sync
+    DECODING_GENERIC_FRAME_LEN, //!< Decoding the frame length
+    DECODING_PAYLOAD            //!< Decoding the payload
+  } decoding_state_t;
+
+  shift_reg                     d_preamble;
+  shift_reg                     d_preamble_shift_reg;
+  const size_t                  d_preamble_len;
+  const size_t                  d_preamble_thrsh;
+  shift_reg                     d_sync;
+  shift_reg                     d_sync_shift_reg;
+  const size_t                  d_sync_len;
+  const size_t                  d_sync_thrsh;
+  crc::crc_t                    d_crc;
+  whitening::whitening_sptr     d_descrambler;
+  const bool                    d_var_len;
+  size_t                        d_len;
+  size_t                        d_length_field_len;
+  decoding_state_t              d_state;
+  size_t                        d_cnt;
+  uint8_t                       *d_pdu;
+
+  decoder_status_t
+  decode_var_len(const void *in, int len);
+
+  decoder_status_t
+  decode_const_len(const void *in, int len);
+
+  int
+  search_preamble(const uint8_t *in, int len);
+
+  int
+  search_sync(const uint8_t *in, int len);
+
+  int
+  decode_frame_len(const uint8_t *in);
+
+  void
+  decode_payload(decoder_status_t &status, const uint8_t *in, int len);
+
+  bool
+  check_crc();
+
 };
 
 } // namespace satnogs

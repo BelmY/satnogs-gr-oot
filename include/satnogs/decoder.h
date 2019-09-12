@@ -101,6 +101,9 @@ public:
   virtual void
   reset() = 0;
 
+  virtual size_t
+  input_multiple() const;
+
   size_t
   max_frame_len() const;
 

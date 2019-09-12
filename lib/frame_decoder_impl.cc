@@ -50,6 +50,14 @@ frame_decoder_impl::frame_decoder_impl(decoder::decoder_sptr decoder_object,
       "frame_decoder: Size mismatch between the block input and the decoder");
   }
 
+  /*
+   * Each decoder implementing the generic decoder API may have special
+   * requirements on the number of input items. If not, by default this will
+   * set a multiple of 1 item, which corresponds to an arbitrary number of
+   * samples
+   */
+  set_output_multiple(d_decoder->input_multiple());
+
   message_port_register_in(pmt::mp("reset"));
   message_port_register_out(pmt::mp("out"));
 

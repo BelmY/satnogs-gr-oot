@@ -24,41 +24,38 @@
 #include <satnogs/coarse_doppler_correction_cc.h>
 #include <gnuradio/fxpt_nco.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class coarse_doppler_correction_cc_impl : public coarse_doppler_correction_cc
-    {
-    private:
-      double d_target_freq;
-      const double d_samp_rate;
-      const size_t d_buf_items;
-      double d_freq_diff;
+class coarse_doppler_correction_cc_impl : public coarse_doppler_correction_cc {
+private:
+  double d_target_freq;
+  const double d_samp_rate;
+  const size_t d_buf_items;
+  double d_freq_diff;
 
-      gr::fxpt_nco d_nco;
-      gr_complex *d_nco_buff;
-      boost::mutex d_mutex;
+  gr::fxpt_nco d_nco;
+  gr_complex *d_nco_buff;
+  boost::mutex d_mutex;
 
-      void
-      new_freq (pmt::pmt_t msg);
+  void
+  new_freq(pmt::pmt_t msg);
 
-    public:
-      coarse_doppler_correction_cc_impl (double target_freq,
-					 double sampling_rate);
-      ~coarse_doppler_correction_cc_impl ();
+public:
+  coarse_doppler_correction_cc_impl(double target_freq,
+                                    double sampling_rate);
+  ~coarse_doppler_correction_cc_impl();
 
-      // Where all the action really happens
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  // Where all the action really happens
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
-      void
-      set_target_freq (double freq);
-    };
+  void
+  set_target_freq(double freq);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_COARSE_DOPPLER_CORRECTION_CC_IMPL_H */

@@ -25,45 +25,43 @@
 #include <gnuradio/io_signature.h>
 #include <satnogs/freq_drift.h>
 
-namespace gr
+namespace gr {
+namespace satnogs {
+
+freq_drift::freq_drift(uint64_t x, double y) :
+  d_x(x),
+  d_freq_drift(y)
 {
-  namespace satnogs
-  {
+}
 
-    freq_drift::freq_drift (uint64_t x, double y) :
-	    d_x (x),
-	    d_freq_drift (y)
-    {
-    }
+freq_drift::~freq_drift()
+{
+}
 
-    freq_drift::~freq_drift ()
-    {
-    }
+double
+freq_drift::get_freq_drift() const
+{
+  return d_freq_drift;
+}
 
-    double
-    freq_drift::get_freq_drift () const
-    {
-      return d_freq_drift;
-    }
+void
+freq_drift::set_freq_drift(double freq_drift)
+{
+  d_freq_drift = freq_drift;
+}
 
-    void
-    freq_drift::set_freq_drift (double freq_drift)
-    {
-      d_freq_drift = freq_drift;
-    }
+uint64_t
+freq_drift::get_x() const
+{
+  return d_x;
+}
 
-    uint64_t
-    freq_drift::get_x () const
-    {
-      return d_x;
-    }
+void
+freq_drift::set_x(uint64_t x)
+{
+  d_x = x;
+}
 
-    void
-    freq_drift::set_x (uint64_t x)
-    {
-      d_x = x;
-    }
-
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 

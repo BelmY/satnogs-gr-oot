@@ -23,13 +23,11 @@
 #include "qa_json_converter.h"
 #include <satnogs/json_converter.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 void
-qa_json_converter::t1 ()
+qa_json_converter::t1()
 {
   // Put test here
 }

@@ -24,38 +24,35 @@
 #include <satnogs/api.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief OGG source block. Reads a file with an OGG audio and
-     * convert it to float samples
-     *
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API ogg_source : virtual public gr::sync_block
-    {
-    public:
-      typedef boost::shared_ptr<ogg_source> sptr;
+/*!
+ * \brief OGG source block. Reads a file with an OGG audio and
+ * convert it to float samples
+ *
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API ogg_source : virtual public gr::sync_block {
+public:
+  typedef boost::shared_ptr<ogg_source> sptr;
 
-      /*!
-       *
-       * @param filename the OGG audio file path
-       * @param channels number of channels of the OGG stream.
-       * If the actual OGG stream contains a different number of channels
-       *  than specified an exception is raised
-       * @param repeat if set to true, when EOF is reached the block
-       * will continue to output samples from the beginning of the OGG file.
-       */
-      static sptr
-      make (const std::string& filename, int channels = 1,
-            bool repeat = false);
-    };
+  /*!
+   *
+   * @param filename the OGG audio file path
+   * @param channels number of channels of the OGG stream.
+   * If the actual OGG stream contains a different number of channels
+   *  than specified an exception is raised
+   * @param repeat if set to true, when EOF is reached the block
+   * will continue to output samples from the beginning of the OGG file.
+   */
+  static sptr
+  make(const std::string &filename, int channels = 1,
+       bool repeat = false);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_OGG_SOURCE_H */

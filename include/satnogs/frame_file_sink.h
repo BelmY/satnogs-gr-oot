@@ -24,31 +24,28 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API frame_file_sink : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<frame_file_sink> sptr;
+/*!
+ * \brief <+description of block+>
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API frame_file_sink : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<frame_file_sink> sptr;
 
-      /*!
-       * Frame to file, sink block
-       * @param prefix_name Prefix of the file name, including the directory path
-       * @param output_type Format type of the output file, txt, hex, bin
-       */
-      static sptr
-      make (const std::string& prefix_name, int output_type);
-    };
+  /*!
+   * Frame to file, sink block
+   * @param prefix_name Prefix of the file name, including the directory path
+   * @param output_type Format type of the output file, txt, hex, bin
+   */
+  static sptr
+  make(const std::string &prefix_name, int output_type);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FRAME_FILE_SINK_H */

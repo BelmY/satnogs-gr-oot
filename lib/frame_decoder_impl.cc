@@ -25,63 +25,61 @@
 #include <gnuradio/io_signature.h>
 #include "frame_decoder_impl.h"
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 frame_decoder::sptr
-frame_decoder::make (decoder::decoder_sptr decoder_object, int input_size)
+frame_decoder::make(decoder::decoder_sptr decoder_object, int input_size)
 {
-  return gnuradio::get_initial_sptr (new frame_decoder_impl (decoder_object,
-                                                             input_size));
+  return gnuradio::get_initial_sptr(new frame_decoder_impl(decoder_object,
+                                    input_size));
 }
 
 /*
  * The private constructor
  */
-frame_decoder_impl::frame_decoder_impl (decoder::decoder_sptr decoder_object,
-                                        int input_size) :
-        gr::sync_block ("frame_decoder",
-                        gr::io_signature::make (1, 1, input_size),
-                        gr::io_signature::make (0, 0, 0)),
-        d_decoder (decoder_object)
+frame_decoder_impl::frame_decoder_impl(decoder::decoder_sptr decoder_object,
+                                       int input_size) :
+  gr::sync_block("frame_decoder",
+                 gr::io_signature::make(1, 1, input_size),
+                 gr::io_signature::make(0, 0, 0)),
+  d_decoder(decoder_object)
 {
-  if (input_size != decoder_object->sizeof_input_item ()) {
-    throw std::invalid_argument (
-        "frame_decoder: Size mismatch between the block input and the decoder");
+  if (input_size != decoder_object->sizeof_input_item()) {
+    throw std::invalid_argument(
+      "frame_decoder: Size mismatch between the block input and the decoder");
   }
 
-  message_port_register_in (pmt::mp ("reset"));
-  message_port_register_out (pmt::mp ("out"));
+  message_port_register_in(pmt::mp("reset"));
+  message_port_register_out(pmt::mp("out"));
 
-  set_msg_handler (pmt::mp ("reset"),
-          boost::bind (&frame_decoder_impl::reset, this, _1));
+  set_msg_handler(pmt::mp("reset"),
+                  boost::bind(&frame_decoder_impl::reset, this, _1));
 }
 
 /*
  * Our virtual destructor.
  */
-frame_decoder_impl::~frame_decoder_impl ()
+frame_decoder_impl::~frame_decoder_impl()
 {
 }
 
 void
-frame_decoder_impl::reset (pmt::pmt_t m)
+frame_decoder_impl::reset(pmt::pmt_t m)
 {
   d_decoder->reset();
 }
 
 int
-frame_decoder_impl::work (int noutput_items,
-                          gr_vector_const_void_star &input_items,
-                          gr_vector_void_star &output_items)
+frame_decoder_impl::work(int noutput_items,
+                         gr_vector_const_void_star &input_items,
+                         gr_vector_void_star &output_items)
 {
   const void *in = input_items[0];
 
-  decoder_status_t status = d_decoder->decode (in, noutput_items);
+  decoder_status_t status = d_decoder->decode(in, noutput_items);
   if (status.decode_success) {
-    message_port_pub (pmt::mp ("out"), status.data);
+    message_port_pub(pmt::mp("out"), status.data);
   }
 
   // Tell runtime system how many output items we produced.

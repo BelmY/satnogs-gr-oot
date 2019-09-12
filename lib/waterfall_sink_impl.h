@@ -27,59 +27,56 @@
 #include <iostream>
 #include <fstream>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class waterfall_sink_impl : public waterfall_sink
-    {
-    private:
-      /**
-       * The different types of operation of the waterfall
-       */
-      typedef enum {
-        WATERFALL_MODE_DECIMATION = 0,//!< WATERFALL_MODE_DECIMATION Performs just a decimation and computes the energy only
-        WATERFALL_MODE_MAX_HOLD = 1,  //!< WATERFALL_MODE_MAX_HOLD compute the max hold energy of all the FFT snapshots between two consecutive pixel rows
-        WATERFALL_MODE_MEAN = 2       //!< WATERFALL_MODE_MEAN compute the mean energy of all the FFT snapshots between two consecutive pixel rows
-      } wf_mode_t;
+class waterfall_sink_impl : public waterfall_sink {
+private:
+  /**
+   * The different types of operation of the waterfall
+   */
+  typedef enum {
+    WATERFALL_MODE_DECIMATION = 0,//!< WATERFALL_MODE_DECIMATION Performs just a decimation and computes the energy only
+    WATERFALL_MODE_MAX_HOLD = 1,  //!< WATERFALL_MODE_MAX_HOLD compute the max hold energy of all the FFT snapshots between two consecutive pixel rows
+    WATERFALL_MODE_MEAN = 2       //!< WATERFALL_MODE_MEAN compute the mean energy of all the FFT snapshots between two consecutive pixel rows
+  } wf_mode_t;
 
-      const double d_samp_rate;
-      double d_pps;
-      const size_t d_fft_size;
-      wf_mode_t d_mode;
-      size_t d_refresh;
-      size_t d_fft_cnt;
-      size_t d_fft_shift;
-      size_t d_samples_cnt;
-      fft::fft_complex d_fft;
-      gr_complex *d_shift_buffer;
-      float *d_hold_buffer;
-      float *d_tmp_buffer;
-      std::ofstream d_fos;
+  const double d_samp_rate;
+  double d_pps;
+  const size_t d_fft_size;
+  wf_mode_t d_mode;
+  size_t d_refresh;
+  size_t d_fft_cnt;
+  size_t d_fft_shift;
+  size_t d_samples_cnt;
+  fft::fft_complex d_fft;
+  gr_complex *d_shift_buffer;
+  float *d_hold_buffer;
+  float *d_tmp_buffer;
+  std::ofstream d_fos;
 
-    public:
-      waterfall_sink_impl (double samp_rate, double center_freq,
-                           double pps, size_t fft_size,
-                           const std::string& filename, int mode);
-      ~waterfall_sink_impl ();
+public:
+  waterfall_sink_impl(double samp_rate, double center_freq,
+                      double pps, size_t fft_size,
+                      const std::string &filename, int mode);
+  ~waterfall_sink_impl();
 
 
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
-      void
-      compute_decimation(const gr_complex *in, size_t n_fft);
+  void
+  compute_decimation(const gr_complex *in, size_t n_fft);
 
-      void
-      compute_max_hold(const gr_complex *in, size_t n_fft);
+  void
+  compute_max_hold(const gr_complex *in, size_t n_fft);
 
-      void
-      compute_mean(const gr_complex *in, size_t n_fft);
-    };
+  void
+  compute_mean(const gr_complex *in, size_t n_fft);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_WATERFALL_SINK_IMPL_H */

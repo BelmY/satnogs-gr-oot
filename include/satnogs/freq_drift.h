@@ -24,36 +24,33 @@
 #include <satnogs/api.h>
 #include <stdint.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief Class that specifies the frequency drift at a given time.
-     * The time is measured in samples.
-     * \ingroup satnogs
-     */
-    class SATNOGS_API freq_drift
-    {
-    public:
-      freq_drift (uint64_t x, double y);
-      ~freq_drift ();
-      double
-      get_freq_drift () const;
-      void
-      set_freq_drift (double freqDrift);
-      uint64_t
-      get_x () const;
-      void
-      set_x (uint64_t x);
+/*!
+ * \brief Class that specifies the frequency drift at a given time.
+ * The time is measured in samples.
+ * \ingroup satnogs
+ */
+class SATNOGS_API freq_drift {
+public:
+  freq_drift(uint64_t x, double y);
+  ~freq_drift();
+  double
+  get_freq_drift() const;
+  void
+  set_freq_drift(double freqDrift);
+  uint64_t
+  get_x() const;
+  void
+  set_x(uint64_t x);
 
-    private:
-      uint64_t d_x;
-      double d_freq_drift;
-    };
+private:
+  uint64_t d_x;
+  double d_freq_drift;
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FREQ_DRIFT_H */

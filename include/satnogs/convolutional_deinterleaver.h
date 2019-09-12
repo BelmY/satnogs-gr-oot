@@ -25,20 +25,17 @@
 
 #include <vector>
 #include <deque>
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief <+description+>
  *
  */
-class SATNOGS_API convolutional_deinterleaver
-{
+class SATNOGS_API convolutional_deinterleaver {
 public:
-  convolutional_deinterleaver (size_t branches, size_t M);
-  ~convolutional_deinterleaver ();
+  convolutional_deinterleaver(size_t branches, size_t M);
+  ~convolutional_deinterleaver();
 
   uint8_t
   decode_bit(uint8_t b);

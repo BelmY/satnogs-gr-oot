@@ -23,40 +23,37 @@
 
 #include <satnogs/tcp_rigctl_msg_source.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class tcp_rigctl_msg_source_impl : public tcp_rigctl_msg_source
-    {
-    private:
-      const std::string d_ip_addr;
-      const uint16_t d_port;
-      const bool d_is_server;
-      const size_t d_interval_ms;
-      const size_t d_mtu;
-      bool d_running;
-      boost::shared_ptr<boost::thread> d_thread;
+class tcp_rigctl_msg_source_impl : public tcp_rigctl_msg_source {
+private:
+  const std::string d_ip_addr;
+  const uint16_t d_port;
+  const bool d_is_server;
+  const size_t d_interval_ms;
+  const size_t d_mtu;
+  bool d_running;
+  boost::shared_ptr<boost::thread> d_thread;
 
-      void
-      rigctl_server();
+  void
+  rigctl_server();
 
-      void
-      rigctl_client();
+  void
+  rigctl_client();
 
-      double
-      get_freq_from_buf(const uint8_t *buf);
+  double
+  get_freq_from_buf(const uint8_t *buf);
 
-    public:
-      tcp_rigctl_msg_source_impl (const std::string& addr, uint16_t port,
-				  bool server_mode, size_t interval_ms,
-				  size_t mtu);
-      ~tcp_rigctl_msg_source_impl ();
-    };
+public:
+  tcp_rigctl_msg_source_impl(const std::string &addr, uint16_t port,
+                             bool server_mode, size_t interval_ms,
+                             size_t mtu);
+  ~tcp_rigctl_msg_source_impl();
+};
 
-    } // namespace satnogs
-  } // namespace gr
+} // namespace satnogs
+} // namespace gr
 
 #endif /* INCLUDED_SATNOGS_TCP_RIGCTL_MSG_SOURCE_IMPL_H */
 

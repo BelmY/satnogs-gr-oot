@@ -24,47 +24,44 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief Block accepting clear text messages from various decoders.
-     * Its purpose is to forward these messages at other services, programs,
-     * stdout, etc,
-     *
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API multi_format_msg_sink : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<multi_format_msg_sink> sptr;
+/*!
+ * \brief Block accepting clear text messages from various decoders.
+ * Its purpose is to forward these messages at other services, programs,
+ * stdout, etc,
+ *
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API multi_format_msg_sink : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<multi_format_msg_sink> sptr;
 
-      /*!
-       * \brief Block accepting clear text messages from various decoders.
-       * Its purpose is to either print these messages to stdout or save them
-       * in text format in a file.
-       *
-       * Depending on format parameter, the contents of each message are
-       * converted to hexademical, binary or ASCII format.
-       *
-       * @param format the format that will used to display the messages.
-       * 0: Clear Text 1: Hexademical 2: Binary
-       * @param timestamp if set, a ISO 8601 timestamp is inserted in front of
-       * each message
-       * @param out_stdout if set, the messages are displayed in the stdout.
-       * Otherwise messages are saved in a text file
-       * @param filepath specifies the file path of the text file
-       */
-      static sptr
-      make (size_t format, bool timestamp = true,
-            bool out_stdout = true,
-            const std::string& filepath = "");
-    };
+  /*!
+   * \brief Block accepting clear text messages from various decoders.
+   * Its purpose is to either print these messages to stdout or save them
+   * in text format in a file.
+   *
+   * Depending on format parameter, the contents of each message are
+   * converted to hexademical, binary or ASCII format.
+   *
+   * @param format the format that will used to display the messages.
+   * 0: Clear Text 1: Hexademical 2: Binary
+   * @param timestamp if set, a ISO 8601 timestamp is inserted in front of
+   * each message
+   * @param out_stdout if set, the messages are displayed in the stdout.
+   * Otherwise messages are saved in a text file
+   * @param filepath specifies the file path of the text file
+   */
+  static sptr
+  make(size_t format, bool timestamp = true,
+       bool out_stdout = true,
+       const std::string &filepath = "");
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_multi_format_MSG_SINK_H */

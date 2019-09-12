@@ -25,39 +25,35 @@
 #include <chrono>
 #include <fstream>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class iq_sink_impl : public iq_sink
-    {
-    private:
-      /**
-       * The different values for iq sink status
-       */
-      typedef enum
-      {
-        IQ_SINK_STATUS_NULL = 0, //!< IQ_SINK_STATUS_NULL IQ sink block behaves just like a null sink
-        IQ_SINK_STATUS_ACTIVE = 1, //!< IQ_SINK_STATUS_ACTIVE IQ sink block is active
-      } iq_sink_status_t;
+class iq_sink_impl : public iq_sink {
+private:
+  /**
+   * The different values for iq sink status
+   */
+  typedef enum {
+    IQ_SINK_STATUS_NULL = 0, //!< IQ_SINK_STATUS_NULL IQ sink block behaves just like a null sink
+    IQ_SINK_STATUS_ACTIVE = 1, //!< IQ_SINK_STATUS_ACTIVE IQ sink block is active
+  } iq_sink_status_t;
 
-      iq_sink_status_t d_status;
-      size_t d_num_points;
-      float d_scale;
-      int16_t *d_out;
+  iq_sink_status_t d_status;
+  size_t d_num_points;
+  float d_scale;
+  int16_t *d_out;
 
-    public:
-      iq_sink_impl (const float scale, const char *filename, bool append,
-                    const int status);
-      ~iq_sink_impl ();
+public:
+  iq_sink_impl(const float scale, const char *filename, bool append,
+               const int status);
+  ~iq_sink_impl();
 
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
-    };
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_IQ_SINK_IMPL_H */

@@ -26,10 +26,8 @@
 #include <satnogs/whitening.h>
 #include <satnogs/utils.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 int whitening::base_unique_id = 1;
 
@@ -42,7 +40,7 @@ int whitening::base_unique_id = 1;
  * number of memory stages.
  */
 whitening::whitening_sptr
-whitening::make (uint32_t mask, uint32_t seed, uint32_t order)
+whitening::make(uint32_t mask, uint32_t seed, uint32_t order)
 {
   return whitening::whitening_sptr(new whitening(mask, seed, order));
 }
@@ -55,19 +53,19 @@ whitening::make (uint32_t mask, uint32_t seed, uint32_t order)
  * @param order the order of the shift register. This is equal to the
  * number of memory stages.
  */
-whitening::whitening (uint32_t mask, uint32_t seed, uint32_t order) :
-        d_lfsr (mask, seed, order),
-        d_id(0)
+whitening::whitening(uint32_t mask, uint32_t seed, uint32_t order) :
+  d_lfsr(mask, seed, order),
+  d_id(0)
 {
   d_id = base_unique_id++;
 }
 
-whitening::~whitening ()
+whitening::~whitening()
 {
 }
 
 int
-whitening::unique_id ()
+whitening::unique_id()
 {
   return d_id;
 }
@@ -77,9 +75,9 @@ whitening::unique_id ()
  * the initial seed.
  */
 void
-whitening::reset ()
+whitening::reset()
 {
-  d_lfsr.reset ();
+  d_lfsr.reset();
 }
 
 /**
@@ -90,33 +88,33 @@ whitening::reset ()
  * @param msb if set to true, the descrambler starts from the msb
  */
 void
-whitening::scramble (uint8_t* out, const uint8_t* in, size_t len, bool msb)
+whitening::scramble(uint8_t *out, const uint8_t *in, size_t len, bool msb)
 {
   size_t i;
   uint8_t b;
-  if(msb) {
+  if (msb) {
     for (i = 0; i < len; i++) {
-      b = d_lfsr.next_bit () << 7;
-      b |= d_lfsr.next_bit () << 6;
-      b |= d_lfsr.next_bit () << 5;
-      b |= d_lfsr.next_bit () << 4;
-      b |= d_lfsr.next_bit () << 3;
-      b |= d_lfsr.next_bit () << 2;
-      b |= d_lfsr.next_bit () << 1;
-      b |= d_lfsr.next_bit ();
+      b = d_lfsr.next_bit() << 7;
+      b |= d_lfsr.next_bit() << 6;
+      b |= d_lfsr.next_bit() << 5;
+      b |= d_lfsr.next_bit() << 4;
+      b |= d_lfsr.next_bit() << 3;
+      b |= d_lfsr.next_bit() << 2;
+      b |= d_lfsr.next_bit() << 1;
+      b |= d_lfsr.next_bit();
       out[i] = in[i] ^ b;
     }
   }
-  else{
+  else {
     for (i = 0; i < len; i++) {
-      b = d_lfsr.next_bit ();
-      b |= d_lfsr.next_bit () << 1;
-      b |= d_lfsr.next_bit () << 2;
-      b |= d_lfsr.next_bit () << 3;
-      b |= d_lfsr.next_bit () << 4;
-      b |= d_lfsr.next_bit () << 5;
-      b |= d_lfsr.next_bit () << 6;
-      b |= d_lfsr.next_bit () << 7;
+      b = d_lfsr.next_bit();
+      b |= d_lfsr.next_bit() << 1;
+      b |= d_lfsr.next_bit() << 2;
+      b |= d_lfsr.next_bit() << 3;
+      b |= d_lfsr.next_bit() << 4;
+      b |= d_lfsr.next_bit() << 5;
+      b |= d_lfsr.next_bit() << 6;
+      b |= d_lfsr.next_bit() << 7;
       out[i] = in[i] ^ b;
     }
   }
@@ -130,10 +128,10 @@ whitening::scramble (uint8_t* out, const uint8_t* in, size_t len, bool msb)
  * @param msb if set to true, the descrambler starts from the msb
  */
 void
-whitening::descramble (uint8_t* out, const uint8_t* in, size_t len,
-                       bool msb)
+whitening::descramble(uint8_t *out, const uint8_t *in, size_t len,
+                      bool msb)
 {
-  scramble (out, in, len, msb);
+  scramble(out, in, len, msb);
 }
 
 /**
@@ -144,12 +142,12 @@ whitening::descramble (uint8_t* out, const uint8_t* in, size_t len,
  * @param bits_num the number of bits to be scrambled
  */
 void
-whitening::scramble_one_bit_per_byte (uint8_t* out, const uint8_t* in,
-                                      size_t bits_num)
+whitening::scramble_one_bit_per_byte(uint8_t *out, const uint8_t *in,
+                                     size_t bits_num)
 {
   size_t i;
   for (i = 0; i < bits_num; i++) {
-    out[i] = in[i] ^ d_lfsr.next_bit ();
+    out[i] = in[i] ^ d_lfsr.next_bit();
   }
 }
 
@@ -161,10 +159,10 @@ whitening::scramble_one_bit_per_byte (uint8_t* out, const uint8_t* in,
  * @param bits_num the number of bits to be descrambled
  */
 void
-whitening::descramble_one_bit_per_byte (uint8_t* out, const uint8_t* in,
-                                        size_t bits_num)
+whitening::descramble_one_bit_per_byte(uint8_t *out, const uint8_t *in,
+                                       size_t bits_num)
 {
-  scramble_one_bit_per_byte (out, in, bits_num);
+  scramble_one_bit_per_byte(out, in, bits_num);
 }
 
 } /* namespace satnogs */

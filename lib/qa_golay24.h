@@ -29,8 +29,7 @@ namespace gr {
 
 namespace satnogs {
 
-class qa_golay24 : public CppUnit::TestCase
-{
+class qa_golay24 : public CppUnit::TestCase {
 public:
   CPPUNIT_TEST_SUITE(qa_golay24);
   CPPUNIT_TEST(example_47);
@@ -45,16 +44,16 @@ private:
   example_47();
 
   void
-  errors_0 ();
+  errors_0();
 
   void
-  errors_1 ();
+  errors_1();
 
   void
-  errors_3 ();
+  errors_3();
 
   void
-  errors_4 ();
+  errors_4();
 };
 
 }  // namespace satnogs

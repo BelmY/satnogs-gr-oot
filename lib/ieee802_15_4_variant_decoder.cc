@@ -26,19 +26,17 @@
 #include <satnogs/ieee802_15_4_variant_decoder.h>
 
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder (
-    const std::vector<uint8_t> &preamble, size_t preamble_threshold,
-    const std::vector<uint8_t> &sync, crc::crc_t crc,
-    whitening::whitening_sptr descrambler)
+ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
+  const std::vector<uint8_t> &preamble, size_t preamble_threshold,
+  const std::vector<uint8_t> &sync, crc::crc_t crc,
+  whitening::whitening_sptr descrambler)
 {
 }
 
-ieee802_15_4_variant_decoder::~ieee802_15_4_variant_decoder ()
+ieee802_15_4_variant_decoder::~ieee802_15_4_variant_decoder()
 {
 }
 

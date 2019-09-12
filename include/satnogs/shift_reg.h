@@ -25,20 +25,17 @@
 #include <deque>
 #include <ostream>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief Implements a bit shift register
  *
  */
-class SATNOGS_API shift_reg
-{
+class SATNOGS_API shift_reg {
 public:
-  shift_reg (size_t len);
-  ~shift_reg ();
+  shift_reg(size_t len);
+  ~shift_reg();
 
   void
   reset();
@@ -56,24 +53,24 @@ public:
   count();
 
   shift_reg
-  operator|(const shift_reg& rhs);
+  operator|(const shift_reg &rhs);
 
   shift_reg
-  operator&(const shift_reg& rhs);
+  operator&(const shift_reg &rhs);
 
   shift_reg
-  operator^(const shift_reg& rhs);
+  operator^(const shift_reg &rhs);
 
-  shift_reg&
+  shift_reg &
   operator>>=(bool bit);
 
-  bool&
+  bool &
   operator[](size_t pos);
 
   bool
   operator[](size_t pos) const;
 
-  shift_reg&
+  shift_reg &
   operator<<=(bool bit);
 
   void
@@ -88,8 +85,8 @@ public:
   bool
   back();
 
-  friend std::ostream&
-  operator<<(std::ostream& os, const shift_reg& reg);
+  friend std::ostream &
+  operator<<(std::ostream &os, const shift_reg &reg);
 
 private:
   const size_t          d_len;

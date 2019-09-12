@@ -23,13 +23,11 @@
 #include "qa_ax25_decoder.h"
 #include <satnogs/ax25_decoder.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 void
-qa_ax25_decoder::t1 ()
+qa_ax25_decoder::t1()
 {
   // Put test here
 }

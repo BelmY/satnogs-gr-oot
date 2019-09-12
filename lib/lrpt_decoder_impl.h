@@ -25,17 +25,14 @@
 #include <satnogs/convolutional_deinterleaver.h>
 #include <satnogs/whitening.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class lrpt_decoder_impl : public lrpt_decoder
-{
+class lrpt_decoder_impl : public lrpt_decoder {
 
 public:
-  lrpt_decoder_impl ();
-  ~lrpt_decoder_impl ();
+  lrpt_decoder_impl();
+  ~lrpt_decoder_impl();
 
 private:
   const size_t                  d_cadu_len;

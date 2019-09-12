@@ -23,13 +23,11 @@
 #include "qa_crc.h"
 #include <satnogs/crc.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 void
-qa_crc::t1 ()
+qa_crc::t1()
 {
   // Put test here
 }

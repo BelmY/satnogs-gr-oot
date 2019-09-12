@@ -31,28 +31,25 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class udp_msg_sink_impl : public udp_msg_sink
-    {
-    private:
-      const std::string d_iface_addr;
-      const uint16_t d_udp_port;
-      const size_t d_mtu;
-      int d_sock;
-      struct sockaddr_in d_sin;
+class udp_msg_sink_impl : public udp_msg_sink {
+private:
+  const std::string d_iface_addr;
+  const uint16_t d_udp_port;
+  const size_t d_mtu;
+  int d_sock;
+  struct sockaddr_in d_sin;
 
-      void msg_handler(pmt::pmt_t msg);
+  void msg_handler(pmt::pmt_t msg);
 
-    public:
-      udp_msg_sink_impl (const std::string& addr, uint16_t port, size_t mtu);
-      ~udp_msg_sink_impl ();
-    };
+public:
+  udp_msg_sink_impl(const std::string &addr, uint16_t port, size_t mtu);
+  ~udp_msg_sink_impl();
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_UDP_MSG_SINK_IMPL_H */

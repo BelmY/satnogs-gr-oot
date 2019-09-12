@@ -37,66 +37,64 @@
 #endif
 #include <volk/volk.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 cw_to_symbol::sptr
-cw_to_symbol::make (double sampling_rate, float threshold, float conf_level,
-                    size_t wpm, size_t hysteresis)
+cw_to_symbol::make(double sampling_rate, float threshold, float conf_level,
+                   size_t wpm, size_t hysteresis)
 {
-  return gnuradio::get_initial_sptr (
-      new cw_to_symbol_impl (sampling_rate, threshold, conf_level, wpm,
-                             hysteresis));
+  return gnuradio::get_initial_sptr(
+           new cw_to_symbol_impl(sampling_rate, threshold, conf_level, wpm,
+                                 hysteresis));
 }
 
 /*
  * The private constructor
  */
-cw_to_symbol_impl::cw_to_symbol_impl (double sampling_rate, float threshold,
-                                      float conf_level, size_t wpm,
-                                      size_t hysteresis) :
-        gr::sync_block ("cw_to_symbol",
-                        gr::io_signature::make (1, 1, sizeof(float)),
-                        gr::io_signature::make (0, 0, 0)),
-        d_sampling_rate (sampling_rate),
-        d_act_thrshld (threshold),
-        d_confidence_level (conf_level),
-        d_dot_samples ((1.2 / wpm) * sampling_rate),
-        d_window_size (0),
-        d_window_cnt (0),
-        d_idle_cnt (0),
-        d_dot_windows_num (0),
-        d_dec_state (NO_SYNC),
-        d_prev_space_symbol (true)
+cw_to_symbol_impl::cw_to_symbol_impl(double sampling_rate, float threshold,
+                                     float conf_level, size_t wpm,
+                                     size_t hysteresis) :
+  gr::sync_block("cw_to_symbol",
+                 gr::io_signature::make(1, 1, sizeof(float)),
+                 gr::io_signature::make(0, 0, 0)),
+  d_sampling_rate(sampling_rate),
+  d_act_thrshld(threshold),
+  d_confidence_level(conf_level),
+  d_dot_samples((1.2 / wpm) * sampling_rate),
+  d_window_size(0),
+  d_window_cnt(0),
+  d_idle_cnt(0),
+  d_dot_windows_num(0),
+  d_dec_state(NO_SYNC),
+  d_prev_space_symbol(true)
 {
   if (wpm < MIN_WPM) {
-    throw std::invalid_argument ("Decoder can not handle such low WPM setting");
+    throw std::invalid_argument("Decoder can not handle such low WPM setting");
   }
 
   if (wpm > MAX_WPM) {
-    throw std::invalid_argument (
-        "Decoder can not handle such high WPM setting");
+    throw std::invalid_argument(
+      "Decoder can not handle such high WPM setting");
   }
 
   if (conf_level > 1.0 || conf_level < 0.5) {
-    throw std::invalid_argument (
-        "Confidence level should be in the range [0.5, 1.0]");
+    throw std::invalid_argument(
+      "Confidence level should be in the range [0.5, 1.0]");
   }
 
-  if(hysteresis > d_dot_samples / 4) {
-    throw std::invalid_argument ("Too large hysteresis value");
+  if (hysteresis > d_dot_samples / 4) {
+    throw std::invalid_argument("Too large hysteresis value");
   }
 
-  message_port_register_in (pmt::mp ("act_threshold"));
-  message_port_register_out (pmt::mp ("out"));
+  message_port_register_in(pmt::mp("act_threshold"));
+  message_port_register_out(pmt::mp("out"));
 
   /* Register the message handlers */
-  set_msg_handler (
-      pmt::mp ("act_threshold"),
-      boost::bind (&cw_to_symbol_impl::set_act_threshold_msg_handler, this,
-                   _1));
+  set_msg_handler(
+    pmt::mp("act_threshold"),
+    boost::bind(&cw_to_symbol_impl::set_act_threshold_msg_handler, this,
+                _1));
 
   /*
    * Reconsider the dot oulse duration based on the confidence level
@@ -131,29 +129,29 @@ cw_to_symbol_impl::cw_to_symbol_impl (double sampling_rate, float threshold,
   d_short_pause_windows_num = d_dash_windows_num;
   d_long_pause_windows_num = 7 * d_dot_windows_num;
 
-  const int alignment_multiple = volk_get_alignment ()
-      / (d_window_size * sizeof(float));
-  set_alignment (std::max (1, alignment_multiple));
+  const int alignment_multiple = volk_get_alignment()
+                                 / (d_window_size * sizeof(float));
+  set_alignment(std::max(1, alignment_multiple));
 
-  d_const_val = (float *) volk_malloc (d_window_size * sizeof(float),
-                                       volk_get_alignment ());
-  d_tmp = (float *) volk_malloc (d_window_size * sizeof(float),
-                                 volk_get_alignment ());
-  d_out = (int32_t *) volk_malloc (d_window_size * sizeof(int32_t),
-                                   volk_get_alignment ());
+  d_const_val = (float *) volk_malloc(d_window_size * sizeof(float),
+                                      volk_get_alignment());
+  d_tmp = (float *) volk_malloc(d_window_size * sizeof(float),
+                                volk_get_alignment());
+  d_out = (int32_t *) volk_malloc(d_window_size * sizeof(int32_t),
+                                  volk_get_alignment());
 
   if (!d_const_val || !d_tmp || !d_out) {
-    throw std::runtime_error ("cw_to_symbol: Could not allocate memory");
+    throw std::runtime_error("cw_to_symbol: Could not allocate memory");
   }
 
   for (i = 0; i < d_window_size; i++) {
     d_const_val[i] = threshold;
   }
-  set_history (d_window_size);
+  set_history(d_window_size);
 }
 
 inline void
-cw_to_symbol_impl::send_symbol_msg (morse_symbol_t s)
+cw_to_symbol_impl::send_symbol_msg(morse_symbol_t s)
 {
   if (s == MORSE_S_SPACE || s == MORSE_L_SPACE) {
     d_prev_space_symbol = true;
@@ -161,11 +159,11 @@ cw_to_symbol_impl::send_symbol_msg (morse_symbol_t s)
   else {
     d_prev_space_symbol = false;
   }
-  message_port_pub (pmt::mp ("out"), pmt::from_long (s));
+  message_port_pub(pmt::mp("out"), pmt::from_long(s));
 }
 
 inline bool
-cw_to_symbol_impl::check_conf_level (size_t cnt, size_t target)
+cw_to_symbol_impl::check_conf_level(size_t cnt, size_t target)
 {
   return ((float) cnt > target * d_confidence_level);
 }
@@ -173,15 +171,15 @@ cw_to_symbol_impl::check_conf_level (size_t cnt, size_t target)
 /*
  * Our virtual destructor.
  */
-cw_to_symbol_impl::~cw_to_symbol_impl ()
+cw_to_symbol_impl::~cw_to_symbol_impl()
 {
-  volk_free (d_const_val);
-  volk_free (d_tmp);
-  volk_free (d_out);
+  volk_free(d_const_val);
+  volk_free(d_tmp);
+  volk_free(d_out);
 }
 
 inline void
-cw_to_symbol_impl::set_idle ()
+cw_to_symbol_impl::set_idle()
 {
   d_dec_state = NO_SYNC;
   d_window_cnt = 0;
@@ -189,42 +187,42 @@ cw_to_symbol_impl::set_idle ()
 }
 
 inline void
-cw_to_symbol_impl::set_short_on ()
+cw_to_symbol_impl::set_short_on()
 {
   d_dec_state = SEARCH_DOT;
   d_window_cnt = 1;
 }
 
 inline void
-cw_to_symbol_impl::set_long_on ()
+cw_to_symbol_impl::set_long_on()
 {
   d_dec_state = SEARCH_DASH;
 }
 
 inline void
-cw_to_symbol_impl::set_search_space ()
+cw_to_symbol_impl::set_search_space()
 {
   d_dec_state = SEARCH_SPACE;
   d_window_cnt = 1;
 }
 
 void
-cw_to_symbol_impl::set_act_threshold_msg_handler (pmt::pmt_t msg)
+cw_to_symbol_impl::set_act_threshold_msg_handler(pmt::pmt_t msg)
 {
-  if (pmt::is_pair (msg)) {
-    set_act_threshold (pmt::to_double (pmt::cdr (msg)));
+  if (pmt::is_pair(msg)) {
+    set_act_threshold(pmt::to_double(pmt::cdr(msg)));
   }
 }
 
 int
-cw_to_symbol_impl::work (int noutput_items,
-                         gr_vector_const_void_star &input_items,
-                         gr_vector_void_star &output_items)
+cw_to_symbol_impl::work(int noutput_items,
+                        gr_vector_const_void_star &input_items,
+                        gr_vector_void_star &output_items)
 {
   bool triggered;
   size_t i;
   const float *in_old = (const float *) input_items[0];
-  const float *in = in_old + history () - 1;
+  const float *in = in_old + history() - 1;
 
   if (noutput_items < 0) {
     return noutput_items;
@@ -237,16 +235,16 @@ cw_to_symbol_impl::work (int noutput_items,
        * Clamp the input so the window mean is not affected by strong spikes
        * Good luck understanding this black magic shit!
        */
-      triggered = is_triggered (in_old + i, d_window_size);
+      triggered = is_triggered(in_old + i, d_window_size);
       if (triggered) {
         LOG_DEBUG("Triggered!");
-        set_short_on ();
+        set_short_on();
         return i + 1;
       }
     }
     d_idle_cnt += noutput_items / d_window_size;
-    if(d_idle_cnt > 10 * d_long_pause_windows_num) {
-      send_symbol_msg (MORSE_END_MSG_SPACE);
+    if (d_idle_cnt > 10 * d_long_pause_windows_num) {
+      send_symbol_msg(MORSE_END_MSG_SPACE);
       d_idle_cnt = 0;
     }
     return noutput_items;
@@ -254,70 +252,69 @@ cw_to_symbol_impl::work (int noutput_items,
 
   /* From now one, we handle the input in multiples of a window */
   for (i = 0; i < (size_t) noutput_items / d_window_size; i++) {
-    triggered = is_triggered (in + i * d_window_size, d_window_size);
-    switch (d_dec_state)
-      {
-      case SEARCH_DOT:
-        if (triggered) {
-          d_window_cnt++;
-          if (d_window_cnt > d_dot_windows_num) {
-            set_long_on ();
-            LOG_DEBUG("Going to search for long sequence");
-          }
+    triggered = is_triggered(in + i * d_window_size, d_window_size);
+    switch (d_dec_state) {
+    case SEARCH_DOT:
+      if (triggered) {
+        d_window_cnt++;
+        if (d_window_cnt > d_dot_windows_num) {
+          set_long_on();
+          LOG_DEBUG("Going to search for long sequence");
         }
-        else {
-          if (check_conf_level (d_window_cnt, d_dot_windows_num)) {
-            LOG_DEBUG("DOT");
-            send_symbol_msg (MORSE_DOT);
-          }
-          LOG_DEBUG("Going to search for space: win cnt %lu", d_window_cnt);
-          set_search_space ();
-        }
-        break;
-      case SEARCH_DASH:
-        if (triggered) {
-          d_window_cnt++;
-        }
-        else {
-          if (check_conf_level (d_window_cnt, d_dash_windows_num)) {
-            LOG_DEBUG("DASH");
-            send_symbol_msg (MORSE_DASH);
-          }
-          else {
-            LOG_DEBUG("DOT");
-            send_symbol_msg (MORSE_DOT);
-          }
-          set_search_space ();
-          LOG_DEBUG("Going to search for space");
-        }
-        break;
-      case SEARCH_SPACE:
-        if (triggered) {
-          if (check_conf_level (d_window_cnt, d_long_pause_windows_num)) {
-            LOG_DEBUG("LONG SPACE");
-            send_symbol_msg (MORSE_L_SPACE);
-          }
-          else if (check_conf_level (d_window_cnt, d_short_pause_windows_num)) {
-            LOG_DEBUG("SHORT SPACE");
-            send_symbol_msg (MORSE_S_SPACE);
-          }
-          set_short_on ();
-          LOG_DEBUG("Going to search for dot");
-        }
-        else {
-          d_window_cnt++;
-          if (d_window_cnt > d_long_pause_windows_num) {
-            LOG_DEBUG("LONG SPACE");
-            send_symbol_msg (MORSE_L_SPACE);
-            set_idle ();
-            LOG_DEBUG("Going to idle");
-            return (i + 1) * d_window_size;
-          }
-        }
-        break;
-      default:
-        LOG_ERROR("Invalid decoder state");
       }
+      else {
+        if (check_conf_level(d_window_cnt, d_dot_windows_num)) {
+          LOG_DEBUG("DOT");
+          send_symbol_msg(MORSE_DOT);
+        }
+        LOG_DEBUG("Going to search for space: win cnt %lu", d_window_cnt);
+        set_search_space();
+      }
+      break;
+    case SEARCH_DASH:
+      if (triggered) {
+        d_window_cnt++;
+      }
+      else {
+        if (check_conf_level(d_window_cnt, d_dash_windows_num)) {
+          LOG_DEBUG("DASH");
+          send_symbol_msg(MORSE_DASH);
+        }
+        else {
+          LOG_DEBUG("DOT");
+          send_symbol_msg(MORSE_DOT);
+        }
+        set_search_space();
+        LOG_DEBUG("Going to search for space");
+      }
+      break;
+    case SEARCH_SPACE:
+      if (triggered) {
+        if (check_conf_level(d_window_cnt, d_long_pause_windows_num)) {
+          LOG_DEBUG("LONG SPACE");
+          send_symbol_msg(MORSE_L_SPACE);
+        }
+        else if (check_conf_level(d_window_cnt, d_short_pause_windows_num)) {
+          LOG_DEBUG("SHORT SPACE");
+          send_symbol_msg(MORSE_S_SPACE);
+        }
+        set_short_on();
+        LOG_DEBUG("Going to search for dot");
+      }
+      else {
+        d_window_cnt++;
+        if (d_window_cnt > d_long_pause_windows_num) {
+          LOG_DEBUG("LONG SPACE");
+          send_symbol_msg(MORSE_L_SPACE);
+          set_idle();
+          LOG_DEBUG("Going to idle");
+          return (i + 1) * d_window_size;
+        }
+      }
+      break;
+    default:
+      LOG_ERROR("Invalid decoder state");
+    }
   }
   return i * d_window_size;
 }
@@ -327,7 +324,7 @@ cw_to_symbol_impl::work (int noutput_items,
  * @param thrhld the new threshold.
  */
 void
-cw_to_symbol_impl::set_act_threshold (float thrhld)
+cw_to_symbol_impl::set_act_threshold(float thrhld)
 {
   d_act_thrshld = thrhld;
 }
@@ -341,14 +338,14 @@ cw_to_symbol_impl::set_act_threshold (float thrhld)
  * @param len number of samples to process
  */
 inline void
-cw_to_symbol_impl::clamp_input (int32_t* out, const float* in, size_t len)
+cw_to_symbol_impl::clamp_input(int32_t *out, const float *in, size_t len)
 {
-  volk_32f_x2_subtract_32f (d_tmp, in, d_const_val, len);
-  volk_32f_binary_slicer_32i (d_out, d_tmp, len);
+  volk_32f_x2_subtract_32f(d_tmp, in, d_const_val, len);
+  volk_32f_binary_slicer_32i(d_out, d_tmp, len);
 }
 
 static inline int32_t
-hadd (const int32_t* in, size_t len)
+hadd(const int32_t *in, size_t len)
 {
   size_t i;
   int32_t cnt = 0;
@@ -359,12 +356,12 @@ hadd (const int32_t* in, size_t len)
 }
 
 inline bool
-cw_to_symbol_impl::is_triggered (const float* in, size_t len)
+cw_to_symbol_impl::is_triggered(const float *in, size_t len)
 {
   int32_t cnt;
-  clamp_input (d_out, in, len);
-  cnt = hadd (d_out, len);
-  return (cnt >= (int32_t) (d_window_size * d_confidence_level)) ? true : false;
+  clamp_input(d_out, in, len);
+  cnt = hadd(d_out, len);
+  return (cnt >= (int32_t)(d_window_size * d_confidence_level)) ? true : false;
 }
 
 } /* namespace satnogs */

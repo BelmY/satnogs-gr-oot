@@ -25,20 +25,19 @@
 #include <cppunit/TestCase.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    class qa_crc : public CppUnit::TestCase
-    {
-    public:
-      CPPUNIT_TEST_SUITE(qa_crc);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST_SUITE_END();
+class qa_crc : public CppUnit::TestCase {
+public:
+  CPPUNIT_TEST_SUITE(qa_crc);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST_SUITE_END();
 
-    private:
-      void t1();
-    };
+private:
+  void t1();
+};
 
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 
 #endif /* _QA_CRC_H_ */

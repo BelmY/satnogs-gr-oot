@@ -32,7 +32,7 @@ std::string
 metadata::keys()
 {
   std::string s = "[";
-  for(size_t i = 0; i < KEYS_NUM - 1; i++) {
+  for (size_t i = 0; i < KEYS_NUM - 1; i++) {
     s.append(value((key_t) i));
     s.append(", ");
   }
@@ -48,27 +48,27 @@ metadata::keys()
  * @return string corresponding to the key @a k value
  */
 std::string
-metadata::value(const key_t& k)
+metadata::value(const key_t &k)
 {
-  switch(k) {
-    case PDU:
-      return "pdu";
-    case CRC_VALID:
-      return "crc_valid";
-    case FREQ_OFFSET:
-      return "freq_offset";
-    case CORRECTED_BITS:
-      return "corrected_bits";
-    case TIME:
-      return "time";
-    case SAMPLE_START:
-      return "sample_start";
-    case SAMPLE_CNT:
-      return "sample_cnt";
-    case SYMBOL_ERASURES:
-      return "symbol_erasures";
-    default:
-      throw std::invalid_argument("metadata: invalid key");
+  switch (k) {
+  case PDU:
+    return "pdu";
+  case CRC_VALID:
+    return "crc_valid";
+  case FREQ_OFFSET:
+    return "freq_offset";
+  case CORRECTED_BITS:
+    return "corrected_bits";
+  case TIME:
+    return "time";
+  case SAMPLE_START:
+    return "sample_start";
+  case SAMPLE_CNT:
+    return "sample_cnt";
+  case SYMBOL_ERASURES:
+    return "symbol_erasures";
+  default:
+    throw std::invalid_argument("metadata: invalid key");
   }
 }
 
@@ -81,7 +81,7 @@ metadata::time_iso8601()
 {
   /* check for the current UTC time */
   std::chrono::system_clock::time_point tp =
-      std::chrono::system_clock::now ();
+    std::chrono::system_clock::now();
 
   return date::format("%FT%TZ", date::floor<std::chrono::microseconds>(tp));
 }
@@ -137,39 +137,39 @@ metadata::add_corrected_bits(pmt::pmt_t &m, uint32_t cnt)
 }
 
 Json::Value
-metadata::to_json(const pmt::pmt_t& m)
+metadata::to_json(const pmt::pmt_t &m)
 {
   Json::Value root;
   pmt::pmt_t v = pmt::dict_ref(m, pmt::mp(value(PDU)), pmt::PMT_NIL);
-  if(!pmt::equal(v, pmt::PMT_NIL)) {
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
     uint8_t *b = (uint8_t *) pmt::blob_data(v);
     size_t len = pmt::blob_length(v);
     root[value(PDU)] = base64_encode(b, len);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(TIME)), pmt::PMT_NIL);
-  if(!pmt::equal(v, pmt::PMT_NIL)) {
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
     root[value(TIME)] = pmt::symbol_to_string(v);
   }
 
-  v = pmt::dict_ref (m, pmt::mp (value (CRC_VALID)), pmt::PMT_NIL);
-  if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (CRC_VALID)] = pmt::to_bool (v);
+  v = pmt::dict_ref(m, pmt::mp(value(CRC_VALID)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(CRC_VALID)] = pmt::to_bool(v);
   }
 
-  v = pmt::dict_ref (m, pmt::mp (value (SAMPLE_START)), pmt::PMT_NIL);
-  if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64 (v));
+  v = pmt::dict_ref(m, pmt::mp(value(SAMPLE_START)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64(v));
   }
 
-  v = pmt::dict_ref (m, pmt::mp (value (SYMBOL_ERASURES)), pmt::PMT_NIL);
-  if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (SYMBOL_ERASURES)] = Json::Value::UInt64(pmt::to_uint64 (v));
+  v = pmt::dict_ref(m, pmt::mp(value(SYMBOL_ERASURES)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(SYMBOL_ERASURES)] = Json::Value::UInt64(pmt::to_uint64(v));
   }
 
-  v = pmt::dict_ref (m, pmt::mp (value (CORRECTED_BITS)), pmt::PMT_NIL);
-  if (!pmt::equal (v, pmt::PMT_NIL)) {
-    root[value (CORRECTED_BITS)] = Json::Value::UInt64(pmt::to_uint64 (v));
+  v = pmt::dict_ref(m, pmt::mp(value(CORRECTED_BITS)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(CORRECTED_BITS)] = Json::Value::UInt64(pmt::to_uint64(v));
   }
   return root;
 }

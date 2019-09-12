@@ -25,28 +25,26 @@
 #include <gnuradio/io_signature.h>
 #include <satnogs/convolutional_deinterleaver.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-convolutional_deinterleaver::convolutional_deinterleaver (size_t branches,
-                                                          size_t M) :
-        d_nbranches (branches),
-        d_M (M),
-        d_idx(0)
+convolutional_deinterleaver::convolutional_deinterleaver(size_t branches,
+    size_t M) :
+  d_nbranches(branches),
+  d_M(M),
+  d_idx(0)
 {
-  for(size_t i = 0; i < d_nbranches; i++) {
+  for (size_t i = 0; i < d_nbranches; i++) {
     d_branches.push_back(std::deque<uint8_t>((d_nbranches - 1 - i) * M, 0));
   }
 }
 
-convolutional_deinterleaver::~convolutional_deinterleaver ()
+convolutional_deinterleaver::~convolutional_deinterleaver()
 {
 }
 
 uint8_t
-convolutional_deinterleaver::decode_bit (uint8_t b)
+convolutional_deinterleaver::decode_bit(uint8_t b)
 {
   uint8_t ret;
   d_branches[d_idx].push_back(b);
@@ -57,7 +55,7 @@ convolutional_deinterleaver::decode_bit (uint8_t b)
 }
 
 uint8_t
-convolutional_deinterleaver::decode_byte (uint8_t b)
+convolutional_deinterleaver::decode_byte(uint8_t b)
 {
   uint8_t ret = 0;
   ret = decode_bit(b >> 7) << 7;
@@ -72,10 +70,10 @@ convolutional_deinterleaver::decode_byte (uint8_t b)
 }
 
 void
-convolutional_deinterleaver::reset ()
+convolutional_deinterleaver::reset()
 {
   d_branches.clear();
-  for(size_t i = 0; i < d_nbranches; i++) {
+  for (size_t i = 0; i < d_nbranches; i++) {
     d_branches.push_back(std::deque<uint8_t>((d_nbranches - 1 - i) * d_M, 0));
   }
   d_idx = 0;

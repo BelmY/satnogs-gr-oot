@@ -24,39 +24,36 @@
 #include <satnogs/api.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief This block corrects the doppler effect between the ground
-     * station and the satellite in a coarse and very simplified way.
-     * Instead of changing the hardware center frequency, we use an NCO
-     * to digitally compensate the doppler effect.
-     *
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API coarse_doppler_correction_cc : virtual public gr::sync_block
-    {
-    public:
-      typedef boost::shared_ptr<coarse_doppler_correction_cc> sptr;
+/*!
+ * \brief This block corrects the doppler effect between the ground
+ * station and the satellite in a coarse and very simplified way.
+ * Instead of changing the hardware center frequency, we use an NCO
+ * to digitally compensate the doppler effect.
+ *
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API coarse_doppler_correction_cc : virtual public gr::sync_block {
+public:
+  typedef boost::shared_ptr<coarse_doppler_correction_cc> sptr;
 
-      /**
-       * The doppler correction block. The input is the complex signal at
-       * baseband as it comes from the SDR device.
-       *
-       * The message input \p freq receives periodically messages containing
-       * the predicted absolute frequency of the satellite at that specific time.
-       * @param target_freq the absolute frequency of the satellite
-       * @param sampling_rate the sampling rate of the signal
-       */
-      static sptr
-      make (double target_freq, double sampling_rate);
-    };
+  /**
+   * The doppler correction block. The input is the complex signal at
+   * baseband as it comes from the SDR device.
+   *
+   * The message input \p freq receives periodically messages containing
+   * the predicted absolute frequency of the satellite at that specific time.
+   * @param target_freq the absolute frequency of the satellite
+   * @param sampling_rate the sampling rate of the signal
+   */
+  static sptr
+  make(double target_freq, double sampling_rate);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_COARSE_DOPPLER_CORRECTION_CC_H */

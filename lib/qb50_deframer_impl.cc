@@ -26,70 +26,68 @@
 #include "qb50_deframer_impl.h"
 #include <satnogs/ax25.h>
 
-namespace gr
+namespace gr {
+namespace satnogs {
+
+qb50_deframer::sptr
+qb50_deframer::make(uint8_t wod_ssid)
 {
-  namespace satnogs
-  {
+  return gnuradio::get_initial_sptr(new qb50_deframer_impl(wod_ssid));
+}
 
-    qb50_deframer::sptr
-    qb50_deframer::make (uint8_t wod_ssid)
-    {
-      return gnuradio::get_initial_sptr (new qb50_deframer_impl (wod_ssid));
-    }
+void
+qb50_deframer_impl::msg_handler(pmt::pmt_t msg)
+{
+  const uint8_t *frame;
+  uint8_t dest_ssid;
+  size_t frame_len;
 
-    void
-    qb50_deframer_impl::msg_handler (pmt::pmt_t msg)
-    {
-      const uint8_t *frame;
-      uint8_t dest_ssid;
-      size_t frame_len;
+  frame = (const uint8_t *) pmt::blob_data(msg);
+  frame_len = pmt::blob_length(msg);
 
-      frame = (const uint8_t *) pmt::blob_data(msg);
-      frame_len = pmt::blob_length(msg);
+  if (frame_len < AX25_MIN_ADDR_LEN) {
+    LOG_ERROR("Invalid AX.25 frame size");
+    return;
+  }
 
-      if(frame_len < AX25_MIN_ADDR_LEN){
-	LOG_ERROR("Invalid AX.25 frame size");
-	return;
-      }
+  /*
+   * Get the destination SSID and decide in which port the frame should
+   * be forwarded. Also skip the leading headers and leave only the payload
+   */
+  dest_ssid = ax25_get_dest_ssid(frame);
+  if (dest_ssid == d_wod_ssid) {
+    message_port_pub(
+      pmt::mp("wod"),
+      pmt::make_blob(frame + AX25_MIN_ADDR_LEN + 2,
+                     frame_len - AX25_MIN_ADDR_LEN - 2));
+  }
+  else {
+    message_port_pub(
+      pmt::mp("out"),
+      pmt::make_blob(frame + AX25_MIN_ADDR_LEN + 2,
+                     frame_len - AX25_MIN_ADDR_LEN - 2));
+  }
+}
 
-      /*
-       * Get the destination SSID and decide in which port the frame should
-       * be forwarded. Also skip the leading headers and leave only the payload
-       */
-      dest_ssid = ax25_get_dest_ssid(frame);
-      if(dest_ssid == d_wod_ssid){
-	message_port_pub (
-	    pmt::mp ("wod"),
-	    pmt::make_blob (frame + AX25_MIN_ADDR_LEN + 2,
-			    frame_len - AX25_MIN_ADDR_LEN - 2));
-      }
-      else{
-	message_port_pub (
-	    pmt::mp ("out"),
-	    pmt::make_blob (frame + AX25_MIN_ADDR_LEN + 2,
-			    frame_len - AX25_MIN_ADDR_LEN - 2));
-      }
-    }
+/*
+ * The private constructor
+ */
+qb50_deframer_impl::qb50_deframer_impl(uint8_t wod_ssid)
+  : gr::block("qb50_deframer",
+              gr::io_signature::make(0, 0, 0),
+              gr::io_signature::make(0, 0, 0)),
+    d_wod_ssid(wod_ssid)
+{
+  message_port_register_in(pmt::mp("in"));
+  message_port_register_out(pmt::mp("out"));
+  message_port_register_out(pmt::mp("wod"));
 
-    /*
-     * The private constructor
-     */
-    qb50_deframer_impl::qb50_deframer_impl(uint8_t wod_ssid)
-    : gr::block("qb50_deframer",
-	gr::io_signature::make(0, 0, 0),
-	gr::io_signature::make(0, 0, 0)),
-	d_wod_ssid(wod_ssid)
-    {
-      message_port_register_in(pmt::mp("in"));
-      message_port_register_out(pmt::mp("out"));
-      message_port_register_out(pmt::mp("wod"));
-
-      set_msg_handler (
-	  pmt::mp ("in"),
-	  boost::bind (&qb50_deframer_impl::msg_handler, this, _1));
-    }
+  set_msg_handler(
+    pmt::mp("in"),
+    boost::bind(&qb50_deframer_impl::msg_handler, this, _1));
+}
 
 
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 

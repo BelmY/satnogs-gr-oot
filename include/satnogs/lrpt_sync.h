@@ -24,18 +24,15 @@
 #include <satnogs/api.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief <+description of block+>
  * \ingroup satnogs
  *
  */
-class SATNOGS_API lrpt_sync : virtual public gr::sync_block
-{
+class SATNOGS_API lrpt_sync : virtual public gr::sync_block {
 public:
   typedef boost::shared_ptr<lrpt_sync> sptr;
 
@@ -48,7 +45,7 @@ public:
    * creating new instances.
    */
   static sptr
-  make (size_t threshold = 2);
+  make(size_t threshold = 2);
 };
 
 } // namespace satnogs

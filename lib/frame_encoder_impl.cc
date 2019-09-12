@@ -25,53 +25,51 @@
 #include <gnuradio/io_signature.h>
 #include "frame_encoder_impl.h"
 
-namespace gr
+namespace gr {
+namespace satnogs {
+
+frame_encoder::sptr
+frame_encoder::make(bool append_preamble, bool ecss_encap,
+                    const std::string &dest_addr, uint8_t dest_ssid,
+                    const std::string &src_addr, uint8_t src_ssid)
 {
-  namespace satnogs
-  {
+  return gnuradio::get_initial_sptr(
+           new frame_encoder_impl(append_preamble, ecss_encap, dest_addr,
+                                  dest_ssid, src_addr, src_ssid));
+}
 
-    frame_encoder::sptr
-    frame_encoder::make (bool append_preamble, bool ecss_encap,
-			 const std::string& dest_addr, uint8_t dest_ssid,
-			 const std::string& src_addr, uint8_t src_ssid)
-    {
-      return gnuradio::get_initial_sptr (
-	  new frame_encoder_impl (append_preamble, ecss_encap, dest_addr,
-				  dest_ssid, src_addr, src_ssid));
-    }
+/*
+ * The private constructor
+ */
+frame_encoder_impl::frame_encoder_impl(bool append_preamble,
+                                       bool ecss_encap,
+                                       const std::string &dest_addr,
+                                       uint8_t dest_ssid,
+                                       const std::string &src_addr,
+                                       uint8_t src_ssid) :
+  gr::sync_block("frame_encoder", gr::io_signature::make(0, 0, 0),
+                 gr::io_signature::make(0, 0, 0))
+{
+}
 
-    /*
-     * The private constructor
-     */
-    frame_encoder_impl::frame_encoder_impl (bool append_preamble,
-					    bool ecss_encap,
-					    const std::string& dest_addr,
-					    uint8_t dest_ssid,
-					    const std::string& src_addr,
-					    uint8_t src_ssid) :
-	    gr::sync_block ("frame_encoder", gr::io_signature::make (0, 0, 0),
-			    gr::io_signature::make (0, 0, 0))
-    {
-    }
+/*
+ * Our virtual destructor.
+ */
+frame_encoder_impl::~frame_encoder_impl()
+{
+}
 
-    /*
-     * Our virtual destructor.
-     */
-    frame_encoder_impl::~frame_encoder_impl ()
-    {
-    }
+int
+frame_encoder_impl::work(int noutput_items,
+                         gr_vector_const_void_star &input_items,
+                         gr_vector_void_star &output_items)
+{
+  // Do <+signal processing+>
 
-    int
-    frame_encoder_impl::work (int noutput_items,
-			      gr_vector_const_void_star &input_items,
-			      gr_vector_void_star &output_items)
-    {
-      // Do <+signal processing+>
+  // Tell runtime system how many output items we produced.
+  return noutput_items;
+}
 
-      // Tell runtime system how many output items we produced.
-      return noutput_items;
-    }
-
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 

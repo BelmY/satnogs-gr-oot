@@ -23,22 +23,19 @@
 
 #include <satnogs/frame_decoder.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class frame_decoder_impl : public frame_decoder
-{
+class frame_decoder_impl : public frame_decoder {
 
 public:
-  frame_decoder_impl (decoder::decoder_sptr decoder_object, int input_size);
-  ~frame_decoder_impl ();
+  frame_decoder_impl(decoder::decoder_sptr decoder_object, int input_size);
+  ~frame_decoder_impl();
 
   // Where all the action really happens
   int
-  work (int noutput_items, gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items);
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
 
 private:

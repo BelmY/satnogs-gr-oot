@@ -24,33 +24,30 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief Parses the received AX.25 and separates the
-     * telecommand and control frames from the WOD frames.
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API qb50_deframer : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<qb50_deframer> sptr;
+/*!
+ * \brief Parses the received AX.25 and separates the
+ * telecommand and control frames from the WOD frames.
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API qb50_deframer : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<qb50_deframer> sptr;
 
-      /*!
-       * \brief Parses the received AX.25 and separates the
-       * telecommand and control frames from the WOD frames.
-       *
-       * @param wod_ssid the SSID that separates the WOD frames from the others
-       */
-      static sptr
-      make (uint8_t wod_ssid);
-    };
+  /*!
+   * \brief Parses the received AX.25 and separates the
+   * telecommand and control frames from the WOD frames.
+   *
+   * @param wod_ssid the SSID that separates the WOD frames from the others
+   */
+  static sptr
+  make(uint8_t wod_ssid);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_QB50_DEFRAMER_H */

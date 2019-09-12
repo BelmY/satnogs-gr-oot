@@ -28,39 +28,36 @@
 #include <satnogs/morse.h>
 #include <gnuradio/fxpt_nco.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class cw_encoder_impl : public cw_encoder
-    {
-    private:
-      const double d_samp_rate;
-      const double d_cw_freq;
-      const size_t d_wpm;
-      const size_t d_dot_samples;
-      size_t d_window_size;
-      size_t d_windows_remaining;
-      morse_symbol_t d_cw_symbol;
-      gr::fxpt_nco d_nco;
+class cw_encoder_impl : public cw_encoder {
+private:
+  const double d_samp_rate;
+  const double d_cw_freq;
+  const size_t d_wpm;
+  const size_t d_dot_samples;
+  size_t d_window_size;
+  size_t d_windows_remaining;
+  morse_symbol_t d_cw_symbol;
+  gr::fxpt_nco d_nco;
 
 
 
-      std::string
-      get_cw_symbol(char c);
+  std::string
+  get_cw_symbol(char c);
 
-    public:
-      cw_encoder_impl (double samp_rate, double cw_freq, size_t wpm);
-      ~cw_encoder_impl ();
+public:
+  cw_encoder_impl(double samp_rate, double cw_freq, size_t wpm);
+  ~cw_encoder_impl();
 
-      // Where all the action really happens
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
-    };
+  // Where all the action really happens
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_CW_ENCODER_IMPL_H */

@@ -25,45 +25,42 @@
 #include <gnuradio/digital/lfsr.h>
 #include <boost/shared_ptr.hpp>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief Performs data whitening and de-whitening
  *
  */
-class SATNOGS_API whitening
-{
+class SATNOGS_API whitening {
 public:
   static int base_unique_id;
 
   int
-  unique_id ();
+  unique_id();
 
   typedef boost::shared_ptr<whitening> whitening_sptr;
 
   static whitening_sptr
   make(uint32_t mask, uint32_t seed, uint32_t order);
 
-  whitening (uint32_t mask, uint32_t seed, uint32_t order);
+  whitening(uint32_t mask, uint32_t seed, uint32_t order);
 
   ~whitening();
 
   void
-  reset ();
+  reset();
 
   void
-  scramble (uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
+  scramble(uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
   void
-  descramble (uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
+  descramble(uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
 
   void
-  scramble_one_bit_per_byte (uint8_t *out, const uint8_t *in, size_t bits_num);
+  scramble_one_bit_per_byte(uint8_t *out, const uint8_t *in, size_t bits_num);
   void
-  descramble_one_bit_per_byte (uint8_t *out, const uint8_t *in,
-                               size_t bits_num);
+  descramble_one_bit_per_byte(uint8_t *out, const uint8_t *in,
+                              size_t bits_num);
 
 private:
   digital::lfsr         d_lfsr;

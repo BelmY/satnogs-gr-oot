@@ -27,10 +27,8 @@
 #include <cstdint>
 #include <vector>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief A binary Golay (24,12,8) encoder and decoder.
@@ -42,11 +40,10 @@ namespace satnogs
  * John Wiley & Sons, 2006.
  *
  */
-class SATNOGS_API golay24
-{
+class SATNOGS_API golay24 {
 public:
-  golay24 ();
-  ~golay24 ();
+  golay24();
+  ~golay24();
 
   static const std::vector<uint32_t>          G_P;
   static const std::vector<uint32_t>          G_I;

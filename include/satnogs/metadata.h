@@ -32,10 +32,9 @@ namespace gr {
 namespace satnogs {
 
 
-class SATNOGS_API metadata
-{
+class SATNOGS_API metadata {
 public:
-  typedef enum key{
+  typedef enum key {
     PDU = 0,
     CRC_VALID,
     FREQ_OFFSET,
@@ -48,7 +47,7 @@ public:
   } key_t;
 
   static std::string
-  value(const key_t& k);
+  value(const key_t &k);
 
   static std::string
   keys();
@@ -78,7 +77,7 @@ public:
   add_corrected_bits(pmt::pmt_t &m, uint32_t cnt);
 
   static Json::Value
-  to_json(const pmt::pmt_t& m);
+  to_json(const pmt::pmt_t &m);
 };
 
 }  // namespace satnogs

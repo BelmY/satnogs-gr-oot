@@ -26,22 +26,19 @@
 #include <cstdlib>
 #include <pmt/pmt.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /**
  * The status of the decoder
  */
-class decoder_status
-{
+class decoder_status {
 public:
   int                   consumed;       /**< The number of input items consumed */
   bool                  decode_success; /**< Indicated if there was a successful decoding */
   pmt::pmt_t            data;           /**< a dictionary with the PDU with of decoded data and the corresponding metadata for the decoded frame */
 
-  decoder_status () :
+  decoder_status() :
     consumed(0),
     decode_success(false),
     data(pmt::make_dict())
@@ -63,18 +60,17 @@ typedef class decoder_status decoder_status_t;
  * appropriate decoder class that implements this abstract class API.
  *
  */
-class SATNOGS_API decoder
-{
+class SATNOGS_API decoder {
 public:
   typedef boost::shared_ptr<decoder> decoder_sptr;
 
   static int base_unique_id;
 
   int
-  unique_id ();
+  unique_id();
 
-  decoder (int input_item_size, size_t max_frame_len = 8192);
-  virtual ~decoder ();
+  decoder(int input_item_size, size_t max_frame_len = 8192);
+  virtual ~decoder();
 
   /**
    * Decodes a buffer. The difference with the decoder::decode_once() is that
@@ -95,7 +91,7 @@ public:
    * If an error occurred an appropriate negative error code is returned
    */
   virtual decoder_status_t
-  decode (const void *in, int len) = 0;
+  decode(const void *in, int len) = 0;
 
 
   /**
@@ -103,7 +99,7 @@ public:
    *
    */
   virtual void
-  reset () = 0;
+  reset() = 0;
 
   size_t
   max_frame_len() const;

@@ -24,31 +24,28 @@
 #include <satnogs/debug_msg_source.h>
 #include <boost/thread.hpp>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class debug_msg_source_impl : public debug_msg_source
-    {
-    private:
-      const size_t d_buf_len;
-      const double d_delay;
-      const bool d_repeat;
-      bool d_running;
-      boost::shared_ptr<boost::thread> d_thread;
-      uint8_t *d_buf;
+class debug_msg_source_impl : public debug_msg_source {
+private:
+  const size_t d_buf_len;
+  const double d_delay;
+  const bool d_repeat;
+  bool d_running;
+  boost::shared_ptr<boost::thread> d_thread;
+  uint8_t *d_buf;
 
-      void
-      msg_sender();
+  void
+  msg_sender();
 
-    public:
-      debug_msg_source_impl (const std::string &msg, double delay, bool repeat);
-      ~debug_msg_source_impl ();
+public:
+  debug_msg_source_impl(const std::string &msg, double delay, bool repeat);
+  ~debug_msg_source_impl();
 
-    };
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_DEBUG_MSG_SOURCE_IMPL_H */

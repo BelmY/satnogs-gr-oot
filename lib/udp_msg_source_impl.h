@@ -24,31 +24,28 @@
 #include <satnogs/udp_msg_source.h>
 #include <boost/thread.hpp>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class udp_msg_source_impl : public udp_msg_source
-    {
-    private:
-      const std::string d_iface_addr;
-      const uint16_t d_udp_port;
-      const size_t d_mtu;
-      const size_t d_type;
-      bool d_running;
-      boost::shared_ptr<boost::thread> d_thread;
+class udp_msg_source_impl : public udp_msg_source {
+private:
+  const std::string d_iface_addr;
+  const uint16_t d_udp_port;
+  const size_t d_mtu;
+  const size_t d_type;
+  bool d_running;
+  boost::shared_ptr<boost::thread> d_thread;
 
-      void
-      udp_msg_accepter ();
+  void
+  udp_msg_accepter();
 
-    public:
-      udp_msg_source_impl (const std::string& addr, uint16_t port,
-                           size_t mtu, size_t type);
-      ~udp_msg_source_impl ();
-    };
+public:
+  udp_msg_source_impl(const std::string &addr, uint16_t port,
+                      size_t mtu, size_t type);
+  ~udp_msg_source_impl();
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_UDP_MSG_SOURCE_IMPL_H */

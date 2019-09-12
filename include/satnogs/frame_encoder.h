@@ -25,30 +25,29 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API frame_encoder : virtual public gr::sync_block
-    {
-     public:
-      typedef boost::shared_ptr<frame_encoder> sptr;
+/*!
+ * \brief <+description of block+>
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API frame_encoder : virtual public gr::sync_block {
+public:
+  typedef boost::shared_ptr<frame_encoder> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of satnogs::frame_encoder.
-       *
-       * To avoid accidental use of raw pointers, satnogs::frame_encoder's
-       * constructor is in a private implementation
-       * class. satnogs::frame_encoder::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(bool append_preamble, bool ecss_encap, const std::string& dest_addr, uint8_t dest_ssid, const std::string& src_addr, uint8_t src_ssid);
-    };
+  /*!
+   * \brief Return a shared_ptr to a new instance of satnogs::frame_encoder.
+   *
+   * To avoid accidental use of raw pointers, satnogs::frame_encoder's
+   * constructor is in a private implementation
+   * class. satnogs::frame_encoder::make is the public interface for
+   * creating new instances.
+   */
+  static sptr make(bool append_preamble, bool ecss_encap, const std::string &dest_addr, uint8_t dest_ssid, const std::string &src_addr, uint8_t src_ssid);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FRAME_ENCODER_H */

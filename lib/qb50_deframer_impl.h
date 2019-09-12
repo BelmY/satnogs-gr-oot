@@ -23,23 +23,20 @@
 
 #include <satnogs/qb50_deframer.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class qb50_deframer_impl : public qb50_deframer
-    {
-    private:
-      const uint8_t d_wod_ssid;
+class qb50_deframer_impl : public qb50_deframer {
+private:
+  const uint8_t d_wod_ssid;
 
-      void msg_handler(pmt::pmt_t msg);
+  void msg_handler(pmt::pmt_t msg);
 
-    public:
-      qb50_deframer_impl (uint8_t wod_ssid);
-    };
+public:
+  qb50_deframer_impl(uint8_t wod_ssid);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_QB50_DEFRAMER_IMPL_H */

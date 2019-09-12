@@ -24,10 +24,8 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 #include <string>
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief This block takes a PMT message from the SatNOGS decoders
@@ -36,24 +34,23 @@ namespace satnogs
  * \ingroup satnogs
  *
  */
-class SATNOGS_API json_converter : virtual public gr::block
-{
+class SATNOGS_API json_converter : virtual public gr::block {
 public:
   typedef boost::shared_ptr<json_converter> sptr;
 
 
- /**
- * This block takes a PMT message from the SatNOGS decoders
- * and converts it a PMT containing the same message in JSON form.
- * This can be used for debugging and stream operations.
- *
- * @param extra every JSON frame can contain an arbitrary amount of extra information.
- * Use this fill to provide a JSON-valid string with such information.
- *
- * @return shared pointer of the block instance
- */
+  /**
+  * This block takes a PMT message from the SatNOGS decoders
+  * and converts it a PMT containing the same message in JSON form.
+  * This can be used for debugging and stream operations.
+  *
+  * @param extra every JSON frame can contain an arbitrary amount of extra information.
+  * Use this fill to provide a JSON-valid string with such information.
+  *
+  * @return shared pointer of the block instance
+  */
   static sptr
-  make (const std::string& extra = "");
+  make(const std::string &extra = "");
 };
 
 } // namespace satnogs

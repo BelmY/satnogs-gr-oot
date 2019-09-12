@@ -25,20 +25,19 @@
 #include <cppunit/TestCase.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    class qa_ieee802_15_4_variant_decoder : public CppUnit::TestCase
-    {
-    public:
-      CPPUNIT_TEST_SUITE(qa_ieee802_15_4_variant_decoder);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST_SUITE_END();
+class qa_ieee802_15_4_variant_decoder : public CppUnit::TestCase {
+public:
+  CPPUNIT_TEST_SUITE(qa_ieee802_15_4_variant_decoder);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST_SUITE_END();
 
-    private:
-      void t1();
-    };
+private:
+  void t1();
+};
 
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 
 #endif /* _QA_IEEE802_15_4_VARIANT_DECODER_H_ */

@@ -38,7 +38,7 @@
 #include <fstream>
 
 int
-main (int argc, char **argv)
+main(int argc, char **argv)
 {
   CppUnit::TestResultCollector result;
   CppUnit::BriefTestProgressListener progressListener;

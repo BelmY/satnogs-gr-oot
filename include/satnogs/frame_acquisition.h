@@ -25,10 +25,8 @@
 #include <satnogs/whitening.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief A generic frame acquisition block
@@ -60,8 +58,7 @@ namespace satnogs
  * \ingroup satnogs
  *
  */
-class SATNOGS_API frame_acquisition : virtual public gr::sync_block
-{
+class SATNOGS_API frame_acquisition : virtual public gr::sync_block {
 public:
   typedef boost::shared_ptr<frame_acquisition> sptr;
 
@@ -122,9 +119,9 @@ public:
    */
   static sptr
   make(variant_t variant,
-       const std::vector<uint8_t>& preamble,
+       const std::vector<uint8_t> &preamble,
        size_t preamble_threshold,
-       const std::vector<uint8_t>& sync,
+       const std::vector<uint8_t> &sync,
        size_t sync_threshold,
        size_t frame_size_field_len,
        size_t frame_len,

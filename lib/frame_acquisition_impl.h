@@ -24,39 +24,35 @@
 #include <satnogs/shift_reg.h>
 #include <satnogs/frame_acquisition.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class frame_acquisition_impl : public frame_acquisition
-{
+class frame_acquisition_impl : public frame_acquisition {
 
 public:
-  frame_acquisition_impl (variant_t variant,
-                          const std::vector<uint8_t>& preamble,
-                          size_t preamble_threshold,
-                          const std::vector<uint8_t>& sync,
-                          size_t sync_threshold,
-                          size_t frame_size_field_len,
-                          size_t frame_len,
-                          checksum_t crc,
-                          whitening::whitening_sptr descrambler,
-                          size_t max_frame_len);
+  frame_acquisition_impl(variant_t variant,
+                         const std::vector<uint8_t> &preamble,
+                         size_t preamble_threshold,
+                         const std::vector<uint8_t> &sync,
+                         size_t sync_threshold,
+                         size_t frame_size_field_len,
+                         size_t frame_len,
+                         checksum_t crc,
+                         whitening::whitening_sptr descrambler,
+                         size_t max_frame_len);
 
-  ~frame_acquisition_impl ();
+  ~frame_acquisition_impl();
 
   // Where all the action really happens
   int
-  work (int noutput_items, gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items);
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
 private:
   /**
    * Decoding FSM
    */
-  typedef enum
-  {
+  typedef enum {
     SEARCHING,   //!< when searching for the start of the preamble
     SEARCHING_SYNC,
     DECODING_GENERIC_FRAME_LEN,

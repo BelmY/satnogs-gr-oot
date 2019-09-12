@@ -25,29 +25,28 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API udp_msg_sink : virtual public gr::block
-    {
-     public:
-      typedef boost::shared_ptr<udp_msg_sink> sptr;
+/*!
+ * \brief <+description of block+>
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API udp_msg_sink : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<udp_msg_sink> sptr;
 
 
-      /**
-       * UDP sink that accepts PMT messages
-       * @param addr the address of the destination host
-       * @param port the destination UDP port
-       * @param mtu the maximum MTU
-       */
-      static sptr make(const std::string& addr, uint16_t port, size_t mtu);
-    };
+  /**
+   * UDP sink that accepts PMT messages
+   * @param addr the address of the destination host
+   * @param port the destination UDP port
+   * @param mtu the maximum MTU
+   */
+  static sptr make(const std::string &addr, uint16_t port, size_t mtu);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_UDP_MSG_SINK_H */

@@ -25,9 +25,8 @@
 #include <cppunit/TestSuite.h>
 
 
-class __GR_ATTR_EXPORT qa_satnogs
-{
- public:
+class __GR_ATTR_EXPORT qa_satnogs {
+public:
 
   static CppUnit::TestSuite *suite();
 };

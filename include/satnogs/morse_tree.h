@@ -26,80 +26,76 @@
 #include <string>
 #include <satnogs/morse.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief Binary tree node containing the corresponding character
-     */
-    class SATNOGS_API tree_node
-    {
-    private:
-      const char d_char;
-      tree_node *d_left;
-      tree_node *d_right;
+/*!
+ * \brief Binary tree node containing the corresponding character
+ */
+class SATNOGS_API tree_node {
+private:
+  const char d_char;
+  tree_node *d_left;
+  tree_node *d_right;
 
-    public:
-      tree_node (char c);
+public:
+  tree_node(char c);
 
-      void
-      set_left_child (tree_node *child);
+  void
+  set_left_child(tree_node *child);
 
-      void
-      set_right_child (tree_node *child);
+  void
+  set_right_child(tree_node *child);
 
-      tree_node*
-      get_left_child ();
+  tree_node *
+  get_left_child();
 
-      tree_node*
-      get_right_child ();
+  tree_node *
+  get_right_child();
 
-      char
-      get_char ();
-    };
+  char
+  get_char();
+};
 
-    /*!
-     * \brief A Binary tree representation of the Morse coding scheme.
-     * Left transitions occur when a dot is received, whereas right transitions
-     * are performed during the reception of a dash.
-     *
-     * The tree follows the ITU International Morse code representation
-     * ITU-R M.1677-1
-     */
-    class SATNOGS_API morse_tree
-    {
-    public:
-      morse_tree ();
-      morse_tree (char unrecognized);
-      ~morse_tree ();
-      void
-      reset ();
-      bool
-      received_symbol (morse_symbol_t s);
-      std::string
-      get_word ();
-      size_t
-      get_max_word_len () const;
-      size_t
-      get_word_len ();
+/*!
+ * \brief A Binary tree representation of the Morse coding scheme.
+ * Left transitions occur when a dot is received, whereas right transitions
+ * are performed during the reception of a dash.
+ *
+ * The tree follows the ITU International Morse code representation
+ * ITU-R M.1677-1
+ */
+class SATNOGS_API morse_tree {
+public:
+  morse_tree();
+  morse_tree(char unrecognized);
+  ~morse_tree();
+  void
+  reset();
+  bool
+  received_symbol(morse_symbol_t s);
+  std::string
+  get_word();
+  size_t
+  get_max_word_len() const;
+  size_t
+  get_word_len();
 
-    private:
-      const char d_unrecognized_symbol;
-      tree_node *d_root;
-      tree_node *d_current;
-      const size_t d_buff_len;
-      size_t d_word_len;
-      std::unique_ptr<char[]> d_word_buffer;
+private:
+  const char d_unrecognized_symbol;
+  tree_node *d_root;
+  tree_node *d_current;
+  const size_t d_buff_len;
+  size_t d_word_len;
+  std::unique_ptr<char[]> d_word_buffer;
 
-      void
-      construct_tree ();
-      void
-      delete_tree (tree_node *node);
-    };
+  void
+  construct_tree();
+  void
+  delete_tree(tree_node *node);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_MORSE_TREE_H */

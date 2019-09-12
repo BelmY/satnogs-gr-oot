@@ -24,42 +24,39 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief Block that accepts TCP messages with rigctl commands. Depending
-     * the command contents this block produces an appropriate PMT message
-     * to control other blocks in the flowgraph
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API tcp_rigctl_msg_source : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<tcp_rigctl_msg_source> sptr;
+/*!
+ * \brief Block that accepts TCP messages with rigctl commands. Depending
+ * the command contents this block produces an appropriate PMT message
+ * to control other blocks in the flowgraph
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API tcp_rigctl_msg_source : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<tcp_rigctl_msg_source> sptr;
 
 
-      /**
-       * Rigctl TCP command accepter
-       *
-       * @param addr the address of the interface to listen at
-       * @param port the TCP port to listen or connect
-       * @param server_mode If set to yes this block, act as a rigctl server.
-       * Otherwise as a rigctl client
-       * @param interval_ms The interval in milliseconds at which the client
-       * request the frequency from the rigctl
-       * @param mtu the maximum MTU
-       * @return shared pointer of the block
-       */
-      static sptr
-      make (const std::string& addr, uint16_t port, bool server_mode,
-	    size_t interval_ms = 1000, size_t mtu = 1500);
-    };
+  /**
+   * Rigctl TCP command accepter
+   *
+   * @param addr the address of the interface to listen at
+   * @param port the TCP port to listen or connect
+   * @param server_mode If set to yes this block, act as a rigctl server.
+   * Otherwise as a rigctl client
+   * @param interval_ms The interval in milliseconds at which the client
+   * request the frequency from the rigctl
+   * @param mtu the maximum MTU
+   * @return shared pointer of the block
+   */
+  static sptr
+  make(const std::string &addr, uint16_t port, bool server_mode,
+       size_t interval_ms = 1000, size_t mtu = 1500);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_TCP_RIGCTL_MSG_SOURCE_H */

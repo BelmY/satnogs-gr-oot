@@ -26,34 +26,33 @@
 #include <satnogs/decoder.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    /*!
-     * \brief This is a generic frame decoder block. It takes as input a
-     * bit stream and produces decoded frames and their metadata.
-     *
-     * The decoding is performed by using a proper decoder object.
-     * Each decoder implements the virtual class ::decoder()
-     *
-     * The frame and metadata are produced in a pmt dictionary, with the
-     * keys "pdu" and "metadata".
-     *
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API frame_decoder : virtual public gr::sync_block
-    {
-     public:
-      typedef boost::shared_ptr<frame_decoder> sptr;
+/*!
+ * \brief This is a generic frame decoder block. It takes as input a
+ * bit stream and produces decoded frames and their metadata.
+ *
+ * The decoding is performed by using a proper decoder object.
+ * Each decoder implements the virtual class ::decoder()
+ *
+ * The frame and metadata are produced in a pmt dictionary, with the
+ * keys "pdu" and "metadata".
+ *
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API frame_decoder : virtual public gr::sync_block {
+public:
+  typedef boost::shared_ptr<frame_decoder> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of satnogs::frame_decoder.
-       * @param decoder_object the decoder object to use
-       */
-      static sptr make(decoder::decoder_sptr decoder_object, int input_size);
-    };
+  /*!
+   * \brief Return a shared_ptr to a new instance of satnogs::frame_decoder.
+   * @param decoder_object the decoder object to use
+   */
+  static sptr make(decoder::decoder_sptr decoder_object, int input_size);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FRAME_DECODER_H */

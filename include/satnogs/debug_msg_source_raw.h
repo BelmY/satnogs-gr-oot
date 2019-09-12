@@ -24,35 +24,32 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief A block for debug reasons producing specific messages.
-     * The input message can be anything, opposed to the \p debug_msg_source()
-     * block that can accept only string messages.
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API debug_msg_source_raw : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<debug_msg_source_raw> sptr;
+/*!
+ * \brief A block for debug reasons producing specific messages.
+ * The input message can be anything, opposed to the \p debug_msg_source()
+ * block that can accept only string messages.
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API debug_msg_source_raw : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<debug_msg_source_raw> sptr;
 
-      /**
-       * Debug message source block.
-       * @param msg the message
-       * @param delay delay in seconds between consecutive messages
-       * @param repeat if set to yes the block will produce a message every
-       * \p delay seconds
-       */
-      static sptr
-      make (const std::vector<uint8_t> &msg, double delay, bool repeat);
-    };
+  /**
+   * Debug message source block.
+   * @param msg the message
+   * @param delay delay in seconds between consecutive messages
+   * @param repeat if set to yes the block will produce a message every
+   * \p delay seconds
+   */
+  static sptr
+  make(const std::vector<uint8_t> &msg, double delay, bool repeat);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_DEBUG_MSG_SOURCE_RAW_H */

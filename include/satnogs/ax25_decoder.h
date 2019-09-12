@@ -27,10 +27,8 @@
 
 #include <deque>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief AX.25 decoder that supports the legacy hardware radios.
@@ -52,8 +50,7 @@ namespace satnogs
  * \ingroup satnogs
  *
  */
-class SATNOGS_API ax25_decoder : public decoder
-{
+class SATNOGS_API ax25_decoder : public decoder {
 public:
 
   /**
@@ -79,9 +76,9 @@ public:
    * @return a shared pointer of the decoder instance
    */
   static decoder::decoder_sptr
-  make (const std::string &addr, uint8_t ssid, bool promisc = false,
-        bool descramble = true, bool crc_check = true,
-        size_t max_frame_len = 512);
+  make(const std::string &addr, uint8_t ssid, bool promisc = false,
+       bool descramble = true, bool crc_check = true,
+       size_t max_frame_len = 512);
 
   /**
    * The decoder take as input a quadrature demodulated bit stream.
@@ -104,21 +101,20 @@ public:
    * @param crc_check bypass the CRC check of the frame
    * @param max_frame_len the maximum allowed frame length
    */
-  ax25_decoder (const std::string &addr, uint8_t ssid, bool promisc = false,
-                bool descramble = true, bool crc_check = true,
-                size_t max_frame_len = 512);
+  ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc = false,
+               bool descramble = true, bool crc_check = true,
+               size_t max_frame_len = 512);
 
-  ~ax25_decoder ();
+  ~ax25_decoder();
 
   decoder_status_t
-  decode (const void *in, int len);
+  decode(const void *in, int len);
 
   void
-  reset ();
+  reset();
 private:
 
-  typedef enum
-  {
+  typedef enum {
     NO_SYNC, IN_SYNC, DECODING
   } decoding_state_t;
 
@@ -143,21 +139,21 @@ private:
   size_t d_frame_start;
 
   void
-  reset_state ();
+  reset_state();
   void
-  enter_sync_state ();
+  enter_sync_state();
   void
-  enter_decoding_state ();
+  enter_decoding_state();
   bool
-  enter_frame_end (decoder_status_t& status);
+  enter_frame_end(decoder_status_t &status);
 
   bool
-  _decode (decoder_status_t& status);
+  _decode(decoder_status_t &status);
 
   inline void
-  decode_1b (uint8_t in);
+  decode_1b(uint8_t in);
   bool
-  frame_check ();
+  frame_check();
 };
 
 } // namespace satnogs

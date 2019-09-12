@@ -23,17 +23,14 @@
 
 #include <satnogs/json_converter.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class json_converter_impl : public json_converter
-{
+class json_converter_impl : public json_converter {
 
 public:
-  json_converter_impl (const std::string &extra);
-  ~json_converter_impl ();
+  json_converter_impl(const std::string &extra);
+  ~json_converter_impl();
 
   void
   convert(pmt::pmt_t m);

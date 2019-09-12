@@ -24,18 +24,15 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief <+description of block+>
  * \ingroup satnogs
  *
  */
-class SATNOGS_API lrpt_decoder : virtual public gr::block
-{
+class SATNOGS_API lrpt_decoder : virtual public gr::block {
 public:
   typedef boost::shared_ptr<lrpt_decoder> sptr;
 
@@ -48,7 +45,7 @@ public:
    * creating new instances.
    */
   static sptr
-  make ();
+  make();
 };
 
 } // namespace satnogs

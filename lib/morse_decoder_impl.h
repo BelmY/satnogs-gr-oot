@@ -24,16 +24,13 @@
 #include <satnogs/morse_decoder.h>
 #include <satnogs/morse_tree.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class morse_decoder_impl : public morse_decoder
-{
+class morse_decoder_impl : public morse_decoder {
 
 public:
-  morse_decoder_impl (char unrecognized_char, size_t min_frame_len);
+  morse_decoder_impl(char unrecognized_char, size_t min_frame_len);
 
 private:
   morse_tree            d_morse_tree;
@@ -41,7 +38,7 @@ private:
   std::string           d_str;
 
   void
-  symbol_msg_handler (pmt::pmt_t msg);
+  symbol_msg_handler(pmt::pmt_t msg);
 };
 
 } // namespace satnogs

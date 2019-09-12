@@ -25,33 +25,30 @@
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class ogg_source_impl : public ogg_source
-    {
-    private:
-      const int                 d_channels;
-      const bool                d_repeat;
-      OggVorbis_File            d_ogvorb_f;
+class ogg_source_impl : public ogg_source {
+private:
+  const int                 d_channels;
+  const bool                d_repeat;
+  OggVorbis_File            d_ogvorb_f;
 
-      int16_t                   *d_in_buffer;
-      float                     *d_out_buffer;
+  int16_t                   *d_in_buffer;
+  float                     *d_out_buffer;
 
-    public:
-      ogg_source_impl (const std::string& filename, int channels,
-                       bool repeat);
-      ~ogg_source_impl ();
+public:
+  ogg_source_impl(const std::string &filename, int channels,
+                  bool repeat);
+  ~ogg_source_impl();
 
-      // Where all the action really happens
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
-    };
+  // Where all the action really happens
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_OGG_SOURCE_IMPL_H */

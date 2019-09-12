@@ -25,79 +25,75 @@
 #include <satnogs/morse.h>
 #include <satnogs/cw_to_symbol.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class cw_to_symbol_impl : public cw_to_symbol
-    {
+class cw_to_symbol_impl : public cw_to_symbol {
 
-      typedef enum
-      {
-        NO_SYNC, SEARCH_DOT, SEARCH_DASH, SEARCH_SPACE
-      } cw_dec_state_t;
+  typedef enum {
+    NO_SYNC, SEARCH_DOT, SEARCH_DASH, SEARCH_SPACE
+  } cw_dec_state_t;
 
-    private:
-      const double d_sampling_rate;
-      float d_act_thrshld;
-      const float d_confidence_level;
-      size_t d_dot_samples;
-      size_t d_window_size;
-      size_t d_window_cnt;
-      size_t d_idle_cnt;
-      size_t d_dot_windows_num;
-      size_t d_dash_windows_num;
-      size_t d_short_pause_windows_num;
-      size_t d_long_pause_windows_num;
-      cw_dec_state_t d_dec_state;
-      bool d_prev_space_symbol;
-      float *d_const_val;
-      float *d_tmp;
-      int32_t *d_out;
+private:
+  const double d_sampling_rate;
+  float d_act_thrshld;
+  const float d_confidence_level;
+  size_t d_dot_samples;
+  size_t d_window_size;
+  size_t d_window_cnt;
+  size_t d_idle_cnt;
+  size_t d_dot_windows_num;
+  size_t d_dash_windows_num;
+  size_t d_short_pause_windows_num;
+  size_t d_long_pause_windows_num;
+  cw_dec_state_t d_dec_state;
+  bool d_prev_space_symbol;
+  float *d_const_val;
+  float *d_tmp;
+  int32_t *d_out;
 
-      inline void
-      set_idle ();
+  inline void
+  set_idle();
 
-      inline void
-      set_short_on ();
+  inline void
+  set_short_on();
 
-      inline void
-      set_long_on ();
+  inline void
+  set_long_on();
 
-      inline void
-      set_search_space ();
+  inline void
+  set_search_space();
 
-      inline void
-      clamp_input (int32_t *out, const float *in, size_t len);
+  inline void
+  clamp_input(int32_t *out, const float *in, size_t len);
 
-      inline bool
-      is_triggered (const float *in, size_t len);
+  inline bool
+  is_triggered(const float *in, size_t len);
 
-      inline void
-      send_symbol_msg (morse_symbol_t s);
+  inline void
+  send_symbol_msg(morse_symbol_t s);
 
-      inline bool
-      check_conf_level(size_t cnt, size_t target);
+  inline bool
+  check_conf_level(size_t cnt, size_t target);
 
-      void
-      set_act_threshold_msg_handler (pmt::pmt_t msg);
+  void
+  set_act_threshold_msg_handler(pmt::pmt_t msg);
 
-    public:
-      cw_to_symbol_impl (double sampling_rate, float threshold,
-                         float conf_level, size_t wpm, size_t hysteresis);
-      ~cw_to_symbol_impl ();
+public:
+  cw_to_symbol_impl(double sampling_rate, float threshold,
+                    float conf_level, size_t wpm, size_t hysteresis);
+  ~cw_to_symbol_impl();
 
-      // Where all the action really happens
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
+  // Where all the action really happens
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
-      void
-      set_act_threshold (float thrhld);
-    };
+  void
+  set_act_threshold(float thrhld);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_CW_TO_SYMBOL_IMPL_H */

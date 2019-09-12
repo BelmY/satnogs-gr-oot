@@ -23,29 +23,26 @@
 
 #include <satnogs/frame_encoder.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class frame_encoder_impl : public frame_encoder
-    {
-    private:
-      // Nothing to declare in this block.
+class frame_encoder_impl : public frame_encoder {
+private:
+  // Nothing to declare in this block.
 
-    public:
-      frame_encoder_impl (bool append_preamble, bool ecss_encap,
-			  const std::string& dest_addr, uint8_t dest_ssid,
-			  const std::string& src_addr, uint8_t src_ssid);
-      ~frame_encoder_impl ();
+public:
+  frame_encoder_impl(bool append_preamble, bool ecss_encap,
+                     const std::string &dest_addr, uint8_t dest_ssid,
+                     const std::string &src_addr, uint8_t src_ssid);
+  ~frame_encoder_impl();
 
-      // Where all the action really happens
-      int
-      work (int noutput_items, gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
-    };
+  // Where all the action really happens
+  int
+  work(int noutput_items, gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FRAME_ENCODER_IMPL_H */

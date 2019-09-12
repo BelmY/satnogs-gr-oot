@@ -25,47 +25,44 @@
 #include <satnogs/api.h>
 #include <gnuradio/block.h>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    /*!
-     * \brief A Morse debug source block that supports injection of random
-     * errors based on a Bernulli distribution with probability p.
-     *
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API morse_debug_source : virtual public gr::block
-    {
-    public:
-      typedef boost::shared_ptr<morse_debug_source> sptr;
+/*!
+ * \brief A Morse debug source block that supports injection of random
+ * errors based on a Bernulli distribution with probability p.
+ *
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API morse_debug_source : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<morse_debug_source> sptr;
 
-      /*!
-       * \brief A Morse debug source block that produces messages corresponding
-       * to Morse symbols, based on the given debug_seq string.
-       * This block can also inject random errors, based on a Bernoulli
-       * distribution.
-       *
-       * @param wpm words per minute
-       * @param debug_seq A string containing the debug sentence
-       * @param inject_errors if set the debug source block will produce
-       * errors that follow a Bernoulli distribution
-       * @param error_prob the probability p of error for the Bernulli distribution
-       * @param seq_pause_ms pause in milliseconds between concecutive debug
-       * sequences. For simplicity the pause duration will be scaled to multiple
-       * dot durations.
-       */
-      static sptr
-      make (const size_t wpm,
-            const std::string& debug_seq,
-            bool inject_errors = false,
-            float error_prob = 0.1,
-            size_t seq_pause_ms = 1000);
-    };
+  /*!
+   * \brief A Morse debug source block that produces messages corresponding
+   * to Morse symbols, based on the given debug_seq string.
+   * This block can also inject random errors, based on a Bernoulli
+   * distribution.
+   *
+   * @param wpm words per minute
+   * @param debug_seq A string containing the debug sentence
+   * @param inject_errors if set the debug source block will produce
+   * errors that follow a Bernoulli distribution
+   * @param error_prob the probability p of error for the Bernulli distribution
+   * @param seq_pause_ms pause in milliseconds between concecutive debug
+   * sequences. For simplicity the pause duration will be scaled to multiple
+   * dot durations.
+   */
+  static sptr
+  make(const size_t wpm,
+       const std::string &debug_seq,
+       bool inject_errors = false,
+       float error_prob = 0.1,
+       size_t seq_pause_ms = 1000);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_MORSE_DEBUG_SOURCE_H */

@@ -28,141 +28,137 @@
 #include <iostream>
 #include <iomanip>
 
-namespace gr
+namespace gr {
+namespace satnogs {
+
+multi_format_msg_sink::sptr
+multi_format_msg_sink::make(size_t format,
+                            bool timestamp,
+                            bool out_stdout,
+                            const std::string &filepath)
 {
-  namespace satnogs
-  {
-
-    multi_format_msg_sink::sptr
-    multi_format_msg_sink::make (size_t format,
-                                 bool timestamp,
-                                 bool out_stdout,
-                                 const std::string& filepath)
-    {
-      return gnuradio::get_initial_sptr (
-          new multi_format_msg_sink_impl (format, timestamp,
+  return gnuradio::get_initial_sptr(
+           new multi_format_msg_sink_impl(format, timestamp,
                                           out_stdout, filepath));
+}
+
+void
+multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
+{
+  uint8_t *su;
+  char buf[256];
+  std::string s((const char *) pmt::blob_data(msg),
+                pmt::blob_length(msg));
+
+  if (d_timestamp) {
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    strftime(buf, sizeof(buf), "%F %T %z", &tm);
+    d_fos << "[" << buf << "]";
+  }
+
+  switch (d_format) {
+  case 0:
+    d_fos << s << std::endl;
+    break;
+  case 1:
+    su = (uint8_t *) pmt::blob_data(msg);
+    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+      d_fos << "0x" << std::hex << std::setw(2) << std::setfill('0')
+            << (uint32_t) su[i] << " ";
     }
+    d_fos << std::endl;
+    break;
+  case 2:
+    su = (uint8_t *) pmt::blob_data(msg);
+    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+      d_fos << "0b" << std::bitset<8> (su[i]) << " ";
+    }
+    d_fos << std::endl;
+    break;
+  default:
+    throw std::invalid_argument("Invalid format");
+  }
+}
 
-    void
-    multi_format_msg_sink_impl::msg_handler_file (pmt::pmt_t msg)
-    {
-      uint8_t *su;
-      char buf[256];
-      std::string s ((const char *) pmt::blob_data (msg),
-                     pmt::blob_length (msg));
+void
+multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
+{
+  uint8_t *su;
+  char buf[256];
+  std::string s((const char *) pmt::blob_data(msg),
+                pmt::blob_length(msg));
 
-      if(d_timestamp) {
-        std::time_t t = std::time(nullptr);
-        std::tm tm = *std::localtime(&t);
-        strftime(buf, sizeof(buf), "%F %T %z", &tm);
-        d_fos << "[" << buf << "]";
-      }
+  if (d_timestamp) {
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    strftime(buf, sizeof(buf), "%F %T %z", &tm);
+    std::cout << "[" << buf << "]";
+  }
 
-      switch (d_format)
-        {
-        case 0:
-          d_fos << s << std::endl;
-          break;
-        case 1:
-          su = (uint8_t *) pmt::blob_data (msg);
-          for (size_t i = 0; i < pmt::blob_length (msg); i++) {
-            d_fos << "0x" << std::hex << std::setw (2) << std::setfill ('0')
+  switch (d_format) {
+  case 0: // binary
+    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+      std::cout << s[i];
+    }
+    std::cout << std::endl;
+    break;
+  case 1: // hex annotated
+    su = (uint8_t *) pmt::blob_data(msg);
+    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+      std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
                 << (uint32_t) su[i] << " ";
-          }
-          d_fos << std::endl;
-          break;
-        case 2:
-          su = (uint8_t *) pmt::blob_data (msg);
-          for (size_t i = 0; i < pmt::blob_length (msg); i++) {
-            d_fos << "0b" << std::bitset<8> (su[i]) << " ";
-          }
-          d_fos << std::endl;
-          break;
-        default:
-          throw std::invalid_argument("Invalid format");
-        }
     }
-
-    void
-    multi_format_msg_sink_impl::msg_handler_stdout (pmt::pmt_t msg)
-    {
-      uint8_t *su;
-      char buf[256];
-      std::string s ((const char *) pmt::blob_data (msg),
-                     pmt::blob_length (msg));
-
-      if(d_timestamp) {
-        std::time_t t = std::time(nullptr);
-        std::tm tm = *std::localtime(&t);
-        strftime(buf, sizeof(buf), "%F %T %z", &tm);
-        std::cout << "[" << buf << "]";
-      }
-
-      switch (d_format)
-        {
-        case 0: // binary
-          for (size_t i = 0; i < pmt::blob_length (msg); i++) {
-            std::cout << s[i];
-          }
-          std::cout << std::endl;
-          break;
-        case 1: // hex annotated
-          su = (uint8_t *) pmt::blob_data (msg);
-          for (size_t i = 0; i < pmt::blob_length (msg); i++) {
-            std::cout << "0x" << std::hex << std::setw (2) << std::setfill ('0')
-                << (uint32_t) su[i] << " ";
-          }
-          std::cout << std::endl;
-          break;
-        case 2: // binary annotated
-          su = (uint8_t *) pmt::blob_data (msg);
-          for (size_t i = 0; i < pmt::blob_length (msg); i++) {
-            std::cout << "0b" << std::bitset<8> (su[i]) << " ";
-          }
-          std::cout << std::endl;
-          break;
-        default:
-          throw std::invalid_argument("Invalid format");
-        }
+    std::cout << std::endl;
+    break;
+  case 2: // binary annotated
+    su = (uint8_t *) pmt::blob_data(msg);
+    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+      std::cout << "0b" << std::bitset<8> (su[i]) << " ";
     }
+    std::cout << std::endl;
+    break;
+  default:
+    throw std::invalid_argument("Invalid format");
+  }
+}
 
-    /*
-     * The private constructor
-     */
-    multi_format_msg_sink_impl::multi_format_msg_sink_impl (
-        size_t format, bool timestamp, bool out_stdout,
-        const std::string& filepath) :
-            gr::block ("multi_format_msg_sink",
-                       gr::io_signature::make (0, 0, 0),
-                       gr::io_signature::make (0, 0, 0)),
-            d_format (format),
-            d_timestamp (timestamp),
-            d_stdout (out_stdout)
-    {
-      message_port_register_in (pmt::mp ("in"));
-      if(out_stdout) {
-        set_msg_handler (
-            pmt::mp ("in"),
-            boost::bind (&multi_format_msg_sink_impl::msg_handler_stdout,
-                         this, _1));
-      }
-      else{
-        d_fos.open(filepath);
-        set_msg_handler (
-            pmt::mp ("in"),
-            boost::bind (&multi_format_msg_sink_impl::msg_handler_file,
-                         this, _1));
-      }
-    }
+/*
+ * The private constructor
+ */
+multi_format_msg_sink_impl::multi_format_msg_sink_impl(
+  size_t format, bool timestamp, bool out_stdout,
+  const std::string &filepath) :
+  gr::block("multi_format_msg_sink",
+            gr::io_signature::make(0, 0, 0),
+            gr::io_signature::make(0, 0, 0)),
+  d_format(format),
+  d_timestamp(timestamp),
+  d_stdout(out_stdout)
+{
+  message_port_register_in(pmt::mp("in"));
+  if (out_stdout) {
+    set_msg_handler(
+      pmt::mp("in"),
+      boost::bind(&multi_format_msg_sink_impl::msg_handler_stdout,
+                  this, _1));
+  }
+  else {
+    d_fos.open(filepath);
+    set_msg_handler(
+      pmt::mp("in"),
+      boost::bind(&multi_format_msg_sink_impl::msg_handler_file,
+                  this, _1));
+  }
+}
 
-    multi_format_msg_sink_impl::~multi_format_msg_sink_impl ()
-    {
-      if(!d_stdout) {
-        d_fos.close();
-      }
-    }
+multi_format_msg_sink_impl::~multi_format_msg_sink_impl()
+{
+  if (!d_stdout) {
+    d_fos.close();
+  }
+}
 
-  } /* namespace satnogs */
+} /* namespace satnogs */
 } /* namespace gr */
 

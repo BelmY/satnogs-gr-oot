@@ -25,21 +25,18 @@
 #include <satnogs/convolutional_deinterleaver.h>
 #include <gnuradio/digital/constellation.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class lrpt_sync_impl : public lrpt_sync
-{
+class lrpt_sync_impl : public lrpt_sync {
 public:
-  lrpt_sync_impl (size_t threshold);
-  ~lrpt_sync_impl ();
+  lrpt_sync_impl(size_t threshold);
+  ~lrpt_sync_impl();
 
   int
-  work (int noutput_items,
-        gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items);
+  work(int noutput_items,
+       gr_vector_const_void_star &input_items,
+       gr_vector_void_star &output_items);
 
 private:
   const size_t                          d_thresh;
@@ -56,11 +53,11 @@ private:
   uint64_t                              d_shift_reg1;
   uint64_t                              d_shift_reg2;
   uint64_t                              d_shift_reg3;
-  gr_complex*                           d_rotate_pi2;
-  gr_complex*                           d_rotate_2pi2;
-  gr_complex*                           d_rotate_3pi2;
-  gr_complex*                           d_corrected;
-  uint8_t*                              d_coded_cadu;
+  gr_complex                           *d_rotate_pi2;
+  gr_complex                           *d_rotate_2pi2;
+  gr_complex                           *d_rotate_3pi2;
+  gr_complex                           *d_corrected;
+  uint8_t                              *d_coded_cadu;
 
   int
   work_no_sync(const gr_complex *in, int noutput_items);

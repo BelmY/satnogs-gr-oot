@@ -23,17 +23,14 @@
 
 #include <satnogs/api.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * CRC class providing a range of different CRC calculation static methods
  *
  */
-class SATNOGS_API crc
-{
+class SATNOGS_API crc {
 public:
   typedef enum crc_type {
     PDU = 0,

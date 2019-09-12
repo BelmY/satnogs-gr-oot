@@ -26,28 +26,25 @@
 #include <fstream>
 
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class frame_file_sink_impl : public frame_file_sink
-    {
-    private:
-      const std::string d_prefix_name;
-      int d_output_type;
-      std::string d_filename_prev;
-      int d_counter;
+class frame_file_sink_impl : public frame_file_sink {
+private:
+  const std::string d_prefix_name;
+  int d_output_type;
+  std::string d_filename_prev;
+  int d_counter;
 
-    public:
-      frame_file_sink_impl (const std::string& prefix_name, int output_type);
-      ~frame_file_sink_impl ();
+public:
+  frame_file_sink_impl(const std::string &prefix_name, int output_type);
+  ~frame_file_sink_impl();
 
-      void
-      msg_handler_frame (pmt::pmt_t msg);
-    };
+  void
+  msg_handler_frame(pmt::pmt_t msg);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_FRAME_FILE_SINK_IMPL_H */

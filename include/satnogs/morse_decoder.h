@@ -25,30 +25,29 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace satnogs {
-    /*!
-     * \brief Morse code decoder block.
-     *
-     * This block received messages from the previous blocks
-     * and try to decode the dot and dashes into clear text.
-     */
-    class SATNOGS_API morse_decoder : virtual public gr::block
-    {
-     public:
-      typedef boost::shared_ptr<morse_decoder> sptr;
+namespace satnogs {
+/*!
+ * \brief Morse code decoder block.
+ *
+ * This block received messages from the previous blocks
+ * and try to decode the dot and dashes into clear text.
+ */
+class SATNOGS_API morse_decoder : virtual public gr::block {
+public:
+  typedef boost::shared_ptr<morse_decoder> sptr;
 
-      /*!
-       * Creates a Morse decoder block
-       * @param unrecognized_char the character that will be placed
-       * in situations where the decoder can not decide which character
-       * was received.
-       * @param min_frame_len the minimum frame length in order to reduce
-       * false alarms
-       */
-      static sptr make(char unrecognized_char = '#', size_t min_frame_len = 3);
-    };
+  /*!
+   * Creates a Morse decoder block
+   * @param unrecognized_char the character that will be placed
+   * in situations where the decoder can not decide which character
+   * was received.
+   * @param min_frame_len the minimum frame length in order to reduce
+   * false alarms
+   */
+  static sptr make(char unrecognized_char = '#', size_t min_frame_len = 3);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_MORSE_DECODER_H */

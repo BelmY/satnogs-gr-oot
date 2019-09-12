@@ -24,20 +24,19 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
-class qa_json_converter : public CppUnit::TestCase
-{
-public:CPPUNIT_TEST_SUITE(qa_json_converter);
-  CPPUNIT_TEST(t1);CPPUNIT_TEST_SUITE_END()
+class qa_json_converter : public CppUnit::TestCase {
+public:
+  CPPUNIT_TEST_SUITE(qa_json_converter);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST_SUITE_END()
   ;
 
 private:
   void
-  t1 ();
+  t1();
 };
 
 } /* namespace satnogs */

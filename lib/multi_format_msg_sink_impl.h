@@ -24,33 +24,30 @@
 #include <satnogs/multi_format_msg_sink.h>
 #include <fstream>
 
-namespace gr
-{
-  namespace satnogs
-  {
+namespace gr {
+namespace satnogs {
 
-    class multi_format_msg_sink_impl : public multi_format_msg_sink
-    {
-    private:
-      void
-      msg_handler_stdout (pmt::pmt_t msg);
-      void
-      msg_handler_file (pmt::pmt_t msg);
+class multi_format_msg_sink_impl : public multi_format_msg_sink {
+private:
+  void
+  msg_handler_stdout(pmt::pmt_t msg);
+  void
+  msg_handler_file(pmt::pmt_t msg);
 
-      const size_t d_format;
-      const bool d_timestamp;
-      const bool d_stdout;
-      std::ofstream d_fos;
+  const size_t d_format;
+  const bool d_timestamp;
+  const bool d_stdout;
+  std::ofstream d_fos;
 
-    public:
-      multi_format_msg_sink_impl (size_t format, bool timestamp,
-                                  bool out_stdout, const std::string& filepath);
+public:
+  multi_format_msg_sink_impl(size_t format, bool timestamp,
+                             bool out_stdout, const std::string &filepath);
 
-      ~multi_format_msg_sink_impl ();
+  ~multi_format_msg_sink_impl();
 
-    };
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_multi_format_MSG_SINK_IMPL_H */

@@ -29,27 +29,25 @@
 
 
 extern "C" {
-  #include <fec.h>
+#include <fec.h>
 }
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 lrpt_decoder::sptr
-lrpt_decoder::make ()
+lrpt_decoder::make()
 {
-  return gnuradio::get_initial_sptr (new lrpt_decoder_impl ());
+  return gnuradio::get_initial_sptr(new lrpt_decoder_impl());
 }
 
 /*
  * The private constructor
  */
 lrpt_decoder_impl::lrpt_decoder_impl()
-: gr::block("lrpt_decoder",
-    gr::io_signature::make(0, 0, 0),
-    gr::io_signature::make(0, 0, 0)),
+  : gr::block("lrpt_decoder",
+              gr::io_signature::make(0, 0, 0),
+              gr::io_signature::make(0, 0, 0)),
     /*
      * Metop violates the standard as many times as possible...
      * The frame should contain 128 RS check symbols at the end.
@@ -57,7 +55,7 @@ lrpt_decoder_impl::lrpt_decoder_impl()
      * Thus, they dropped the check symbols at the end of the frame.
      */
     d_cadu_len(1020 + 4 - 128),
-    d_coded_cadu_len(1020 * 2 + 4*2 - 128 * 2),
+    d_coded_cadu_len(1020 * 2 + 4 * 2 - 128 * 2),
     d_mpdu_max_len(59400),
     d_scrambler(0x2A9, 0xFF, 7),
     d_have_mpdu(false)
@@ -65,12 +63,12 @@ lrpt_decoder_impl::lrpt_decoder_impl()
   message_port_register_in(pmt::mp("cadu"));
   message_port_register_out(pmt::mp("frame"));
 
-  set_msg_handler (
-      pmt::mp ("cadu"),
-      boost::bind (&lrpt_decoder_impl::decode, this, _1));
+  set_msg_handler(
+    pmt::mp("cadu"),
+    boost::bind(&lrpt_decoder_impl::decode, this, _1));
 
   d_vt = create_viterbi27(d_cadu_len * 8);
-  if(!d_vt) {
+  if (!d_vt) {
     throw std::runtime_error("lrpt_decoder: Failed to init Viterbi decoder");
   }
 
@@ -86,7 +84,7 @@ lrpt_decoder_impl::lrpt_decoder_impl()
 /*
  * Our virtual destructor.
  */
-lrpt_decoder_impl::~lrpt_decoder_impl ()
+lrpt_decoder_impl::~lrpt_decoder_impl()
 {
 
   delete [] d_cadu;
@@ -95,17 +93,17 @@ lrpt_decoder_impl::~lrpt_decoder_impl ()
 }
 
 void
-lrpt_decoder_impl::decode (pmt::pmt_t m)
+lrpt_decoder_impl::decode(pmt::pmt_t m)
 {
   const uint8_t *coded_cadu = (const uint8_t *)pmt::blob_data(m);
-  if(pmt::blob_length(m) != d_coded_cadu_len) {
+  if (pmt::blob_length(m) != d_coded_cadu_len) {
     LOG_ERROR("Wrong CADU size");
     return;
   }
 
   init_viterbi27(d_vt, 0);
 
-  for(size_t i = 0; i < d_coded_cadu_len; i++) {
+  for (size_t i = 0; i < d_coded_cadu_len; i++) {
     d_coded_cadu_syms[i * 8] = 0xFF * (coded_cadu[i] >> 7);
     d_coded_cadu_syms[i * 8 + 1] = 0xFF * ((coded_cadu[i] >> 6) & 0x1);
     d_coded_cadu_syms[i * 8 + 2] = 0xFF * ((coded_cadu[i] >> 5) & 0x1);
@@ -131,10 +129,10 @@ void
 lrpt_decoder_impl::decode_ccsds_packet(const uint8_t *cvcdu)
 {
   /* Check first the VCDU version and if encryption is off */
-  if( (cvcdu[0] >> 6) != 0x1) {
+  if ((cvcdu[0] >> 6) != 0x1) {
     return;
   }
-  if(cvcdu[6] != 0x0 || cvcdu[7] != 0x0) {
+  if (cvcdu[6] != 0x0 || cvcdu[7] != 0x0) {
     return;
   }
 
@@ -147,7 +145,7 @@ lrpt_decoder_impl::decode_ccsds_packet(const uint8_t *cvcdu)
   /* Check CCSDS packet version and type */
   //if( (mpdu[0] >> 5) != 0x0) {
   //  return;
- // }
+// }
 
   uint32_t vcdu_seq = 0;
   vcdu_seq = cvcdu[2];
@@ -159,8 +157,8 @@ lrpt_decoder_impl::decode_ccsds_packet(const uint8_t *cvcdu)
   hdr_ptr = (hdr_ptr << 8) | cvcdu[9];
 
   /* Try to find the start of a MPDU */
-  if(!d_have_mpdu) {
-    if(hdr_ptr != 0) {
+  if (!d_have_mpdu) {
+    if (hdr_ptr != 0) {
       return;
     }
     d_have_mpdu = true;

@@ -28,45 +28,43 @@
 #include <json/json.h>
 
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 json_converter::sptr
-json_converter::make (const std::string& extra)
+json_converter::make(const std::string &extra)
 {
-  return gnuradio::get_initial_sptr (new json_converter_impl (extra));
+  return gnuradio::get_initial_sptr(new json_converter_impl(extra));
 }
 
 /*
  * The private constructor
  */
-json_converter_impl::json_converter_impl (const std::string& extra) :
-        gr::block ("json_converter", gr::io_signature::make (0, 0, 0),
-                   gr::io_signature::make (0, 0, 0)),
-                   d_extra(extra)
+json_converter_impl::json_converter_impl(const std::string &extra) :
+  gr::block("json_converter", gr::io_signature::make(0, 0, 0),
+            gr::io_signature::make(0, 0, 0)),
+  d_extra(extra)
 {
   message_port_register_in(pmt::mp("in"));
   message_port_register_out(pmt::mp("out"));
 
-  set_msg_handler (pmt::mp ("in"),
-          boost::bind (&json_converter_impl::convert, this, _1));
+  set_msg_handler(pmt::mp("in"),
+                  boost::bind(&json_converter_impl::convert, this, _1));
 }
 
 /*
  * Our virtual destructor.
  */
-json_converter_impl::~json_converter_impl ()
+json_converter_impl::~json_converter_impl()
 {
 }
 
 void
-json_converter_impl::convert (pmt::pmt_t m)
+json_converter_impl::convert(pmt::pmt_t m)
 {
   Json::Value root = metadata::to_json(m);
   root["extra"] = d_extra;
-  const std::string& s = root.toStyledString();
+  const std::string &s = root.toStyledString();
   const char *c = s.c_str();
   message_port_pub(pmt::mp("out"), pmt::make_blob(c, s.length()));
 }

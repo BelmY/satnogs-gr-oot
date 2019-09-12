@@ -25,10 +25,8 @@
 #include <satnogs/whitening.h>
 #include <satnogs/crc.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*!
  * \brief A IEEE 802.15.4 like decoder
@@ -40,15 +38,14 @@ namespace satnogs
  * scheme.
  *
  */
-class SATNOGS_API ieee802_15_4_variant_decoder
-{
+class SATNOGS_API ieee802_15_4_variant_decoder {
 public:
-  ieee802_15_4_variant_decoder (const std::vector<uint8_t> &preamble,
-                                size_t preamble_threshold,
-                                const std::vector<uint8_t> &sync,
-                                crc::crc_t crc,
-                                whitening::whitening_sptr descrambler);
-  ~ieee802_15_4_variant_decoder ();
+  ieee802_15_4_variant_decoder(const std::vector<uint8_t> &preamble,
+                               size_t preamble_threshold,
+                               const std::vector<uint8_t> &sync,
+                               crc::crc_t crc,
+                               whitening::whitening_sptr descrambler);
+  ~ieee802_15_4_variant_decoder();
 private:
 };
 

@@ -25,10 +25,8 @@
 #include <gnuradio/io_signature.h>
 #include <satnogs/decoder.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 int decoder::base_unique_id = 1;
 
@@ -37,7 +35,7 @@ int decoder::base_unique_id = 1;
  * @return the unique id of the decoder object
  */
 int
-decoder::unique_id ()
+decoder::unique_id()
 {
   return d_id;
 }
@@ -68,7 +66,7 @@ decoder::max_frame_len() const
 }
 
 int
-decoder::sizeof_input_item () const
+decoder::sizeof_input_item() const
 {
   return d_sizeof_in;
 }

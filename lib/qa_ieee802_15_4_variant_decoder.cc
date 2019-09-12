@@ -23,13 +23,11 @@
 #include "qa_ieee802_15_4_variant_decoder.h"
 #include <satnogs/ieee802_15_4_variant_decoder.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 void
-qa_ieee802_15_4_variant_decoder::t1 ()
+qa_ieee802_15_4_variant_decoder::t1()
 {
   // Put test here
 }

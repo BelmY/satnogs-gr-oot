@@ -28,10 +28,8 @@
 
 #include <satnogs/utils.h>
 
-namespace gr
-{
-namespace satnogs
-{
+namespace gr {
+namespace satnogs {
 
 /*
  * Matrix P was retrieved by:
@@ -40,19 +38,21 @@ namespace satnogs
  * Matrix mentioned by Morelos-Zaragoza, Robert H. "The art of error correcting coding."
  * John Wiley & Sons, 2006 was not suitable.
  */
-const std::vector<uint32_t> golay24::G_P =
-  {0x8ED, 0x1DB, 0x3B5, 0x769, 0xED1, 0xDA3, 0xB47, 0x68F, 0xD1D, 0xA3B, 0x477,
-      0xFFE};
+const std::vector<uint32_t> golay24::G_P = {
+  0x8ED, 0x1DB, 0x3B5, 0x769, 0xED1, 0xDA3, 0xB47, 0x68F, 0xD1D, 0xA3B, 0x477,
+  0xFFE
+};
 
-const std::vector<uint32_t> golay24::G_I =
-  { 0x800, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004, 0x002,
-      0x001 };
+const std::vector<uint32_t> golay24::G_I = {
+  0x800, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004, 0x002,
+  0x001
+};
 
-golay24::golay24 ()
+golay24::golay24()
 {
 }
 
-golay24::~golay24 ()
+golay24::~golay24()
 {
 }
 
@@ -66,7 +66,7 @@ static inline uint32_t
 syndrome(uint16_t x, uint16_t y)
 {
   uint32_t s = 0;
-  for(size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     s = (s << 1) | (weight(y & golay24::G_P[i]) % 2);
   }
   s ^= x;
@@ -82,10 +82,10 @@ syndrome(uint16_t x, uint16_t y)
  * @return the coded 24-bit message. The message is placed at the 24 LS bits
  */
 uint32_t
-golay24::encode12 (uint16_t in, bool lsb_parity)
+golay24::encode12(uint16_t in, bool lsb_parity)
 {
   uint32_t c[2] =
-    { 0x0, 0x0 };
+  { 0x0, 0x0 };
   c[0] = in & 0xFFF;
   for (size_t i = 0; i < 12; i++) {
     uint32_t tmp = 0;
@@ -94,7 +94,7 @@ golay24::encode12 (uint16_t in, bool lsb_parity)
     }
     c[1] = (c[1] << 1) ^ tmp;
   }
-  if(lsb_parity) {
+  if (lsb_parity) {
     return ((c[0] & 0xFFF) << 12) | (c[1] & 0xFFF);
   }
   return ((c[1] & 0xFFF) << 12) | (c[0] & 0xFFF);
@@ -121,14 +121,14 @@ golay24::decode24(uint32_t *out, const uint32_t in)
   r[0] = (in >> 12) & 0xFFF;
   r[1] = in & 0xFFF;
   s = syndrome(r[0], r[1]);
-  if(weight(s) <= 3) {
+  if (weight(s) <= 3) {
     *out = ((r[0] ^ s) << 12) | (r[1]);
     return true;
   }
 
-  for(size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     const uint16_t tmp = s ^ G_P[i];
-    if(weight(tmp) <= 2) {
+    if (weight(tmp) <= 2) {
       *out = ((r[0] ^ tmp) << 12) | (r[1] ^ G_I[i]);
       return true;
     }
@@ -136,17 +136,17 @@ golay24::decode24(uint32_t *out, const uint32_t in)
 
   /* Compute the sP vector */
   uint32_t sP = 0;
-  for(size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     sP = (sP << 1) | (weight(s & G_P[i]) % 2);
   }
-  if(weight(sP) == 2 || weight(sP) == 3) {
+  if (weight(sP) == 2 || weight(sP) == 3) {
     *out = (r[0] << 12) | (r[1] ^ sP);
     return true;
   }
 
-  for(size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     const uint16_t tmp = sP ^ G_P[i];
-    if(weight(tmp) == 2) {
+    if (weight(tmp) == 2) {
       *out = ((r[0] ^ G_I[i]) << 12) | (r[1] ^ tmp);
       return true;
     }

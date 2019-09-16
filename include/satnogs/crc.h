@@ -38,6 +38,7 @@ public:
     CRC16_CCITT_REVERSED,
     CRC16_AX25,
     CRC16_IBM,
+    CRC32_C,
     CRC_METHODS_NUM
   } crc_t;
 
@@ -53,12 +54,16 @@ public:
   static uint16_t
   crc16_ibm(const uint8_t *data, size_t len);
 
+  static uint32_t
+  crc32_c(const uint8_t *data, size_t len);
+
   static size_t
   crc_size(crc_t t);
 
 private:
   static const uint16_t crc16_ccitt_table_reverse[256];
   static const uint16_t crc16_ccitt_table[256];
+  static const uint32_t crc32_c_table[256];
 };
 
 } // namespace satnogs

@@ -18,23 +18,27 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qa_satnogs.h"
-#include "qa_golay24.h"
-#include "qa_ax25_decoder.h"
-#include "qa_json_converter.h"
-#include "qa_ieee802_15_4_variant_decoder.h"
-#include "qa_crc.h"
-#include "qa_ax100_decoder.h"
+#ifndef _QA_AX100_DECODER_H_
+#define _QA_AX100_DECODER_H_
 
-CppUnit::TestSuite *
-qa_satnogs::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("satnogs");
-  s->addTest(gr::satnogs::qa_golay24::suite());
-  s->addTest(gr::satnogs::qa_ax25_decoder::suite());
-  s->addTest(gr::satnogs::qa_json_converter::suite());
-  s->addTest(gr::satnogs::qa_ieee802_15_4_variant_decoder::suite());
-  s->addTest(gr::satnogs::qa_crc::suite());
-  s->addTest(gr::satnogs::qa_ax100_decoder::suite());
-  return s;
-}
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
+
+namespace gr {
+namespace satnogs {
+
+class qa_ax100_decoder : public CppUnit::TestCase {
+public:
+  CPPUNIT_TEST_SUITE(qa_ax100_decoder);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST_SUITE_END();
+
+private:
+  void t1();
+};
+
+} /* namespace satnogs */
+} /* namespace gr */
+
+#endif /* _QA_AX100_DECODER_H_ */
+

@@ -15,6 +15,7 @@
 
 %{
 #include "satnogs/amsat_duv_decoder.h"
+#include "satnogs/ax100_decoder.h"
 #include "satnogs/ax25_decoder.h"
 #include "satnogs/morse_tree.h"
 #include "satnogs/morse_decoder.h"
@@ -53,8 +54,11 @@
 %include "satnogs/amsat_duv_decoder.h"
 %include "satnogs/ax25_decoder.h"
 %include "satnogs/metadata.h"
+
+/* crc.h should come first. All classes using it should be included afterwards */ 
 %include "satnogs/crc.h"
 %include "satnogs/ieee802_15_4_variant_decoder.h"
+%include "satnogs/ax100_decoder.h"
 
 %include "satnogs/morse_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, morse_decoder);

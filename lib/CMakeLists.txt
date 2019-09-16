@@ -76,7 +76,8 @@ list(APPEND satnogs_sources
     ax25_decoder.cc
     json_converter_impl.cc
     ieee802_15_4_variant_decoder.cc
-    crc.cc)
+    crc.cc
+    ax100_decoder.cc)
 
 if(${INCLUDE_DEBUG_BLOCKS})
 	list(APPEND satnogs_sources ${satnogs_debug_sources})
@@ -129,6 +130,7 @@ list(APPEND test_satnogs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_golay24.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/test_satnogs.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_satnogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_ax100_decoder.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_crc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_ieee802_15_4_variant_decoder.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_json_converter.cc

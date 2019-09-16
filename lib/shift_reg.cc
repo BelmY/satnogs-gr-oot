@@ -36,9 +36,6 @@ shift_reg::shift_reg(size_t len)
   : d_len(len),
     d_reg(len, 0)
 {
-  if (len < 1) {
-    throw std::invalid_argument("Shift register should contain at least one stage");
-  }
 }
 
 shift_reg::~shift_reg()

@@ -200,6 +200,15 @@ crc32(const uint8_t *buf, size_t len)
   return crc;
 }
 
+static void
+print_pdu(const uint8_t *buf, size_t len)
+{
+  for (size_t i = 0; i < len; i++) {
+    printf("0x%02x ", buf[i]);
+  }
+  printf("\n");
+}
+
 }  // namespace satnogs
 
 }  // namespace gr

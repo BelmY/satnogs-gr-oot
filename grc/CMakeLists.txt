@@ -50,7 +50,9 @@ list(APPEND enabled_blocks
     satnogs_ogg_source.xml
     satnogs_noaa_apt_sink.xml
     satnogs_whitening.xml
+    satnogs_whitening_ccsds.xml
     satnogs_ieee802_15_4_variant_decoder.xml
+    satnogs_ax100_decoder.xml
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

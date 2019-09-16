@@ -5,6 +5,7 @@
     <block>variable_ax25_decoder</block>
     <block>variable_amsat_duv_decoder</block>
     <block>variable_ieee802_15_4_variant_decoder</block>
+    <block>variable_ax100_decoder</block>
   </cat>
   <cat>
     <name>Satellites</name>
@@ -40,5 +41,6 @@
   <block>satnogs_ax25_encoder_mb</block>
   <block>satnogs_waterfall_sink</block>
   <block>variable_whitening</block>
+  <block>variable_whitening_ccsds</block>
   <block>satnogs_frame_decoder</block>
 </cat>

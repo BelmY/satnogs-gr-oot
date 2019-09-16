@@ -47,6 +47,17 @@ whitening::make(uint32_t mask, uint32_t seed, uint32_t order)
 
 
 /**
+ * CCSDS compliant data whitening
+ * @return shared pointer to a CCSDS compliant scrambler/descrambler
+ */
+whitening::whitening_sptr
+whitening::make_ccsds()
+{
+  return make(0xA9, 0xFF, 7);
+}
+
+
+/**
  * Data whitening and de-whitening class
  * @param mask the polynomial mask
  * @param seed the initial seed

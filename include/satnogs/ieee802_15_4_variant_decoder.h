@@ -102,7 +102,7 @@ public:
 
 private:
   /**
-   * Decoding FSM
+   * Decoding FSM states
    */
   typedef enum {
     SEARCHING,                  //!< when searching for the start of the preamble

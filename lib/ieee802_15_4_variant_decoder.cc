@@ -326,6 +326,8 @@ ieee802_15_4_variant_decoder::check_crc()
 {
   uint16_t crc16_c;
   uint16_t crc16_received;
+  uint32_t crc32_c;
+  uint32_t crc32_received;
   switch (d_crc) {
   case crc::CRC_NONE:
     return true;
@@ -351,8 +353,17 @@ ieee802_15_4_variant_decoder::check_crc()
     crc16_c = crc::crc16_ibm(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
     crc16_received = ntohs(crc16_received);
-    LOG_WARN("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
     if (crc16_c == crc16_received) {
+      return true;
+    }
+    return false;
+  case crc::CRC32_C:
+    crc32_c = crc::crc32_c(d_pdu, d_len + d_length_field_len - 4);
+    memcpy(&crc32_received, d_pdu + d_length_field_len + d_len - 4, 4);
+    crc32_received = ntohl(crc32_received);
+    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc32_received, crc32_c);
+    if (crc32_c == crc32_received) {
       return true;
     }
     return false;

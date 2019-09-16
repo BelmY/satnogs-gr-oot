@@ -44,6 +44,9 @@ public:
   static whitening_sptr
   make(uint32_t mask, uint32_t seed, uint32_t order);
 
+  static whitening_sptr
+  make_ccsds();
+
   whitening(uint32_t mask, uint32_t seed, uint32_t order);
 
   ~whitening();

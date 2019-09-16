@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<block>
+  <name>CCSDS Whitening</name>
+  <key>variable_whitening_ccsds</key>
+  <import>import satnogs</import>
+  <var_make>self.$(id) = $(id) = satnogs.whitening.make_ccsds()</var_make>
+  <var_value>satnogs.whitening.make_ccsds()</var_value>
+  <make></make>
+  <param>
+      <name>Ignore Me</name>
+      <key>value</key>
+      <value>'ok'</value>
+      <type>raw</type>
+      <hide>all</hide>
+  </param>
+</block>

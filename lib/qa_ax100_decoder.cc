@@ -18,23 +18,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qa_satnogs.h"
-#include "qa_golay24.h"
-#include "qa_ax25_decoder.h"
-#include "qa_json_converter.h"
-#include "qa_ieee802_15_4_variant_decoder.h"
-#include "qa_crc.h"
+#include <gnuradio/attributes.h>
+#include <cppunit/TestAssert.h>
 #include "qa_ax100_decoder.h"
+#include <satnogs/ax100_decoder.h>
 
-CppUnit::TestSuite *
-qa_satnogs::suite()
+namespace gr {
+namespace satnogs {
+
+void
+qa_ax100_decoder::t1()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("satnogs");
-  s->addTest(gr::satnogs::qa_golay24::suite());
-  s->addTest(gr::satnogs::qa_ax25_decoder::suite());
-  s->addTest(gr::satnogs::qa_json_converter::suite());
-  s->addTest(gr::satnogs::qa_ieee802_15_4_variant_decoder::suite());
-  s->addTest(gr::satnogs::qa_crc::suite());
-  s->addTest(gr::satnogs::qa_ax100_decoder::suite());
-  return s;
+  // Put test here
 }
+
+} /* namespace satnogs */
+} /* namespace gr */
+

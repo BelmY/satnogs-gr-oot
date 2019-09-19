@@ -57,7 +57,8 @@ ax25_decoder::ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc,
     new uint8_t[max_frame_len + AX25_MAX_ADDR_LEN + AX25_MAX_CTRL_LEN
                               + sizeof(uint16_t)]),
   d_start_idx(0),
-  d_frame_start(0)
+  d_frame_start(0),
+  d_sample_cnt(0)
 {
 }
 
@@ -110,8 +111,11 @@ ax25_decoder::_decode(decoder_status_t &status)
         if (d_shift_reg == AX25_SYNC_FLAG) {
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);
+          /* Increment the number of items read so far */
+          incr_nitems_read(i);
           enter_sync_state();
-          d_frame_start = i;
+          /* Mark possible start of the frame */
+          d_frame_start = nitems_read();
           d_start_idx = 0;
           cont = true;
           break;
@@ -120,6 +124,7 @@ ax25_decoder::_decode(decoder_status_t &status)
       if (cont) {
         continue;
       }
+      incr_nitems_read(d_bitstream.size());
       d_bitstream.clear();
       return false;
     case IN_SYNC:
@@ -151,10 +156,13 @@ ax25_decoder::_decode(decoder_status_t &status)
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
         if (d_shift_reg == AX25_SYNC_FLAG) {
+          d_sample_cnt = nitems_read() + i - d_frame_start;
           LOG_DEBUG("Found frame end");
           if (enter_frame_end(status)) {
             d_bitstream.erase(d_bitstream.begin(),
                               d_bitstream.begin() + i + 1);
+            /* Increment the number of items read so far */
+            incr_nitems_read(i);
             d_start_idx = d_bitstream.size();
             return true;
           }
@@ -271,6 +279,7 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, true);
     metadata::add_sample_start(status.data, d_frame_start);
+    metadata::add_sample_cnt(status.data, d_sample_cnt);
     status.decode_success = true;
     reset_state();
     return true;

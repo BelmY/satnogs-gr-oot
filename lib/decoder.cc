@@ -41,13 +41,16 @@ decoder::unique_id()
 }
 
 /**
- * Creates a generic decoder object
+ * @brief Construct a new decoder::decoder object
+ *
+ * @param input_item_size the sizeof() the input stream item
  * @param max_frame_len the maximum allowed frame size in bytes
  */
 decoder::decoder(int input_item_size, size_t max_frame_len)
   : d_sizeof_in(input_item_size),
     d_max_frame_len(max_frame_len),
-    d_id(base_unique_id++)
+    d_id(base_unique_id++),
+    d_nitems_read(0)
 {
 }
 
@@ -81,11 +84,40 @@ decoder::max_frame_len() const
   return d_max_frame_len;
 }
 
+/**
+ * @brief Return the size of the input stream
+ *
+ * @return int the sizeof() the input stream item
+*/
 int
 decoder::sizeof_input_item() const
 {
   return d_sizeof_in;
 }
+
+
+/**
+ * @brief Increaments the number of items read so far
+ *
+ * @param nitems the number of items read
+ */
+void
+decoder::incr_nitems_read(size_t nitems)
+{
+  d_nitems_read += nitems;
+}
+
+/**
+ * @brief Return the number of items read so far
+ *
+ * @return uint64_t number of items read so far
+ */
+uint64_t
+decoder::nitems_read() const
+{
+  return d_nitems_read;
+}
+
 
 } /* namespace satnogs */
 } /* namespace gr */

@@ -110,10 +110,18 @@ public:
   int
   sizeof_input_item() const;
 
+protected:
+  void
+  incr_nitems_read(size_t nitems);
+
+  uint64_t
+  nitems_read() const;
+
 private:
   const int     d_sizeof_in;
   const size_t  d_max_frame_len;
   int           d_id;
+  uint64_t      d_nitems_read;
 };
 
 } // namespace satnogs

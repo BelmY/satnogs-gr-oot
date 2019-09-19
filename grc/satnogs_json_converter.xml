@@ -9,7 +9,7 @@
     <name>Extra JSON field</name>
     <key>extra</key>
     <value></value>
-    <type>string</type>
+    <type>raw</type>
   </param>
   
   <sink>

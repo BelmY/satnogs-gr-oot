@@ -162,6 +162,11 @@ metadata::to_json(const pmt::pmt_t &m)
     root[value(SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64(v));
   }
 
+  v = pmt::dict_ref(m, pmt::mp(value(SAMPLE_CNT)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(SAMPLE_CNT)] = Json::Value::UInt64(pmt::to_uint64(v));
+  }
+
   v = pmt::dict_ref(m, pmt::mp(value(SYMBOL_ERASURES)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
     root[value(SYMBOL_ERASURES)] = Json::Value::UInt64(pmt::to_uint64(v));

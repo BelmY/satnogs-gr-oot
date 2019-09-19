@@ -136,7 +136,8 @@ private:
   uint8_t *d_frame_buffer;
   std::deque<uint8_t> d_bitstream;
   size_t d_start_idx;
-  size_t d_frame_start;
+  uint64_t d_frame_start;
+  uint64_t d_sample_cnt;
 
   void
   reset_state();

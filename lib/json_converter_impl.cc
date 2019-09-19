@@ -62,8 +62,16 @@ json_converter_impl::~json_converter_impl()
 void
 json_converter_impl::convert(pmt::pmt_t m)
 {
+  Json::CharReaderBuilder crb;
+  Json::CharReader *cr = crb.newCharReader();
+  Json::Value extra;
+  std::string err;
+
+
   Json::Value root = metadata::to_json(m);
-  root["extra"] = d_extra;
+  if (cr->parse(d_extra.c_str(), d_extra.c_str() + d_extra.size(), &extra, &err)) {
+    root["extra"] = extra;
+  }
   const std::string &s = root.toStyledString();
   const char *c = s.c_str();
   message_port_pub(pmt::mp("out"), pmt::make_blob(c, s.length()));

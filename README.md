@@ -211,7 +211,7 @@ The table below describes some of them:
 | corrected_bits | `uint64_t` with the number of corrected bits |
 | symbol_erasures | `uint64_t` with the number of erased symbols |
 | sample_start | `uint64_t` with the sample index at which the decoder identified the start of the frame |
-| sample_cnt | `uint64_t` with the number of samples of a valid frame.  `sample_start + sample_cnt` specify the length of a frame in samples |
+| sample_cnt | `uint64_t` with the number of samples of a valid frame.  `sample_start + sample_cnt` specify the sample index at the end of the frame |
 
 The method `Json::Value
 metadata::to_json(const pmt::pmt_t& m)` is converts the dictionary `m`

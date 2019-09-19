@@ -44,7 +44,10 @@ public:
    * class. satnogs::frame_encoder::make is the public interface for
    * creating new instances.
    */
-  static sptr make(bool append_preamble, bool ecss_encap, const std::string &dest_addr, uint8_t dest_ssid, const std::string &src_addr, uint8_t src_ssid);
+  static sptr
+  make(bool append_preamble, bool ecss_encap,
+       const std::string &dest_addr, uint8_t dest_ssid, const std::string &src_addr,
+       uint8_t src_ssid);
 };
 
 } // namespace satnogs

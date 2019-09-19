@@ -35,8 +35,10 @@ namespace satnogs {
 class decoder_status {
 public:
   int                   consumed;       /**< The number of input items consumed */
-  bool                  decode_success; /**< Indicated if there was a successful decoding */
-  pmt::pmt_t            data;           /**< a dictionary with the PDU with of decoded data and the corresponding metadata for the decoded frame */
+  bool
+  decode_success; /**< Indicated if there was a successful decoding */
+  pmt::pmt_t
+  data;           /**< a dictionary with the PDU with of decoded data and the corresponding metadata for the decoded frame */
 
   decoder_status() :
     consumed(0),

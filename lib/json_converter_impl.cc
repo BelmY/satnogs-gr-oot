@@ -69,7 +69,8 @@ json_converter_impl::convert(pmt::pmt_t m)
 
 
   Json::Value root = metadata::to_json(m);
-  if (cr->parse(d_extra.c_str(), d_extra.c_str() + d_extra.size(), &extra, &err)) {
+  if (cr->parse(d_extra.c_str(), d_extra.c_str() + d_extra.size(), &extra,
+                &err)) {
     root["extra"] = extra;
   }
   const std::string &s = root.toStyledString();

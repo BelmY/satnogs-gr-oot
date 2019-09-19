@@ -126,6 +126,7 @@ private:
   size_t                        d_length_field_len;
   decoding_state_t              d_state;
   size_t                        d_cnt;
+  uint64_t                      d_frame_start_idx;
   uint8_t                       *d_pdu;
 
   decoder_status_t

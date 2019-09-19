@@ -112,7 +112,7 @@ ax25_decoder::_decode(decoder_status_t &status)
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);
           /* Increment the number of items read so far */
-          incr_nitems_read(i);
+          incr_nitems_read(i + 1);
           enter_sync_state();
           /* Mark possible start of the frame */
           d_frame_start = nitems_read();
@@ -162,7 +162,7 @@ ax25_decoder::_decode(decoder_status_t &status)
             d_bitstream.erase(d_bitstream.begin(),
                               d_bitstream.begin() + i + 1);
             /* Increment the number of items read so far */
-            incr_nitems_read(i);
+            incr_nitems_read(i + 1);
             d_start_idx = d_bitstream.size();
             return true;
           }

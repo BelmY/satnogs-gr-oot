@@ -73,6 +73,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   d_length_field_len(0),
   d_state(SEARCHING),
   d_cnt(0),
+  d_frame_start_idx(0),
   d_pdu(new uint8_t[max_len])
 {
   for (uint8_t b : preamble) {
@@ -173,6 +174,7 @@ ieee802_15_4_variant_decoder::decode_var_len(const void *in, int len)
   default:
     throw std::runtime_error("ieee802_15_4_variant_decoder: Invalid state");
   }
+  incr_nitems_read(static_cast<uint64_t>(status.consumed));
   return status;
 }
 
@@ -193,6 +195,7 @@ ieee802_15_4_variant_decoder::decode_const_len(const void *in, int len)
   default:
     throw std::runtime_error("ieee802_15_4_variant_decoder: Invalid state");
   }
+  incr_nitems_read(static_cast<uint64_t>(status.consumed));
   return status;
 }
 
@@ -215,6 +218,7 @@ ieee802_15_4_variant_decoder::search_preamble(const uint8_t *in, int len)
     shift_reg tmp = d_preamble_shift_reg ^ d_preamble;
     if (tmp.count() <= d_preamble_thrsh) {
       d_state = SEARCHING_SYNC;
+      d_frame_start_idx = nitems_read() + i + 1;
       d_cnt = 0;
       return i + 1;
     }
@@ -304,8 +308,11 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
 
       status.decode_success = true;
       status.consumed = (i + 1) * 8;
+      metadata::add_time_iso8601(status.data);
+      metadata::add_sample_start(status.data, d_frame_start_idx);
+      metadata::add_sample_cnt(status.data,
+                               nitems_read() + (i + 1) * 8 - d_frame_start_idx);
       if (check_crc()) {
-        metadata::add_time_iso8601(status.data);
         metadata::add_pdu(status.data, d_pdu + d_length_field_len,
                           d_len - crc::crc_size(d_crc));
         metadata::add_crc_valid(status.data, true);

@@ -5,7 +5,7 @@
 # Title: NOAA APT Decoder
 # Author: Manolis Surligas, George Vardakis
 # Description: A NOAA APT Decoder with automatic image synchronization
-# Generated: Wed Jul  4 12:13:02 2018
+# GNU Radio version: 3.7.13.5
 ##################################################
 
 
@@ -67,7 +67,7 @@ class satnogs_noaa_apt_decoder(gr.top_block):
         # Blocks
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(samp_rate_rx/ ( first_stage_decimation  * int(samp_rate_rx/ first_stage_decimation / initial_bandwidth)), 0.0, 8, 1024, waterfall_file_path, 0)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000/doppler_correction_per_sec, 1500)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, 48000, 0.8)
         self.satnogs_noaa_apt_sink_0 = satnogs.noaa_apt_sink(decoded_data_file_path, 2080, 1800, bool(sync), bool(flip_images))
         self.satnogs_iq_sink_0 = satnogs.iq_sink(32767, iq_file_path, False, enable_iq_dump)
@@ -128,6 +128,8 @@ class satnogs_noaa_apt_decoder(gr.top_block):
         	quad_rate=samp_rate_rx/ ( first_stage_decimation  * int(samp_rate_rx/ first_stage_decimation / initial_bandwidth)),
         	audio_decimation=audio_decimation,
         )
+
+
 
         ##################################################
         # Connections

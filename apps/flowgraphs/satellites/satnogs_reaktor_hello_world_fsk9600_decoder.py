@@ -27,7 +27,7 @@ import time
 
 class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
 
-    def __init__(self, antenna=satnogs.not_set_antenna, baudrate=9600.0, bb_gain=satnogs.not_set_rx_bb_gain, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=1000, enable_iq_dump=0, file_path='test.wav', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
+    def __init__(self, antenna=satnogs.not_set_antenna, baudrate=9600.0, bb_gain=satnogs.not_set_rx_bb_gain, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=20, enable_iq_dump=0, file_path='test.wav', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
         gr.top_block.__init__(self, "satnogs_reaktor_hello_world_fsk9600_decoder")
 
         ##################################################
@@ -58,6 +58,8 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         # Variables
         ##################################################
         self.variable_whitening_0 = variable_whitening_0 = satnogs.whitening_make(0x21, 0x1FF, 8)
+        self.variable_whitening_0_0 = variable_whitening_0_0 = satnogs.whitening_make(0x21, 0x1FF, 8)
+        self.variable_ieee802_15_4_variant_decoder_0 = variable_ieee802_15_4_variant_decoder_0 = satnogs.ieee802_15_4_variant_decoder_make([0x55, 0x55, 0x55, 0x55, 0x55], 2, [0x35, 0x2E, 0x35, 0x2E], 1, satnogs.crc.CRC16_IBM, variable_whitening_0, True, 256)
         self.audio_samp_rate = audio_samp_rate = 48000
 
         ##################################################
@@ -65,11 +67,11 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(audio_samp_rate, 0.0, 10, 1024, waterfall_file_path, 1)
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000, 1500)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
-        self.satnogs_frame_acquisition_0 = satnogs.frame_acquisition(1, [0xAA, 0xAA, 0xAA, 0xAA], 4, [0x35, 0x2E, 0x35, 0x2E], 3, 1, 256, 3, variable_whitening_0, 2048)
+        self.satnogs_frame_decoder_0_0 = satnogs.frame_decoder(variable_ieee802_15_4_variant_decoder_0, gr.sizeof_char)
         self.satnogs_coarse_doppler_correction_cc_0 = satnogs.coarse_doppler_correction_cc(rx_freq, satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx))
         self.pfb_arb_resampler_xxx_0_0_0 = pfb.arb_resampler_ccf(
         	  (2.0*baudrate)/audio_samp_rate,
@@ -107,7 +109,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         self.blocks_vco_c_0 = blocks.vco_c(audio_samp_rate, -audio_samp_rate, 1.0)
         self.blocks_rotator_cc_0 = blocks.rotator_cc(-2.0 * math.pi * (lo_offset / satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx)))
         self.blocks_multiply_xx_0_0 = blocks.multiply_vcc(1)
-        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1024, 1.0/1024.0, 4096)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1024, 1.0/1024.0, 4096, 1)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 1024/2)
         self.analog_quadrature_demod_cf_0_0_0_1 = analog.quadrature_demod_cf(1.2)
         self.analog_quadrature_demod_cf_0_0_0_0 = analog.quadrature_demod_cf(1.0)
@@ -118,8 +120,8 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_frame_acquisition_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_frame_acquisition_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_coarse_doppler_correction_cc_0, 'freq'))
         self.connect((self.analog_quadrature_demod_cf_0_0_0, 0), (self.dc_blocker_xx_0_0, 0))
         self.connect((self.analog_quadrature_demod_cf_0_0_0_0, 0), (self.blocks_moving_average_xx_0, 0))
@@ -131,7 +133,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         self.connect((self.blocks_vco_c_0, 0), (self.blocks_multiply_xx_0_0, 1))
         self.connect((self.dc_blocker_xx_0_0, 0), (self.satnogs_ogg_encoder_0, 0))
         self.connect((self.dc_blocker_xx_0_0_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))
-        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_frame_acquisition_0, 0))
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_frame_decoder_0_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.pfb_arb_resampler_xxx_0_0_0, 0))
         self.connect((self.low_pass_filter_1, 0), (self.dc_blocker_xx_0_0_0, 0))
@@ -294,6 +296,18 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
     def set_variable_whitening_0(self, variable_whitening_0):
         self.variable_whitening_0 = variable_whitening_0
 
+    def get_variable_whitening_0_0(self):
+        return self.variable_whitening_0_0
+
+    def set_variable_whitening_0_0(self, variable_whitening_0_0):
+        self.variable_whitening_0_0 = variable_whitening_0_0
+
+    def get_variable_ieee802_15_4_variant_decoder_0(self):
+        return self.variable_ieee802_15_4_variant_decoder_0
+
+    def set_variable_ieee802_15_4_variant_decoder_0(self, variable_ieee802_15_4_variant_decoder_0):
+        self.variable_ieee802_15_4_variant_decoder_0 = variable_ieee802_15_4_variant_decoder_0
+
     def get_audio_samp_rate(self):
         return self.audio_samp_rate
 
@@ -323,7 +337,7 @@ def argument_parser():
         "", "--dev-args", dest="dev_args", type="string", default=satnogs.not_set_dev_args,
         help="Set dev_args [default=%default]")
     parser.add_option(
-        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=1000,
+        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=20,
         help="Set doppler_correction_per_sec [default=%default]")
     parser.add_option(
         "", "--enable-iq-dump", dest="enable_iq_dump", type="intx", default=0,

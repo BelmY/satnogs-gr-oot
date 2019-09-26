@@ -5,8 +5,9 @@
 # Title: CW Decoder
 # Author: Manolis Surligas (surligas@gmail.com)
 # Description: A CW (Morse) Decoder
-# Generated: Sun Jan  6 13:47:58 2019
+# GNU Radio version: 3.7.13.5
 ##################################################
+
 
 from gnuradio import analog
 from gnuradio import blocks
@@ -25,7 +26,7 @@ import time
 
 class satnogs_cw_decoder(gr.top_block):
 
-    def __init__(self, antenna=satnogs.not_set_antenna, bb_gain=satnogs.not_set_rx_bb_gain, bfo_freq=1e3, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=1000, enable_iq_dump=0, file_path='test.txt', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat', wpm=20):
+    def __init__(self, antenna=satnogs.not_set_antenna, bb_gain=satnogs.not_set_rx_bb_gain, bfo_freq=1e3, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=20, enable_iq_dump=0, file_path='test.txt', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat', wpm=20):
         gr.top_block.__init__(self, "CW Decoder")
 
         ##################################################
@@ -65,7 +66,7 @@ class satnogs_cw_decoder(gr.top_block):
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(audio_samp_rate, 0.0, 10, 1024, waterfall_file_path, 1)
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000, 1500)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_morse_decoder_0 = satnogs.morse_decoder(ord('#'), 3)
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
@@ -340,7 +341,7 @@ def argument_parser():
         "", "--dev-args", dest="dev_args", type="string", default=satnogs.not_set_dev_args,
         help="Set dev_args [default=%default]")
     parser.add_option(
-        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=1000,
+        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=20,
         help="Set doppler_correction_per_sec [default=%default]")
     parser.add_option(
         "", "--enable-iq-dump", dest="enable_iq_dump", type="intx", default=0,

@@ -117,6 +117,65 @@
     </param>
   </block>
   <block>
+    <key>variable_ieee802_15_4_variant_decoder</key>
+    <param>
+      <key>crc</key>
+      <value>satnogs.crc.CRC16_IBM</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>preamble</key>
+      <value>[0x55, 0x55, 0x55, 0x55, 0x55]</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1380, 618)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_ieee802_15_4_variant_decoder_0</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'ok'</value>
+    </param>
+    <param>
+      <key>frame_len</key>
+      <value>256</value>
+    </param>
+    <param>
+      <key>preamble_thrsh</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>sync_thrsh</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>sync_word</key>
+      <value>[0x35, 0x2E, 0x35, 0x2E]</value>
+    </param>
+    <param>
+      <key>var_len</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>whitening</key>
+      <value>variable_whitening_0</value>
+    </param>
+  </block>
+  <block>
     <key>variable_whitening</key>
     <param>
       <key>comment</key>
@@ -137,6 +196,45 @@
     <param>
       <key>id</key>
       <value>variable_whitening_0</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'ok'</value>
+    </param>
+    <param>
+      <key>mask</key>
+      <value>0x21</value>
+    </param>
+    <param>
+      <key>order</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>0x1FF</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_whitening</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1220, 618)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_whitening_0_0</value>
     </param>
     <param>
       <key>value</key>
@@ -939,7 +1037,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1672, 532)</value>
+      <value>(1675, 530)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1026,7 +1124,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>20</value>
     </param>
   </block>
   <block>
@@ -3309,14 +3407,10 @@ we shift the LO a little further</value>
     </param>
   </block>
   <block>
-    <key>satnogs_frame_acquisition</key>
+    <key>satnogs_frame_decoder</key>
     <param>
       <key>alias</key>
       <value></value>
-    </param>
-    <param>
-      <key>crc</key>
-      <value>3</value>
     </param>
     <param>
       <key>comment</key>
@@ -3327,24 +3421,16 @@ we shift the LO a little further</value>
       <value></value>
     </param>
     <param>
+      <key>decoder_object</key>
+      <value>variable_ieee802_15_4_variant_decoder_0</value>
+    </param>
+    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>frame_len</key>
-      <value>256</value>
-    </param>
-    <param>
-      <key>preamble</key>
-      <value>[0xAA, 0xAA, 0xAA, 0xAA]</value>
-    </param>
-    <param>
-      <key>frame_size_field_len</key>
-      <value>1</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(1228, 490)</value>
+      <value>(1228, 534)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3352,39 +3438,19 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>id</key>
-      <value>satnogs_frame_acquisition_0</value>
+      <value>satnogs_frame_decoder_0_0</value>
+    </param>
+    <param>
+      <key>itype</key>
+      <value>byte</value>
     </param>
     <param>
       <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
-      <key>max_frame_len</key>
-      <value>2048</value>
-    </param>
-    <param>
       <key>minoutbuf</key>
       <value>0</value>
-    </param>
-    <param>
-      <key>preamble_thrsh</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>sync_thrsh</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>sync_word</key>
-      <value>[0x35, 0x2E, 0x35, 0x2E]</value>
-    </param>
-    <param>
-      <key>variant</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>whitening</key>
-      <value>variable_whitening_0</value>
     </param>
   </block>
   <block>
@@ -3407,7 +3473,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(936, 684)</value>
+      <value>(933, 586)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3536,7 +3602,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(112, 148)</value>
+      <value>(111, 163)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3572,7 +3638,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>interval</key>
-      <value>1000</value>
+      <value>int(1000.0/doppler_correction_per_sec) + 1</value>
     </param>
   </block>
   <block>
@@ -3595,7 +3661,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(936, 596)</value>
+      <value>(933, 506)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3876,7 +3942,7 @@ we shift the LO a little further</value>
   </connection>
   <connection>
     <source_block_id>digital_binary_slicer_fb_0</source_block_id>
-    <sink_block_id>satnogs_frame_acquisition_0</sink_block_id>
+    <sink_block_id>satnogs_frame_decoder_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3947,13 +4013,13 @@ we shift the LO a little further</value>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>satnogs_frame_acquisition_0</source_block_id>
+    <source_block_id>satnogs_frame_decoder_0_0</source_block_id>
     <sink_block_id>satnogs_frame_file_sink_0_1_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>frame</sink_key>
   </connection>
   <connection>
-    <source_block_id>satnogs_frame_acquisition_0</source_block_id>
+    <source_block_id>satnogs_frame_decoder_0_0</source_block_id>
     <sink_block_id>satnogs_udp_msg_sink_0_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>in</sink_key>

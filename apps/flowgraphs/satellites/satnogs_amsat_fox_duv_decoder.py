@@ -5,7 +5,7 @@
 # Title: AMSAT FOX DUV Decoder
 # Author: Thanos Giolias (agiolias@csd.uoc.gr), Nikos Karamolegos (karamolegkos.n@gmail.com), Manolis Surligas (surligas@gmail.com)
 # Description: A DUV Decoder for the AMSAT FOX satellites
-# Generated: Wed Sep  5 12:05:57 2018
+# GNU Radio version: 3.7.13.5
 ##################################################
 
 
@@ -57,6 +57,7 @@ class satnogs_amsat_fox_duv_decoder(gr.top_block):
         ##################################################
         # Variables
         ##################################################
+        self.variable_amsat_duv_decoder_0 = variable_amsat_duv_decoder_0 = satnogs.amsat_duv_decoder_make('0011111010', 96)
         self.max_modulation_freq = max_modulation_freq = 3000
         self.deviation = deviation = 5000
         self.audio_samp_rate = audio_samp_rate = 48000
@@ -66,16 +67,12 @@ class satnogs_amsat_fox_duv_decoder(gr.top_block):
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(audio_samp_rate, 0.0, 10, 1024, waterfall_file_path, 1)
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000, 1500)
-        self.satnogs_quad_demod_filter_ff_0 = satnogs.quad_demod_filter_ff(1.2)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
-        self.satnogs_fox_telem_mm_0 = satnogs.fox_telem_mm()
-        self.satnogs_decoder_8b10b_0 = satnogs.decoder_8b10b('0011111010', 960)
-
+        self.satnogs_frame_decoder_0 = satnogs.frame_decoder(variable_amsat_duv_decoder_0, gr.sizeof_char)
         self.satnogs_coarse_doppler_correction_cc_0 = satnogs.coarse_doppler_correction_cc(rx_freq, satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx))
-        self.satnogs_ccsds_rs_decoder_mm_0 = satnogs.ccsds_rs_decoder_mm()
         self.root_raised_cosine_filter_0 = filter.fir_filter_fff(1, firdes.root_raised_cosine(
         	1, 1, 2.4, 0.5, 512))
         self.pfb_arb_resampler_xxx_0 = pfb.arb_resampler_ccf(
@@ -108,20 +105,20 @@ class satnogs_amsat_fox_duv_decoder(gr.top_block):
         self.analog_quadrature_demod_cf_0_0 = analog.quadrature_demod_cf(1.2)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(1.0)
 
+
+
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_ccsds_rs_decoder_mm_0, 'pdu'), (self.satnogs_fox_telem_mm_0, 'in'))
-        self.msg_connect((self.satnogs_decoder_8b10b_0, 'pdu'), (self.satnogs_ccsds_rs_decoder_mm_0, 'in'))
-        self.msg_connect((self.satnogs_fox_telem_mm_0, 'raw'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_fox_telem_mm_0, 'raw'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_coarse_doppler_correction_cc_0, 'freq'))
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.satnogs_ogg_encoder_0, 0))
         self.connect((self.analog_quadrature_demod_cf_0_0, 0), (self.low_pass_filter_1, 0))
         self.connect((self.blocks_rotator_cc_0, 0), (self.satnogs_coarse_doppler_correction_cc_0, 0))
         self.connect((self.dc_blocker_xx_0, 0), (self.root_raised_cosine_filter_0, 0))
-        self.connect((self.digital_binary_slicer_fb_0_0, 0), (self.satnogs_decoder_8b10b_0, 0))
-        self.connect((self.digital_clock_recovery_mm_xx_0_0_0, 0), (self.satnogs_quad_demod_filter_ff_0, 0))
+        self.connect((self.digital_binary_slicer_fb_0_0, 0), (self.satnogs_frame_decoder_0, 0))
+        self.connect((self.digital_clock_recovery_mm_xx_0_0_0, 0), (self.digital_binary_slicer_fb_0_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0_0, 0))
         self.connect((self.low_pass_filter_1, 0), (self.dc_blocker_xx_0, 0))
@@ -131,7 +128,6 @@ class satnogs_amsat_fox_duv_decoder(gr.top_block):
         self.connect((self.pfb_arb_resampler_xxx_0, 0), (self.satnogs_waterfall_sink_0, 0))
         self.connect((self.root_raised_cosine_filter_0, 0), (self.digital_clock_recovery_mm_xx_0_0_0, 0))
         self.connect((self.satnogs_coarse_doppler_correction_cc_0, 0), (self.pfb_arb_resampler_xxx_0, 0))
-        self.connect((self.satnogs_quad_demod_filter_ff_0, 0), (self.digital_binary_slicer_fb_0_0, 0))
 
     def get_antenna(self):
         return self.antenna
@@ -273,6 +269,12 @@ class satnogs_amsat_fox_duv_decoder(gr.top_block):
 
     def set_waterfall_file_path(self, waterfall_file_path):
         self.waterfall_file_path = waterfall_file_path
+
+    def get_variable_amsat_duv_decoder_0(self):
+        return self.variable_amsat_duv_decoder_0
+
+    def set_variable_amsat_duv_decoder_0(self, variable_amsat_duv_decoder_0):
+        self.variable_amsat_duv_decoder_0 = variable_amsat_duv_decoder_0
 
     def get_max_modulation_freq(self):
         return self.max_modulation_freq

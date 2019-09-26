@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
+<?grc format='1' created='3.7.13'?>
 <flow_graph>
   <timestamp>Thu May  5 00:22:45 2016</timestamp>
   <block>
@@ -2747,7 +2747,7 @@ doppler correction block.</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(16, 204)</value>
+      <value>(7, 211)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2755,7 +2755,7 @@ doppler correction block.</value>
     </param>
     <param>
       <key>id</key>
-      <value>satnogs_tcp_rigctl_msg_source_0</value>
+      <value>satnogs_tcp_rigctl_msg_source_0_0</value>
     </param>
     <param>
       <key>addr</key>
@@ -2783,7 +2783,7 @@ doppler correction block.</value>
     </param>
     <param>
       <key>interval</key>
-      <value>1000/doppler_correction_per_sec</value>
+      <value>int(1000.0/doppler_correction_per_sec) + 1</value>
     </param>
   </block>
   <block>
@@ -2931,7 +2931,7 @@ doppler correction block.</value>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>satnogs_tcp_rigctl_msg_source_0</source_block_id>
+    <source_block_id>satnogs_tcp_rigctl_msg_source_0_0</source_block_id>
     <sink_block_id>satnogs_coarse_doppler_correction_cc_0</sink_block_id>
     <source_key>freq</source_key>
     <sink_key>freq</sink_key>

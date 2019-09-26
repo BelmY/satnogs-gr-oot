@@ -5,8 +5,9 @@
 # Title: satnogs_bpsk_ax25
 # Author: Manolis Surligas (surligas@gmail.com), Patrick Dohmen (DL4PD)
 # Description: BPSK AX.25 decoder
-# Generated: Fri Dec 21 16:45:19 2018
+# GNU Radio version: 3.7.13.5
 ##################################################
+
 
 from gnuradio import analog
 from gnuradio import blocks
@@ -60,6 +61,8 @@ class satnogs_bpsk_ax25(gr.top_block):
         ##################################################
         self.sps = sps = 4
         self.nfilts = nfilts = 32
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), excess_bw, 11*sps*nfilts)
 
         self.bpsk_constellation = bpsk_constellation = digital.constellation_bpsk().base()
@@ -71,13 +74,13 @@ class satnogs_bpsk_ax25(gr.top_block):
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(audio_samp_rate, 0.0, 10, 1024, waterfall_file_path, 1)
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000, 1500)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1.0/doppler_correction_per_sec) * 1000 + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
+        self.satnogs_frame_decoder_0_0_0 = satnogs.frame_decoder(variable_ax25_decoder_0_0, gr.sizeof_char)
+        self.satnogs_frame_decoder_0_0 = satnogs.frame_decoder(variable_ax25_decoder_0, gr.sizeof_char)
         self.satnogs_coarse_doppler_correction_cc_0 = satnogs.coarse_doppler_correction_cc(rx_freq, satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx))
-        self.satnogs_ax25_decoder_bm_0_0 = satnogs.ax25_decoder_bm('GND', 0, True, False, 1024)
-        self.satnogs_ax25_decoder_bm_0 = satnogs.ax25_decoder_bm('GND', 0, True, True, 1024)
         self.pfb_arb_resampler_xxx_0_0 = pfb.arb_resampler_ccf(
         	  (1.0 * sps*baudrate)/satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx),
                   taps=None,
@@ -123,18 +126,18 @@ class satnogs_bpsk_ax25(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0, 'pdu'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0, 'pdu'), (self.satnogs_udp_msg_sink_0_0, 'in'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0_0, 'pdu'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0_0, 'pdu'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_coarse_doppler_correction_cc_0, 'freq'))
         self.connect((self.analog_agc2_xx_0, 0), (self.pfb_arb_resampler_xxx_0_0, 0))
         self.connect((self.analog_agc2_xx_0_0, 0), (self.low_pass_filter_0_0, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.satnogs_ogg_encoder_0, 0))
         self.connect((self.blocks_rotator_cc_0, 0), (self.satnogs_coarse_doppler_correction_cc_0, 0))
         self.connect((self.blocks_rotator_cc_0_0, 0), (self.blocks_complex_to_real_0, 0))
-        self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_ax25_decoder_bm_0, 0))
-        self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_ax25_decoder_bm_0_0, 0))
+        self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_frame_decoder_0_0, 0))
+        self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_frame_decoder_0_0_0, 0))
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.digital_pfb_clock_sync_xxx_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0, 0), (self.digital_constellation_receiver_cb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.digital_costas_loop_cc_0_0, 0))
@@ -325,6 +328,18 @@ class satnogs_bpsk_ax25(gr.top_block):
     def set_nfilts(self, nfilts):
         self.nfilts = nfilts
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), self.excess_bw, 11*self.sps*self.nfilts))
+
+    def get_variable_ax25_decoder_0_0(self):
+        return self.variable_ax25_decoder_0_0
+
+    def set_variable_ax25_decoder_0_0(self, variable_ax25_decoder_0_0):
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0
+
+    def get_variable_ax25_decoder_0(self):
+        return self.variable_ax25_decoder_0
+
+    def set_variable_ax25_decoder_0(self, variable_ax25_decoder_0):
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0
 
     def get_rrc_taps(self):
         return self.rrc_taps

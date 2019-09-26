@@ -27,7 +27,7 @@ import time
 
 class satnogs_afsk1200_ax25(gr.top_block):
 
-    def __init__(self, antenna=satnogs.not_set_antenna, baudrate=1200.0, bb_gain=satnogs.not_set_rx_bb_gain, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=1000, enable_iq_dump=0, file_path='test.wav', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, mark_frequency=2200.0, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, space_frequency=1200.0, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
+    def __init__(self, antenna=satnogs.not_set_antenna, baudrate=1200.0, bb_gain=satnogs.not_set_rx_bb_gain, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args=satnogs.not_set_dev_args, doppler_correction_per_sec=20, enable_iq_dump=0, file_path='test.wav', if_gain=satnogs.not_set_rx_if_gain, iq_file_path='/tmp/iq.dat', lo_offset=100e3, mark_frequency=2200.0, ppm=0, rf_gain=satnogs.not_set_rx_rf_gain, rigctl_port=4532, rx_freq=100e6, rx_sdr_device='usrpb200', samp_rate_rx=satnogs.not_set_samp_rate_rx, space_frequency=1200.0, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
         gr.top_block.__init__(self, "AFSK1200 AX.25 decoder ")
 
         ##################################################
@@ -59,6 +59,8 @@ class satnogs_afsk1200_ax25(gr.top_block):
         ##################################################
         # Variables
         ##################################################
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
         self.max_modulation_freq = max_modulation_freq = 3000
         self.deviation = deviation = 5000
         self.baud_rate = baud_rate = 1200
@@ -69,13 +71,13 @@ class satnogs_afsk1200_ax25(gr.top_block):
         ##################################################
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(audio_samp_rate, 0.0, 10, 1024, waterfall_file_path, 1)
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
-        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, 1000, 1500)
+        self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
+        self.satnogs_frame_decoder_0_0_0 = satnogs.frame_decoder(variable_ax25_decoder_0_0, gr.sizeof_char)
+        self.satnogs_frame_decoder_0_0 = satnogs.frame_decoder(variable_ax25_decoder_0, gr.sizeof_char)
         self.satnogs_coarse_doppler_correction_cc_0 = satnogs.coarse_doppler_correction_cc(rx_freq, satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx))
-        self.satnogs_ax25_decoder_bm_0_0 = satnogs.ax25_decoder_bm('GND', 0, True, True, 1024)
-        self.satnogs_ax25_decoder_bm_0 = satnogs.ax25_decoder_bm('GND', 0, True, False, 1024)
         self.pfb_arb_resampler_xxx_0 = pfb.arb_resampler_ccf(
         	  audio_samp_rate/satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx),
                   taps=None,
@@ -109,7 +111,7 @@ class satnogs_afsk1200_ax25(gr.top_block):
         self.blocks_rotator_cc_0 = blocks.rotator_cc(-2.0 * math.pi * (lo_offset / satnogs.handle_samp_rate_rx(rx_sdr_device, samp_rate_rx)))
         self.blocks_multiply_xx_0_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1024, 1.0/1024.0, 4096)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1024, 1.0/1024.0, 4096, 1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 1024/2)
         self.band_pass_filter_0 = filter.fir_filter_fff(1, firdes.band_pass(
@@ -124,10 +126,10 @@ class satnogs_afsk1200_ax25(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0, 'pdu'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0, 'pdu'), (self.satnogs_udp_msg_sink_0_0, 'in'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0_0, 'pdu'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_ax25_decoder_bm_0_0, 'pdu'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_coarse_doppler_correction_cc_0, 'freq'))
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.dc_blocker_xx_0_0, 0))
         self.connect((self.analog_quadrature_demod_cf_0_0, 0), (self.band_pass_filter_0, 0))
@@ -144,8 +146,8 @@ class satnogs_afsk1200_ax25(gr.top_block):
         self.connect((self.blocks_vco_c_0, 0), (self.blocks_multiply_xx_0_0, 1))
         self.connect((self.dc_blocker_xx_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.dc_blocker_xx_0_0, 0), (self.low_pass_filter_2_0, 0))
-        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_ax25_decoder_bm_0, 0))
-        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_ax25_decoder_bm_0_0, 0))
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_frame_decoder_0_0, 0))
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.satnogs_frame_decoder_0_0_0, 0))
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0_0, 0))
         self.connect((self.low_pass_filter_1, 0), (self.analog_quadrature_demod_cf_0, 0))
@@ -313,6 +315,18 @@ class satnogs_afsk1200_ax25(gr.top_block):
     def set_waterfall_file_path(self, waterfall_file_path):
         self.waterfall_file_path = waterfall_file_path
 
+    def get_variable_ax25_decoder_0_0(self):
+        return self.variable_ax25_decoder_0_0
+
+    def set_variable_ax25_decoder_0_0(self, variable_ax25_decoder_0_0):
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0
+
+    def get_variable_ax25_decoder_0(self):
+        return self.variable_ax25_decoder_0
+
+    def set_variable_ax25_decoder_0(self, variable_ax25_decoder_0):
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0
+
     def get_max_modulation_freq(self):
         return self.max_modulation_freq
 
@@ -369,7 +383,7 @@ def argument_parser():
         "", "--dev-args", dest="dev_args", type="string", default=satnogs.not_set_dev_args,
         help="Set dev_args [default=%default]")
     parser.add_option(
-        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=1000,
+        "", "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type="intx", default=20,
         help="Set doppler_correction_per_sec [default=%default]")
     parser.add_option(
         "", "--enable-iq-dump", dest="enable_iq_dump", type="intx", default=0,

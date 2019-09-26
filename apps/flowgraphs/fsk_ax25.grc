@@ -117,6 +117,108 @@
     </param>
   </block>
   <block>
+    <key>variable_ax25_decoder</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>descrambling</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1212, 801)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_ax25_decoder_0</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'ok'</value>
+    </param>
+    <param>
+      <key>frame_len</key>
+      <value>512</value>
+    </param>
+    <param>
+      <key>crc_check</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>promisc</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>addr</key>
+      <value>'GND'</value>
+    </param>
+    <param>
+      <key>ssid</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_ax25_decoder</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>descrambling</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1372, 801)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_ax25_decoder_0_0</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'ok'</value>
+    </param>
+    <param>
+      <key>frame_len</key>
+      <value>512</value>
+    </param>
+    <param>
+      <key>crc_check</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>promisc</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>addr</key>
+      <value>'GND'</value>
+    </param>
+    <param>
+      <key>ssid</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>analog_quadrature_demod_cf</key>
     <param>
       <key>alias</key>
@@ -861,7 +963,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1512, 592)</value>
+      <value>(1523, 606)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -900,7 +1002,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1768, 556)</value>
+      <value>(1771, 570)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -987,7 +1089,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>20</value>
     </param>
   </block>
   <block>
@@ -3223,124 +3325,6 @@ we shift the LO a little further</value>
     </param>
   </block>
   <block>
-    <key>satnogs_ax25_decoder_bm</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>descrambling</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1240, 492)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>satnogs_ax25_decoder_bm_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max_frame_len</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>promisc</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>addr</key>
-      <value>'GND'</value>
-    </param>
-    <param>
-      <key>ssid</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>satnogs_ax25_decoder_bm</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>descrambling</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1240, 612)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>satnogs_ax25_decoder_bm_0_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max_frame_len</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>promisc</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>addr</key>
-      <value>'GND'</value>
-    </param>
-    <param>
-      <key>ssid</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>satnogs_coarse_doppler_correction_cc</key>
     <param>
       <key>alias</key>
@@ -3388,6 +3372,100 @@ we shift the LO a little further</value>
     </param>
   </block>
   <block>
+    <key>satnogs_frame_decoder</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decoder_object</key>
+      <value>variable_ax25_decoder_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1220, 638)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>satnogs_frame_decoder_0_0</value>
+    </param>
+    <param>
+      <key>itype</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>satnogs_frame_decoder</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decoder_object</key>
+      <value>variable_ax25_decoder_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1220, 566)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>satnogs_frame_decoder_0_0_0</value>
+    </param>
+    <param>
+      <key>itype</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>satnogs_frame_file_sink</key>
     <param>
       <key>alias</key>
@@ -3407,7 +3485,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(936, 684)</value>
+      <value>(885, 730)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3536,7 +3614,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 148)</value>
+      <value>(215, 147)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3572,7 +3650,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>interval</key>
-      <value>1000</value>
+      <value>int(1000.0/doppler_correction_per_sec) + 1</value>
     </param>
   </block>
   <block>
@@ -3595,7 +3673,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(936, 596)</value>
+      <value>(885, 634)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3876,13 +3954,13 @@ we shift the LO a little further</value>
   </connection>
   <connection>
     <source_block_id>digital_binary_slicer_fb_0</source_block_id>
-    <sink_block_id>satnogs_ax25_decoder_bm_0</sink_block_id>
+    <sink_block_id>satnogs_frame_decoder_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_binary_slicer_fb_0</source_block_id>
-    <sink_block_id>satnogs_ax25_decoder_bm_0_0</sink_block_id>
+    <sink_block_id>satnogs_frame_decoder_0_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3947,34 +4025,34 @@ we shift the LO a little further</value>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>satnogs_ax25_decoder_bm_0</source_block_id>
-    <sink_block_id>satnogs_frame_file_sink_0_1_0</sink_block_id>
-    <source_key>pdu</source_key>
-    <sink_key>frame</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>satnogs_ax25_decoder_bm_0</source_block_id>
-    <sink_block_id>satnogs_udp_msg_sink_0_0</sink_block_id>
-    <source_key>pdu</source_key>
-    <sink_key>in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>satnogs_ax25_decoder_bm_0_0</source_block_id>
-    <sink_block_id>satnogs_frame_file_sink_0_1_0</sink_block_id>
-    <source_key>pdu</source_key>
-    <sink_key>frame</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>satnogs_ax25_decoder_bm_0_0</source_block_id>
-    <sink_block_id>satnogs_udp_msg_sink_0_0</sink_block_id>
-    <source_key>pdu</source_key>
-    <sink_key>in</sink_key>
-  </connection>
-  <connection>
     <source_block_id>satnogs_coarse_doppler_correction_cc_0</source_block_id>
     <sink_block_id>pfb_arb_resampler_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>satnogs_frame_decoder_0_0</source_block_id>
+    <sink_block_id>satnogs_frame_file_sink_0_1_0</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>frame</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>satnogs_frame_decoder_0_0</source_block_id>
+    <sink_block_id>satnogs_udp_msg_sink_0_0</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>satnogs_frame_decoder_0_0_0</source_block_id>
+    <sink_block_id>satnogs_frame_file_sink_0_1_0</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>frame</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>satnogs_frame_decoder_0_0_0</source_block_id>
+    <sink_block_id>satnogs_udp_msg_sink_0_0</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>in</sink_key>
   </connection>
   <connection>
     <source_block_id>satnogs_tcp_rigctl_msg_source_0</source_block_id>

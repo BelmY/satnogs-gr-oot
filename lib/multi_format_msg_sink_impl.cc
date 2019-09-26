@@ -47,7 +47,7 @@ multi_format_msg_sink::make(size_t format,
 void
 multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
 {
-  const uint8_t *su;
+  const char *su;
   size_t len;
   std::string s;
   char buf[256];
@@ -56,14 +56,13 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
   if (pmt::is_dict(msg)) {
     pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
                                    pmt::PMT_NIL);
-    std::string d = base64_decode(std::string((const char *) pmt::blob_data(pdu),
+    s = base64_decode(std::string((const char *) pmt::blob_data(pdu),
                                   pmt::blob_length(pdu)));
-    su = (const uint8_t *) pmt::blob_data(pdu), pmt::blob_length(pdu);
-    s = std::string((const char *) pmt::blob_data(pdu), pmt::blob_length(pdu));
-    len = pmt::blob_length(pdu);
+    su = s.c_str();
+    len = s.size();
   }
   else {
-    su = (const uint8_t *) pmt::blob_data(msg), pmt::blob_length(msg);
+    su = (const char *) pmt::blob_data(msg), pmt::blob_length(msg);
     s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
     len = pmt::blob_length(msg);
   }
@@ -100,23 +99,23 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
 void
 multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
 {
-  const uint8_t *su;
+  const char *su;
   size_t len;
   std::string s;
   char buf[256];
 
   /* Check if the message contains the legacy or the new format */
+  /* Check if the message contains the legacy or the new format */
   if (pmt::is_dict(msg)) {
     pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
                                    pmt::PMT_NIL);
-    std::string d = base64_decode(std::string((const char *) pmt::blob_data(pdu),
+    s = base64_decode(std::string((const char *) pmt::blob_data(pdu),
                                   pmt::blob_length(pdu)));
-    su = (const uint8_t *) pmt::blob_data(pdu), pmt::blob_length(pdu);
-    s = std::string((const char *) pmt::blob_data(pdu), pmt::blob_length(pdu));
-    len = pmt::blob_length(pdu);
+    su = s.c_str();
+    len = s.size();
   }
   else {
-    su = (const uint8_t *) pmt::blob_data(msg), pmt::blob_length(msg);
+    su = (const char *) pmt::blob_data(msg), pmt::blob_length(msg);
     s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
     len = pmt::blob_length(msg);
   }

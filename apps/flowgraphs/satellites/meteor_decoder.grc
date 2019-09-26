@@ -720,7 +720,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>20</value>
     </param>
   </block>
   <block>
@@ -3008,7 +3008,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 148)</value>
+      <value>(215, 147)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3044,7 +3044,7 @@ we shift the LO a little further</value>
     </param>
     <param>
       <key>interval</key>
-      <value>1000</value>
+      <value>int(1000.0/doppler_correction_per_sec) + 1</value>
     </param>
   </block>
   <block>

@@ -20,18 +20,11 @@
 include(GrPython)
 
 add_subdirectory(flowgraphs/satellites)
-add_subdirectory(scripts)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
     flowgraphs/satnogs_fm_demod.py
-    flowgraphs/satnogs_generic_iq_receiver.py
-    flowgraphs/satnogs_bpsk_demod.py
     flowgraphs/satnogs_cw_decoder.py
-    flowgraphs/satnogs_bpsk_decoder.py
-    flowgraphs/satnogs_apt_demod.py
-    flowgraphs/satnogs_fsk9600_ax25.py
-    flowgraphs/satnogs_fsk9600_g3ruh_ax25.py
     flowgraphs/satnogs_afsk1200_ax25.py
     flowgraphs/satnogs_example_flowgraph.py
     flowgraphs/satnogs_fsk_ax25.py

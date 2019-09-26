@@ -187,7 +187,7 @@ ieee802_15_4_variant_decoder::decode_const_len(const void *in, int len)
     status.consumed = search_preamble((const uint8_t *) in, len);
     break;
   case SEARCHING_SYNC:
-    status.consumed = search_preamble((const uint8_t *) in, len);
+    status.consumed = search_sync((const uint8_t *) in, len);
     break;
   case DECODING_PAYLOAD:
     decode_payload(status, (const uint8_t *) in, len);

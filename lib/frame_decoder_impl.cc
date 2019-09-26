@@ -84,7 +84,6 @@ frame_decoder_impl::work(int noutput_items,
                          gr_vector_void_star &output_items)
 {
   const void *in = input_items[0];
-
   decoder_status_t status = d_decoder->decode(in, noutput_items);
   if (status.decode_success) {
     message_port_pub(pmt::mp("out"), status.data);

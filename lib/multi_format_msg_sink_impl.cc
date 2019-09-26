@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016,2017 Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016,2017,2019 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 
 #include <gnuradio/io_signature.h>
 #include "multi_format_msg_sink_impl.h"
+#include <satnogs/base64.h>
+#include <satnogs/metadata.h>
 #include <ctime>
 #include <iostream>
 #include <iomanip>
@@ -45,10 +47,26 @@ multi_format_msg_sink::make(size_t format,
 void
 multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
 {
-  uint8_t *su;
+  const uint8_t *su;
+  size_t len;
+  std::string s;
   char buf[256];
-  std::string s((const char *) pmt::blob_data(msg),
-                pmt::blob_length(msg));
+
+  /* Check if the message contains the legacy or the new format */
+  if (pmt::is_dict(msg)) {
+    pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
+                                   pmt::PMT_NIL);
+    std::string d = base64_decode(std::string((const char *) pmt::blob_data(pdu),
+                                  pmt::blob_length(pdu)));
+    su = (const uint8_t *) pmt::blob_data(pdu), pmt::blob_length(pdu);
+    s = std::string((const char *) pmt::blob_data(pdu), pmt::blob_length(pdu));
+    len = pmt::blob_length(pdu);
+  }
+  else {
+    su = (const uint8_t *) pmt::blob_data(msg), pmt::blob_length(msg);
+    s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
+    len = pmt::blob_length(msg);
+  }
 
   if (d_timestamp) {
     std::time_t t = std::time(nullptr);
@@ -62,16 +80,14 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
     d_fos << s << std::endl;
     break;
   case 1:
-    su = (uint8_t *) pmt::blob_data(msg);
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       d_fos << "0x" << std::hex << std::setw(2) << std::setfill('0')
             << (uint32_t) su[i] << " ";
     }
     d_fos << std::endl;
     break;
   case 2:
-    su = (uint8_t *) pmt::blob_data(msg);
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       d_fos << "0b" << std::bitset<8> (su[i]) << " ";
     }
     d_fos << std::endl;
@@ -84,10 +100,26 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
 void
 multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
 {
-  uint8_t *su;
+  const uint8_t *su;
+  size_t len;
+  std::string s;
   char buf[256];
-  std::string s((const char *) pmt::blob_data(msg),
-                pmt::blob_length(msg));
+
+  /* Check if the message contains the legacy or the new format */
+  if (pmt::is_dict(msg)) {
+    pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
+                                   pmt::PMT_NIL);
+    std::string d = base64_decode(std::string((const char *) pmt::blob_data(pdu),
+                                  pmt::blob_length(pdu)));
+    su = (const uint8_t *) pmt::blob_data(pdu), pmt::blob_length(pdu);
+    s = std::string((const char *) pmt::blob_data(pdu), pmt::blob_length(pdu));
+    len = pmt::blob_length(pdu);
+  }
+  else {
+    su = (const uint8_t *) pmt::blob_data(msg), pmt::blob_length(msg);
+    s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
+    len = pmt::blob_length(msg);
+  }
 
   if (d_timestamp) {
     std::time_t t = std::time(nullptr);
@@ -98,22 +130,20 @@ multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
 
   switch (d_format) {
   case 0: // binary
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       std::cout << s[i];
     }
     std::cout << std::endl;
     break;
   case 1: // hex annotated
-    su = (uint8_t *) pmt::blob_data(msg);
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
                 << (uint32_t) su[i] << " ";
     }
     std::cout << std::endl;
     break;
   case 2: // binary annotated
-    su = (uint8_t *) pmt::blob_data(msg);
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       std::cout << "0b" << std::bitset<8> (su[i]) << " ";
     }
     std::cout << std::endl;

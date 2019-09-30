@@ -100,20 +100,16 @@ frame_file_sink_impl::msg_handler_frame(pmt::pmt_t msg)
 
   const char *su;
   size_t len;
-  std::string s;
 
   /* Check if the message contains the legacy or the new format */
   if (pmt::is_dict(msg)) {
     pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
                                    pmt::PMT_NIL);
-    s = base64_decode(std::string((const char *) pmt::blob_data(pdu),
-                                  pmt::blob_length(pdu)));
-    su = s.c_str();
-    len = s.size();
+    su = (const char *) pmt::blob_data(pdu);
+    len = pmt::blob_length(pdu);
   }
   else {
     su = (const char *) pmt::blob_data(msg), pmt::blob_length(msg);
-    s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
     len = pmt::blob_length(msg);
   }
 
@@ -129,7 +125,7 @@ frame_file_sink_impl::msg_handler_frame(pmt::pmt_t msg)
     /* aHex annotated, dd .txt to filename */
     filename.append(".txt");
     std::ofstream fd(filename.c_str());
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       fd << "0x" << std::hex << std::setw(2) << std::setfill('0')
          << (uint32_t) su[i] << " ";
     }
@@ -140,7 +136,7 @@ frame_file_sink_impl::msg_handler_frame(pmt::pmt_t msg)
     /* Binary annotated, add .txt to filename */
     filename.append(".txt");
     std::ofstream fd(filename.c_str());
-    for (size_t i = 0; i < pmt::blob_length(msg); i++) {
+    for (size_t i = 0; i < len; i++) {
       fd << "0b" << std::bitset<8> (su[i]) << " ";
     }
     fd.close();

@@ -108,7 +108,26 @@ ax25_decoder::_decode(decoder_status_t &status)
     case NO_SYNC:
       for (size_t i = 0; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if (d_shift_reg == AX25_SYNC_FLAG) {
+        /*
+         * In case of scrambling the self synchronizing scrambler ensures
+         * that enough repetitions of the AX.25 flag have been received.
+         * However, this does not hold for the case of non scrambled
+         * transmissions. In this case, we wait for at least two consecutive
+         * AX.25 flags to reduce the false alarms. Experiments have shown
+         * that due to the poor CRC there were many false positive frames.
+         *
+         * It is expected however, to miss some transmissions that use only one
+         * AX.25 flag. We believe that such transmissions are yet rare.
+         */
+        bool have_sync = false;
+        if (d_descramble) {
+          have_sync = (d_shift_reg >> 8) == AX25_SYNC_FLAG;
+        }
+        else {
+          have_sync = ((d_shift_reg & 0xFF) == AX25_SYNC_FLAG)
+                      && (d_shift_reg >> 8) == AX25_SYNC_FLAG;
+        }
+        if (have_sync) {
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);
           /* Increment the number of items read so far */
@@ -138,7 +157,7 @@ ax25_decoder::_decode(decoder_status_t &status)
         d_decoded_bits++;
         if (d_decoded_bits == 8) {
           /* Perhaps we are in frame! */
-          if (d_shift_reg != AX25_SYNC_FLAG) {
+          if ((d_shift_reg >> 8) != AX25_SYNC_FLAG) {
             d_start_idx = i + 1;
             enter_decoding_state();
             cont = true;
@@ -155,7 +174,7 @@ ax25_decoder::_decode(decoder_status_t &status)
     case DECODING:
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if (d_shift_reg == AX25_SYNC_FLAG) {
+        if ((d_shift_reg >> 8) == AX25_SYNC_FLAG) {
           d_sample_cnt = nitems_read() + i - d_frame_start;
           LOG_DEBUG("Found frame end");
           if (enter_frame_end(status)) {
@@ -169,11 +188,11 @@ ax25_decoder::_decode(decoder_status_t &status)
           cont = true;
           break;
         }
-        else if ((d_shift_reg & 0xfc) == 0x7c) {
+        else if (((d_shift_reg >> 8) & 0xfc) == 0x7c) {
           /*This was a stuffed bit */
           d_dec_b <<= 1;
         }
-        else if ((d_shift_reg & 0xfe) == 0xfe) {
+        else if (((d_shift_reg >> 8) & 0xfe) == 0xfe) {
           LOG_DEBUG("Invalid shift register value %u", d_received_bytes);
           reset_state();
           cont = true;
@@ -246,7 +265,7 @@ ax25_decoder::enter_decoding_state()
    * Due to the possibility of bit stuffing on the first byte some special
    * handling is necessary
    */
-  if ((d_shift_reg & 0xfc) == 0x7c) {
+  if (((d_shift_reg >> 8) & 0xfc) == 0x7c) {
     /*This was a stuffed bit */
     d_dec_b <<= 1;
     d_decoded_bits = 7;
@@ -304,7 +323,7 @@ ax25_decoder::decode_1b(uint8_t in)
 {
 
   /* In AX.25 the LS bit is sent first */
-  d_shift_reg = (d_shift_reg >> 1) | (in << 7);
+  d_shift_reg = (d_shift_reg >> 1) | (in << 15);
   d_dec_b = (d_dec_b >> 1) | (in << 7);
 }
 

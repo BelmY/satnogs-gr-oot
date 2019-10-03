@@ -127,7 +127,7 @@ private:
   const bool d_crc_check;
   const size_t d_max_frame_len;
   decoding_state_t d_state;
-  uint8_t d_shift_reg;
+  uint16_t d_shift_reg;
   uint8_t d_dec_b;
   uint8_t d_prev_bit_nrzi;
   size_t d_received_bytes;

@@ -17,8 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "qa_golay24.h"
+#include <boost/test/unit_test.hpp>
 #include <satnogs/golay24.h>
 #include <random>
 #include <algorithm>
@@ -30,20 +29,19 @@ namespace satnogs {
 /* Inspired by the example 4.7 of
  * Lin & Costello, Ch4, "Error Control Coding", 2nd ed, Pearson.
  */
-void
-qa_golay24::example_47()
+
+BOOST_AUTO_TEST_CASE(example_47)
 {
   golay24 gol;
   uint32_t r = 0b100000110100110000000001;
   uint32_t res;
   bool ret = gol.decode24(&res, r);
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT((res >> 12) == 0b100100110110);
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE((res >> 12) == 0b100100110110);
 }
 
 
-void
-qa_golay24::errors_0()
+BOOST_AUTO_TEST_CASE(errors_0)
 {
   std::random_device rd;
   std::mt19937 mt(rd());
@@ -55,13 +53,13 @@ qa_golay24::errors_0()
 
   uint32_t res;
   bool ret = gol.decode24(&res, coded);
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT((res >> 12) == x);
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE((res >> 12) == x);
 
   coded = gol.encode12(x, false);
   ret = gol.decode24(&res, coded);
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT((res & 0xFFF) == x);
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE((res & 0xFFF) == x);
 }
 
 
@@ -89,8 +87,7 @@ flip(uint32_t in, uint32_t n)
   return in ^ mask;
 }
 
-void
-qa_golay24::errors_1()
+BOOST_AUTO_TEST_CASE(errors_1)
 {
   std::random_device rd;
   std::mt19937 mt(rd());
@@ -105,20 +102,19 @@ qa_golay24::errors_1()
 
     uint32_t res;
     bool ret = gol.decode24(&res, coded);
-    CPPUNIT_ASSERT(ret);
-    CPPUNIT_ASSERT((res >> 12) == x);
+    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE((res >> 12) == x);
 
     coded = gol.encode12(x, false);
     /* Apply bit flip */
     coder_error = flip(coded, 1);
     ret = gol.decode24(&res, coded);
-    CPPUNIT_ASSERT(ret);
-    CPPUNIT_ASSERT((res & 0xFFF) == x);
+    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE((res & 0xFFF) == x);
   }
 }
 
-void
-qa_golay24::errors_3()
+BOOST_AUTO_TEST_CASE(errors_3)
 {
   std::random_device rd;
   std::mt19937 mt(rd());
@@ -133,20 +129,19 @@ qa_golay24::errors_3()
 
     uint32_t res;
     bool ret = gol.decode24(&res, coded);
-    CPPUNIT_ASSERT(ret);
-    CPPUNIT_ASSERT((res >> 12) == x);
+    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE((res >> 12) == x);
 
     coded = gol.encode12(x, false);
     /* Apply bit flip */
     coder_error = flip(coded, 3);
     ret = gol.decode24(&res, coded);
-    CPPUNIT_ASSERT(ret);
-    CPPUNIT_ASSERT((res & 0xFFF) == x);
+    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE((res & 0xFFF) == x);
   }
 }
 
-void
-qa_golay24::errors_4()
+BOOST_AUTO_TEST_CASE(errors_4)
 {
   std::random_device rd;
   std::mt19937 mt(rd());
@@ -162,7 +157,7 @@ qa_golay24::errors_4()
     uint32_t res;
     bool ret = gol.decode24(&res, coded);
     if (ret) {
-      CPPUNIT_ASSERT((res >> 12) == x);
+      BOOST_REQUIRE((res >> 12) == x);
     }
 
     coded = gol.encode12(x, false);
@@ -170,7 +165,7 @@ qa_golay24::errors_4()
     coder_error = flip(coded, 4);
     ret = gol.decode24(&res, coded);
     if (ret) {
-      CPPUNIT_ASSERT((res & 0xFFF) == x);
+      BOOST_REQUIRE((res & 0xFFF) == x);
     }
   }
 }

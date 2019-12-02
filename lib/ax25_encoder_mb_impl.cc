@@ -107,7 +107,10 @@ ax25_encoder_mb_impl::work(int noutput_items,
     d_lfsr.reset();
 
     /* Block waiting from a new message from users */
-    msg = delete_head_blocking(pmt::mp("info"));
+    msg = delete_head_nowait(pmt::mp("info"));
+    if (msg.get() == nullptr) {
+      return 0;
+    }
     info = (const uint8_t *) pmt::blob_data(msg);
     info_len = pmt::blob_length(msg);
 

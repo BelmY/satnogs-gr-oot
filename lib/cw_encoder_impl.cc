@@ -97,7 +97,10 @@ cw_encoder_impl::work(int noutput_items,
   }
 
   if (d_windows_remaining == 0) {
-    pmt::pmt_t symbol = delete_head_blocking(pmt::mp("symbol"));
+    pmt::pmt_t symbol = delete_head_nowait(pmt::mp("symbol"));
+    if (symbol.get() == nullptr) {
+      return 0;
+    }
     d_cw_symbol = (morse_symbol_t) pmt::to_long(symbol);
     /* Reset NCO so the amplitude starts from zero */
     d_nco.set_freq((2 * M_PI * d_cw_freq) / d_samp_rate);

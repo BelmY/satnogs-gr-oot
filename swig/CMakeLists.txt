@@ -29,7 +29,7 @@ endif(NOT satnogs_sources)
 # Include swig generation macros
 ########################################################################
 find_package(SWIG)
-find_package(PythonLibs 2)
+find_package(PythonLibs)
 if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
     return()
 endif()
@@ -39,20 +39,16 @@ include(GrPython)
 ########################################################################
 # Setup swig generation
 ########################################################################
-foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
-endforeach(incdir)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:gnuradio::runtime_swig,INTERFACE_INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS gnuradio::runtime_swig)
+
+set(GR_SWIG_LIBRARIES gnuradio-satnogs)
 
 if(${INCLUDE_DEBUG_BLOCKS})
     set(INCLUDE_DEBUG_BLOCKS_BOOL_VAL 1)
 else()
     set(INCLUDE_DEBUG_BLOCKS_BOOL_VAL 0)
 endif()
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/satnogs_swig.py.in
-    ${CMAKE_CURRENT_BINARY_DIR}/satnogs_swig.py
-@ONLY)
 
 if(${INCLUDE_DEBUG_BLOCKS})
     set(SATONGS_SWIG_FILES
@@ -65,15 +61,11 @@ else()
     )
 endif()
 
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 foreach(swigfile ${SATONGS_SWIG_FILES})
   set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
-  set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-  
-  set(GR_SWIG_LIBRARIES gnuradio-satnogs)
   GR_SWIG_MAKE(${swigfile} ${swigfile}.i)
-
   GR_SWIG_INSTALL(TARGETS ${swigfile} DESTINATION ${GR_PYTHON_DIR}/satnogs)
-
   list(APPEND SWIGFILES ${swigfile}.i)
   list(APPEND SWIGDOCFILES ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
 endforeach(swigfile)
@@ -83,11 +75,4 @@ install(
     ${SWIGFILES}
     ${SWIGDOCFILES}
     DESTINATION ${GR_INCLUDE_DIR}/satnogs/swig
-)
-
-# Install the Python file that pulls in the swig built files.
-GR_PYTHON_INSTALL(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/satnogs_swig.py
-    DESTINATION ${GR_PYTHON_DIR}/satnogs
-    COMPONENT "satnogs_python"
 )

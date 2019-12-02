@@ -27,9 +27,9 @@ telecommunication schemes.
 
 #### Debian / Ubuntu
 ```bash
-apt install -y build-essential cmake gnuradio g++    \
-               python-mako python-six libogg-dev     \
-               libvorbis-dev libpng-dev libpng++-dev \
+sudo apt install -y build-essential cmake gnuradio g++    \
+               python-mako python-six libogg-dev          \
+               libvorbis-dev libpng-dev libpng++-dev      \
                swig libjsoncpp-dev
 cd /tmp
 git clone https://github.com/gnuradio/volk.git

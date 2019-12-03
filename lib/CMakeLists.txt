@@ -55,7 +55,6 @@ list(APPEND satnogs_sources
     doppler_correction_cc_impl.cc
     doppler_fit.cc
     frame_decoder_impl.cc
-    frame_encoder_impl.cc
     frame_file_sink_impl.cc
     freq_drift.cc
     golay24.cc
@@ -96,6 +95,7 @@ add_dependencies(gnuradio-satnogs fec)
 
 target_link_libraries(gnuradio-satnogs PUBLIC
     ${Boost_LIBRARIES}
+    Boost::chrono
     gnuradio::gnuradio-runtime
     gnuradio::gnuradio-fft
     gnuradio::gnuradio-blocks
@@ -144,7 +144,7 @@ list(APPEND test_satnogs_sources
     qa_golay24.cc
 )
 # Anything we need to link to for the unit tests go here
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-satnogs Boost::chrono)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-satnogs)
 
 if(NOT test_satnogs_sources)
     MESSAGE(STATUS "No C++ unit tests... skipping")

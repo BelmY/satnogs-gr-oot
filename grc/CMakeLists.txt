@@ -17,47 +17,46 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA
 
-add_subdirectory(satellites)
-
 list(APPEND debug_blocks
-    satnogs_morse_debug_source.xml
-    satnogs_debug_msg_source.xml
-    satnogs_debug_msg_source_raw.xml
-    satnogs_cw_encoder.xml 
+    satnogs_cw_encoder.block.yml
+    satnogs_cw_to_symbol.block.yml
+    satnogs_debug_msg_source_raw.block.yml
+    satnogs_debug_msg_source.block.yml
+    satnogs_morse_debug_source.block.yml
 )
 
 list(APPEND enabled_blocks
-    satnogs_block_tree.xml
-    satnogs_amsat_duv_decoder.xml
-    satnogs_ax25_encoder_mb.xml
-    satnogs_ax25_decoder.xml
-    satnogs_frame_decoder.xml
-    satnogs_frame_file_sink.xml
-    satnogs_iq_sink.xml
-    satnogs_json_converter.xml
-    satnogs_lrpt_decoder.xml 
-    satnogs_lrpt_sync.xml 
-    satnogs_morse_decoder.xml
-    satnogs_multi_format_msg_sink.xml
-    satnogs_ogg_encoder.xml 
-    satnogs_cw_to_symbol.xml
-    satnogs_udp_msg_source.xml
-    satnogs_tcp_rigctl_msg_source.xml
-    satnogs_doppler_correction_cc.xml
-    satnogs_udp_msg_sink.xml
-    satnogs_coarse_doppler_correction_cc.xml
-    satnogs_waterfall_sink.xml
-    satnogs_ogg_source.xml
-    satnogs_noaa_apt_sink.xml
-    satnogs_whitening.xml
-    satnogs_whitening_ccsds.xml
-    satnogs_ieee802_15_4_variant_decoder.xml
-    satnogs_ax100_decoder.xml
+    satnogs_amsat_duv_decoder.block.yml
+    satnogs_ax25_decoder.block.yml
+    satnogs_ax25_encoder_mb.block.yml
+    satnogs_ax100_decoder.block.yml
+    satnogs_coarse_doppler_correction_cc.block.yml
+    satnogs_doppler_correction_cc.block.yml
+    satnogs_frame_decoder.block.yml
+    satnogs_frame_file_sink.block.yml
+    satnogs_ieee802_15_4_variant_decoder.block.yml
+    satnogs_iq_sink.block.yml
+    satnogs_json_converter.block.yml
+    satnogs_lrpt_decoder.block.yml
+    satnogs_lrpt_sync.block.yml
+    satnogs_morse_decoder.block.yml
+    satnogs_multi_format_msg_sink.block.yml
+    satnogs_noaa_apt_sink.block.yml
+    satnogs_ogg_encoder.block.yml
+    satnogs_ogg_source.block.yml
+    satnogs_tcp_rigctl_msg_source.block.yml
+    satnogs_udp_msg_sink.block.yml
+    satnogs_udp_msg_source.block.yml
+    satnogs_waterfall_sink.block.yml
+    satnogs_whitening_ccsds.block.yml
+    satnogs_whitening.block.yml
+    satnogs.tree.yml
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})
 	list(APPEND enabled_blocks ${debug_blocks})
 endif()
+
 install(FILES
     ${enabled_blocks}
     DESTINATION share/gnuradio/grc/blocks

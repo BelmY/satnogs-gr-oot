@@ -1,0 +1,41 @@
+id: satnogs_doppler_correction_cc
+label: Doppler Correction
+
+parameters:
+- id: target_freq
+  label: Target frequency
+  dtype: real
+
+- id: sampling_rate
+  label: Sample Rate
+  dtype: real
+  default: samp_rate
+
+- id: corrections_per_sec
+  label: Corrections per Second
+  dtype: int
+  default: 1000
+
+
+inputs:
+- id: freq
+  domain: message
+  
+- id: reset
+  domain: message
+  optional: true
+
+- label: in
+  domain: stream
+  dtype: complex
+
+outputs:
+- label: out
+  domain: stream
+  dtype: complex
+
+templates:
+  imports: import satnogs
+  make: satnogs.doppler_correction_cc(${target_freq}, ${sampling_rate}, ${corrections_per_sec})
+
+file_format: 1

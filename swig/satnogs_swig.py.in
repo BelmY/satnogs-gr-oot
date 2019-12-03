@@ -1,8 +1,8 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 #
 # gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
 #
-#  Copyright (C) 2018
+#  Copyright (C) 2018, 2019
 #  Libre Space Foundation <http://librespacefoundation.org/>
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-from satnogs_swig0 import *
+from .satnogs_swig0 import *
 if @INCLUDE_DEBUG_BLOCKS_BOOL_VAL@:
-    from satnogs_debug_swig import *
+    from .satnogs_debug_swig import *

@@ -1,0 +1,11 @@
+id: variable_whitening_ccsds
+label: Whitening (CCSDS)
+flags: [show_id]
+
+value: ${satnogs.whitening.make_ccsds()}
+
+templates:
+  imports: import satnogs
+  var_make: self.${id} = ${id} = satnogs.whitening.make_ccsds()
+
+file_format: 1

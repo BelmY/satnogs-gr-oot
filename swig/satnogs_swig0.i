@@ -26,13 +26,10 @@
 #include "satnogs/decoder.h"
 #include "satnogs/doppler_correction_cc.h"
 #include "satnogs/frame_decoder.h"
-#include "satnogs/frame_encoder.h"
-#include "satnogs/upsat_fsk_frame_encoder.h"
 #include "satnogs/whitening.h"
 #include "satnogs/udp_msg_sink.h"
 #include "satnogs/coarse_doppler_correction_cc.h"
 #include "satnogs/ax25_encoder_mb.h"
-#include "satnogs/qb50_deframer.h"
 #include "satnogs/waterfall_sink.h"
 #include "satnogs/ogg_encoder.h"
 #include "satnogs/ogg_source.h"
@@ -78,14 +75,8 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, tcp_rigctl_msg_source);
 %include "satnogs/frame_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, frame_decoder);
 
-%include "satnogs/frame_encoder.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, frame_encoder);
-
 %include "satnogs/doppler_correction_cc.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, doppler_correction_cc);
-
-%include "satnogs/upsat_fsk_frame_encoder.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, upsat_fsk_frame_encoder);
 
 %include "satnogs/udp_msg_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, udp_msg_sink);
@@ -95,9 +86,6 @@ GR_SWIG_BLOCK_MAGIC2(satnogs, coarse_doppler_correction_cc);
 
 %include "satnogs/ax25_encoder_mb.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, ax25_encoder_mb);
-
-%include "satnogs/qb50_deframer.h"
-GR_SWIG_BLOCK_MAGIC2(satnogs, qb50_deframer);
 
 %include "satnogs/waterfall_sink.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, waterfall_sink);

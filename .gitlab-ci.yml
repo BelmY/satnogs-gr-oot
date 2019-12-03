@@ -1,5 +1,5 @@
 variables:
-  GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
+  GITLAB_CI_IMAGE_DEBIAN: 'debian:bullseye'
 stages:
   - style 
   - test
@@ -7,6 +7,7 @@ stages:
   - deploy
 
 style:
+  image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: style
   before_script:
     - apt-get update -qq && apt-get install -y -qq astyle git
@@ -16,24 +17,26 @@ style:
     - if (test $(astyle --dry-run --options=.astylerc --formatted include/satnogs/*.h | wc -l) -eq 0); then (exit 0); else (exit 1); fi
 
 test:
+  image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: test
   before_script:
-    - apt-get update -qq && apt-get install -y -qq gnuradio-dev libcppunit-dev libjsoncpp-dev libpng++-dev libvorbis-dev cmake swig pkg-config build-essential git
+    - apt-get update -qq && apt-get install -y -qq gnuradio-dev libboost-program-options-dev libjsoncpp-dev libpng++-dev libvorbis-dev cmake swig pkg-config build-essential git
   script:
     - mkdir -p build
     - cd build
     - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr ..
     - make
+    - make CTEST_OUTPUT_ON_FAILURE=1 test
     - make install
     - ldconfig
-    - python -c "import satnogs"
+    - python3 -c "import satnogs"
     - rm -rf *
     - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DINCLUDE_DEBUG_BLOCKS=OFF -DCMAKE_INSTALL_PREFIX=/usr  ..
     - make
     - make CTEST_OUTPUT_ON_FAILURE=1 test
     - make install
     - ldconfig
-    - python -c "import satnogs"
+    - python3 -c "import satnogs"
 
 debian:
   stage: build

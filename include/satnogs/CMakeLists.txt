@@ -22,56 +22,55 @@
 # Install public header files
 ########################################################################
 list(APPEND DEBUG_HEADER_FILES
-    morse_debug_source.h
+    cw_encoder.h 
     debug_msg_source_raw.h
     debug_msg_source.h
-    cw_encoder.h 
+    morse_debug_source.h
 )
 
 list(APPEND HEADER_FILES
-    ax100_decoder.h 
     amsat_duv_decoder.h
     api.h
     ax25.h
+    ax25_decoder.h
+    ax25_encoder_mb.h
+    ax100_decoder.h
     base64.h
+    coarse_doppler_correction_cc.h
     config.h
     convolutional_deinterleaver.h
-    log.h
-    metadata.h
-    morse_tree.h
-    morse.h
-    morse_decoder.h
-    multi_format_msg_sink.h
-    ogg_encoder.h 
+    crc.h
     cw_to_symbol.h
-    utils.h
-    udp_msg_source.h
-    tcp_rigctl_msg_source.h
     decoder.h
-    frame_decoder.h
-    frame_encoder.h
     doppler_correction_cc.h
     doppler_fit.h
-    freq_drift.h
-    upsat_fsk_frame_encoder.h
-    whitening.h
-    udp_msg_sink.h
-    coarse_doppler_correction_cc.h
-    ax25_encoder_mb.h
-    qb50_deframer.h
-    waterfall_sink.h
-    ogg_source.h
-    noaa_apt_sink.h
+    frame_decoder.h
     frame_file_sink.h
-    iq_sink.h
-    lrpt_sync.h
-    lrpt_decoder.h
-    shift_reg.h
+    freq_drift.h
     golay24.h
-    ax25_decoder.h
-    json_converter.h
     ieee802_15_4_variant_decoder.h
-    crc.h
+    iq_sink.h
+    json_converter.h
+    log.h
+    lrpt_decoder.h
+    lrpt_sync.h
+    metadata.h
+    morse.h
+    morse_decoder.h
+    morse_tree.h
+    multi_format_msg_sink.h
+    noaa_apt_sink.h
+    ogg_encoder.h
+    ogg_source.h
+    qb50_deframer.h
+    shift_reg.h
+    tcp_rigctl_msg_source.h
+    udp_msg_sink.h
+    udp_msg_source.h
+    upsat_fsk_frame_encoder.h
+    utils.h
+    waterfall_sink.h
+    whitening.h
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

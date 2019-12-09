@@ -23,19 +23,6 @@
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${VOLK_INCLUDE_DIRS}
-    ${VORBIS_INCLUDE_DIR}
-    ${OGG_INCLUDE_DIR}
-    ${PNG_INCLUDE_DIR}
-    ${png++_INCLUDE_DIRS}
-    ${FEC_INCLUDE_DIRS}
-    ${JSONCPP_INCLUDE_DIRS}
-)
-
-link_directories(${Boost_LIBRARY_DIRS} ${GNURADIO_ALL_LIBRARIES})
-
 list(APPEND satnogs_debug_sources
     morse_debug_source_impl.cc
     debug_msg_source_impl.cc

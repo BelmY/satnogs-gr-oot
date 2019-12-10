@@ -26,11 +26,7 @@
 #include "lrpt_decoder_impl.h"
 #include <satnogs/log.h>
 #include <satnogs/utils.h>
-
-
-extern "C" {
-#include <fec.h>
-}
+#include <satnogs/libfec/fec.h>
 
 namespace gr {
 namespace satnogs {

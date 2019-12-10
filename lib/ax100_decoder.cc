@@ -28,10 +28,7 @@
 #include <satnogs/metadata.h>
 #include <satnogs/utils.h>
 #include <satnogs/log.h>
-
-extern "C" {
-#include <fec.h>
-}
+#include <satnogs/libfec/fec.h>
 
 namespace gr {
 namespace satnogs {

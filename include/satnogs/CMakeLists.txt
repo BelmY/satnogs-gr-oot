@@ -21,6 +21,8 @@
 ########################################################################
 # Install public header files
 ########################################################################
+add_subdirectory(libfec)
+
 list(APPEND DEBUG_HEADER_FILES
     cw_encoder.h 
     debug_msg_source_raw.h

@@ -23,9 +23,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include <satnogs/golay24.h>
-
 #include <satnogs/utils.h>
 
 namespace gr {

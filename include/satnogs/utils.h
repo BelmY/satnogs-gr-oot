@@ -23,6 +23,7 @@
 
 #include <cstdint>
 #include <cmath>
+#include <cstdio>
 #include <arpa/inet.h>
 
 namespace gr {
@@ -180,7 +181,7 @@ update_crc32(uint32_t crc, const uint8_t *data, size_t len)
     0x2D02EF8DL
   };
 
-  register uint32_t i;
+  uint32_t i;
   for (i = 0; i < len; i++) {
     crc = (crc >> 8) ^ crc32_lut[(crc ^ data[i]) & 0xff];
   }

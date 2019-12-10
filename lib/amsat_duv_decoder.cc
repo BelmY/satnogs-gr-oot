@@ -26,10 +26,7 @@
 #include <satnogs/amsat_duv_decoder.h>
 #include <satnogs/metadata.h>
 #include <gnuradio/blocks/count_bits.h>
-
-extern "C" {
-#include <fec.h>
-}
+#include <satnogs/libfec/fec.h>
 
 namespace gr {
 namespace satnogs {

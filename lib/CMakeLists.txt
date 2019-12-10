@@ -23,6 +23,8 @@
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
+add_subdirectory(libfec)
+
 list(APPEND satnogs_debug_sources
     morse_debug_source_impl.cc
     debug_msg_source_impl.cc
@@ -78,23 +80,26 @@ if(NOT satnogs_sources)
 endif(NOT satnogs_sources)
 
 add_library(gnuradio-satnogs SHARED ${satnogs_sources})
-add_dependencies(gnuradio-satnogs fec)
+add_dependencies(gnuradio-satnogs gnuradio-satnogs-fec)
 
-target_link_libraries(gnuradio-satnogs PUBLIC
+target_link_libraries(gnuradio-satnogs
+    gnuradio-satnogs-fec
     gnuradio::gnuradio-runtime
-    gnuradio::gnuradio-fft
+    gnuradio::gnuradio-analog
     gnuradio::gnuradio-blocks
+    gnuradio::gnuradio-fft
     gnuradio::gnuradio-digital
     gnuradio::gnuradio-pmt
     ${VOLK_LIBRARIES}
     ${OGGVORBIS_LIBRARIES}
     ${PNG_LIBRARIES}
     ${png++_LIBRARIES}
-    ${FEC_LIBRARIES}
     ${JSONCPP_LIBRARY}
 )
+
 target_include_directories(gnuradio-satnogs
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/>
     PUBLIC $<INSTALL_INTERFACE:include>
   )
 set_target_properties(gnuradio-satnogs PROPERTIES DEFINE_SYMBOL "gnuradio_satnogs_EXPORTS")
@@ -128,6 +133,7 @@ include(GrTest)
 list(APPEND test_satnogs_sources
     qa_golay24.cc
 )
+
 # Anything we need to link to for the unit tests go here
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-satnogs)
 

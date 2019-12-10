@@ -1,6 +1,7 @@
 usr/bin/*
 usr/include/*
 usr/lib/*/libgnuradio-satnogs.so
+usr/lib/*/libgnuradio-satnogs-fec.so
 usr/lib/*/cmake/*
 usr/lib/python*
 usr/share/*

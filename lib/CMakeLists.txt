@@ -81,13 +81,11 @@ add_library(gnuradio-satnogs SHARED ${satnogs_sources})
 add_dependencies(gnuradio-satnogs fec)
 
 target_link_libraries(gnuradio-satnogs PUBLIC
-    ${Boost_LIBRARIES}
-    Boost::chrono
     gnuradio::gnuradio-runtime
     gnuradio::gnuradio-fft
     gnuradio::gnuradio-blocks
     gnuradio::gnuradio-digital
-    ${CMAKE_THREAD_LIBS_INIT}
+    gnuradio::gnuradio-pmt
     ${VOLK_LIBRARIES}
     ${OGGVORBIS_LIBRARIES}
     ${PNG_LIBRARIES}

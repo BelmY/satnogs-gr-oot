@@ -7,18 +7,27 @@ Build-Depends: cmake,
                dh-python,
                doxygen,
                git,
-               gnuradio-dev (>=3.7.10),
+               build-essential,
+               gnuradio-dev (>=3.8.0),
                libboost-dev,
+               libboost-date-time-dev,
                libboost-filesystem-dev,
+               libboost-program-options-dev,
                libboost-system-dev,
-               liblog4cpp5-dev,
-               libnova-dev,
+               libboost-thread-dev,
+               libboost-regex-dev,
+               libboost-test-dev,
                libpng++-dev,
                libvorbis-dev,
                pkg-config,
-               python-dev,
-               swig
-X-Python-Version: >= 2.7, << 2.8
+               python3-dev,
+               swig,
+               libgmp-dev,
+               liborc-0.4-0,
+               liborc-0.4-dev,
+               liborc-0.4-dev-bin,
+               liblog4cpp5-dev
+X-Python-Version: >= 3.0, 
 Standards-Version: 3.9.8
 Homepage: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs
 Vcs-Git: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs.git

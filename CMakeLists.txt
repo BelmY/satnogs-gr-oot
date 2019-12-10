@@ -86,28 +86,8 @@ else()
 endif()
 
 ########################################################################
-# Find boost
-########################################################################
-if(UNIX AND EXISTS "/usr/lib64")
-    list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
-endif(UNIX AND EXISTS "/usr/lib64")
-set(Boost_ADDITIONAL_VERSIONS
-    "1.50.0" "1.50" "1.51.0" "1.51" "1.52.0" "1.52" "1.53.0" "1.53" "1.54.0" "1.54"
-    "1.55.0" "1.55" "1.56.0" "1.56" "1.57.0" "1.57" "1.58.0" "1.58" "1.59.0" "1.59"
-    "1.60.0" "1.60" "1.61.0" "1.61" "1.62.0" "1.62" "1.63.0" "1.63" "1.64.0" "1.64"
-    "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
-)
-find_package(Boost "1.54" 
-    COMPONENTS filesystem system unit_test_framework thread chrono)
-
-if(NOT Boost_FOUND)
-    message(FATAL_ERROR "Boost required to compile satnogs")
-endif()
-
-########################################################################
 # Find gnuradio build dependencies
 ########################################################################
-find_package (Threads REQUIRED)
 find_package(PythonLibs 3)
 
 find_package(Gnuradio "3.8" REQUIRED runtime fft blocks filter analog digital)

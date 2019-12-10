@@ -2,7 +2,8 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016, 2019
+ *  Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +25,9 @@
 
 #include <gnuradio/io_signature.h>
 #include "debug_msg_source_impl.h"
-#include <boost/chrono.hpp>
+
+#include <thread>
+#include <chrono>
 
 namespace gr {
 namespace satnogs {
@@ -62,14 +65,12 @@ debug_msg_source_impl::msg_sender()
   pmt::pmt_t msg = pmt::make_blob(d_buf, d_buf_len);
   if (d_repeat) {
     while (d_running) {
-      boost::this_thread::sleep_for(
-        boost::chrono::milliseconds((size_t)(d_delay * 1e3)));
+      std::this_thread::sleep_for(std::chrono::milliseconds((size_t)(d_delay * 1e3)));
       message_port_pub(pmt::mp("msg"), msg);
     }
   }
   else {
-    boost::this_thread::sleep_for(
-      boost::chrono::milliseconds((size_t)(d_delay * 1e3)));
+    std::this_thread::sleep_for(std::chrono::milliseconds((size_t)(d_delay * 1e3)));
     message_port_pub(pmt::mp("msg"), msg);
   }
 }

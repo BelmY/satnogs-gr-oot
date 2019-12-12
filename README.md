@@ -9,9 +9,10 @@ telecommunication schemes.
 ## Installation
 
 ### Requirements
-* GNU Radio ( > 3.7.11 )
-* CMake ( > 3.1)
-* G++ (with C++11 support)
+* GNU Radio ( > 3.8.0 )
+* CMake ( > 3.8)
+* G++ (> 4.8)
+* Boost
 * VOLK
 * libogg
 * libvorbis
@@ -20,25 +21,63 @@ telecommunication schemes.
 * libjsoncpp
 * git
 * swig
+* gr-soapy (>= 2.0.0)
 
 **Optional**
-* gr-osmocom (for using the flowgraphs with real SDR hardware)
-* libfec (it will automatically installed if not present)
+* [iqzip](https://gitlab.com/librespacefoundation/sdrmakerspace/iqzip) (for compresses IQ storage)
 
 #### Debian / Ubuntu
 ```bash
-sudo apt install -y build-essential cmake gnuradio g++    \
-               python-mako python-six libogg-dev          \
-               libvorbis-dev libpng-dev libpng++-dev      \
-               swig libjsoncpp-dev
-cd /tmp
-git clone https://github.com/gnuradio/volk.git
-cd volk
-mkdir build
-cd build
-cmake ..
-make -j $(nproc --all)
-sudo make install
+sudo apt install -y 
+      libboost-dev \
+      libboost-date-time-dev \
+      libboost-filesystem-dev \
+      libboost-program-options-dev \
+      libboost-system-dev \
+      libboost-thread-dev \
+      libboost-regex-dev \
+      libboost-test-dev \
+      swig \
+      cmake \
+      build-essential \
+      pkg-config \
+      gnuradio-dev \
+      libconfig++-dev \
+      libgmp-dev \
+      liborc-0.4-0 \
+      liborc-0.4-dev \
+      liborc-0.4-dev-bin \
+      libjsoncpp-dev \
+      libpng++-dev \
+      libvorbis-dev \
+      git
+```
+#### openSUSE
+```bash
+sudo zypper in -y \
+      boost-devel \
+      libboost_filesystem-devel \
+      libboost_system-devel \
+      libboost_thread-devel \
+      libboost_program_options-devel \
+      libboost_regex-devel \
+      libboost_test-devel \
+      python3 \
+      python3-devel \
+      swig \
+      cmake \
+      gcc-c++ \
+      gcc \
+      soapy-sdr \
+      soapy-sdr-devel \
+      gnuradio \
+      gnuradio-devel \
+      gmp-devel \
+      libmpir-devel \
+      liborc-0_4-0 \
+      orc \
+      log4cpp-devel \
+      git
 ```
 
 ### Installation from source
@@ -54,7 +93,9 @@ sudo make install
 ```
 
 If this is the first time you are building the gr-satnogs module run
-`sudo ldconfig`
+```bash
+sudo ldconfig
+```
 
 #### Advanced
 By default, the **SatNOGS** module will use the default installation prefix.
@@ -62,14 +103,18 @@ This highly depends on the Linux distribution. You can use the `CMAKE_INSTALL_PR
 variable to alter the default installation path.
 E.g:
 
-`cmake -DCMAKE_INSTALL_PREFIX=/usr ..`
+```bash
+cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+```
 
 Also, by default the build system enables a set of blocks used for debugging
 during the development. The enable/disable switch is controlled through the
 `INCLUDE_DEBUG_BLOCKS` boolean variable. If for example, you want to disable the
 debugging blocks, the **CMake** command would be:
 
-`cmake -DINCLUDE_DEBUG_BLOCKS=OFF ..`
+```bash
+cmake -DINCLUDE_DEBUG_BLOCKS=OFF ..
+```
 
 Another common control option is the library suffix of the Linux distribution.
 There are distributions like Fedora, openSUSE, e.t.c that the their 64-bit version
@@ -79,7 +124,9 @@ On the other hand, distributions like Ubuntu do the exact opposite. They use
 on the `lib32` directory. In any case the correct library directory suffix
 can be specified with the `LIB_SUFFIX` variable. For example:
 
-`cmake -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=/usr -DINCLUDE_DEBUG_BLOCKS=OFF ..`
+```bash
+cmake -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=/usr -DINCLUDE_DEBUG_BLOCKS=OFF ..
+```
 
 will install the libraries at the `/usr/lib64` directory.
 

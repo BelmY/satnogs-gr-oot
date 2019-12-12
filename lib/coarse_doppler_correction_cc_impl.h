@@ -30,19 +30,20 @@ namespace satnogs {
 class coarse_doppler_correction_cc_impl : public coarse_doppler_correction_cc {
 private:
   double d_target_freq;
+  const double d_offset;
   const double d_samp_rate;
   const size_t d_buf_items;
   double d_freq_diff;
 
   gr::fxpt_nco d_nco;
   gr_complex *d_nco_buff;
-  boost::mutex d_mutex;
 
   void
   new_freq(pmt::pmt_t msg);
 
 public:
   coarse_doppler_correction_cc_impl(double target_freq,
+                                    double offset,
                                     double sampling_rate);
   ~coarse_doppler_correction_cc_impl();
 
@@ -50,9 +51,6 @@ public:
   int
   work(int noutput_items, gr_vector_const_void_star &input_items,
        gr_vector_void_star &output_items);
-
-  void
-  set_target_freq(double freq);
 };
 
 } // namespace satnogs

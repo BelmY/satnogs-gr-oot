@@ -27,13 +27,12 @@ parameters:
   default: 0
 
 inputs:
-- domain: message
-  id: act_threshold
-  optiona: true
-
 - label: in
   domain: stream
   dtype: float
+  
+- domain: message
+  id: act_threshold
 
 outputs:
 - domain: message

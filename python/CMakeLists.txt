@@ -38,6 +38,7 @@ GR_PYTHON_INSTALL(
     hw_settings.py
     utils.py
     ${CMAKE_BINARY_DIR}/satnogs_info.py
+    doppler_compensation.py 
     DESTINATION ${GR_PYTHON_DIR}/satnogs
 )
 

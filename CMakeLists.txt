@@ -136,12 +136,17 @@ endif(APPLE)
 # Find gr-satnogs build dependencies
 ########################################################################
 find_package(Doxygen)
-find_package(SWIG)
+find_package(SWIG REQUIRED)
 find_package(Volk REQUIRED)
 find_package(OggVorbis REQUIRED)
 find_package(PNG REQUIRED)
 find_package(png++ REQUIRED)
 find_package(JsonCpp REQUIRED)
+find_package(soapy)
+
+if(NOT soapy_FOUND)
+    message(WARNING "gr-soapy not found. Flowgraphs may not be able to execute!")
+endif()
 
 ########################################################################
 # Include or not into the module blocks for debugging

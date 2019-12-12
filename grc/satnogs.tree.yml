@@ -13,6 +13,7 @@
         - satnogs_lrpt_sync
   - satnogs_ax25_encoder_mb
   - satnogs_coarse_doppler_correction_cc
+  - satnogs_doppler_compensation
   - satnogs_doppler_correction_cc
   - satnogs_frame_decoder
   - satnogs_frame_file_sink

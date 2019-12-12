@@ -32,24 +32,27 @@ namespace satnogs {
 
 coarse_doppler_correction_cc::sptr
 coarse_doppler_correction_cc::make(double target_freq,
+                                   double offset,
                                    double sampling_rate)
 {
   return gnuradio::get_initial_sptr(
-           new coarse_doppler_correction_cc_impl(target_freq, sampling_rate));
+           new coarse_doppler_correction_cc_impl(target_freq, offset,
+               sampling_rate));
 }
 
 /*
  * The private constructor
  */
 coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
-  double target_freq, double sampling_rate) :
+  double target_freq, double offset, double sampling_rate) :
   gr::sync_block("coarse_doppler_correction_cc",
                  gr::io_signature::make(1, 1, sizeof(gr_complex)),
                  gr::io_signature::make(1, 1, sizeof(gr_complex))),
   d_target_freq(target_freq),
+  d_offset(offset),
   d_samp_rate(sampling_rate),
   d_buf_items(std::min((size_t)8192UL, (size_t)(d_samp_rate / 4))),
-  d_freq_diff(0),
+  d_freq_diff(d_offset),
   d_nco()
 {
   message_port_register_in(pmt::mp("freq"));
@@ -70,7 +73,7 @@ coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
     pmt::mp("freq"),
     boost::bind(&coarse_doppler_correction_cc_impl::new_freq, this, _1));
 
-  d_nco.set_freq(0);
+  d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
   /* Allocate aligned memory for the NCO */
   d_nco_buff = (gr_complex *) volk_malloc(
                  (d_samp_rate / 4) * sizeof(gr_complex), 32);
@@ -82,10 +85,9 @@ coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
 void
 coarse_doppler_correction_cc_impl::new_freq(pmt::pmt_t msg)
 {
-  boost::mutex::scoped_lock lock(d_mutex);
   double new_freq;
   new_freq = pmt::to_double(msg);
-  d_freq_diff = new_freq - d_target_freq;
+  d_freq_diff = new_freq - (d_target_freq - d_offset);
   d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
 }
 
@@ -111,15 +113,6 @@ coarse_doppler_correction_cc_impl::work(
 
   // Tell runtime system how many output items we produced.
   return noutput_items;
-}
-
-void
-coarse_doppler_correction_cc_impl::set_target_freq(double freq)
-{
-  boost::mutex::scoped_lock lock(d_mutex);
-  d_target_freq = freq;
-  d_freq_diff = 0.0;
-  d_nco.set_freq(0);
 }
 
 } /* namespace satnogs */

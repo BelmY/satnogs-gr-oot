@@ -30,6 +30,7 @@ try:
     # this might fail if the module is python-only
     from .satnogs_swig import *
     from .hw_settings import *
+    from .doppler_compensation import doppler_compensation
     from .utils import *
 except ImportError as err:
     sys.stderr.write("Failed to import SatNOGS ({})\n".format(err))

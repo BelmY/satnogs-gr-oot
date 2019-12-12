@@ -47,10 +47,13 @@ public:
    * The message input \p freq receives periodically messages containing
    * the predicted absolute frequency of the satellite at that specific time.
    * @param target_freq the absolute frequency of the satellite
+   * @param offset the frequency offset from the actuall target frequency.
+   * This is very common on SDR receivers to avoid DC spikes at the center
+   * frequency. This block can automatically compensate this offset
    * @param sampling_rate the sampling rate of the signal
    */
   static sptr
-  make(double target_freq, double sampling_rate);
+  make(double target_freq, double offset, double sampling_rate);
 };
 
 } // namespace satnogs

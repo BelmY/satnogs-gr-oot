@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2017, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2017,2019 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,12 +26,28 @@
 #include <gnuradio/fft/fft.h>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 namespace gr {
 namespace satnogs {
 
 class waterfall_sink_impl : public waterfall_sink {
 private:
+
+  /**
+   * Waterfall header data.
+   * This structure is only for readability purposes and make more clear to
+   * possible users the structure of the header.
+   */
+  typedef struct {
+    char start_time[32];        /**< String with the start of the waterfall in ISO-8601 format */
+    uint32_t samp_rate;         /**< The sampling rate of the waterfall */
+    uint32_t fft_size;          /**< The FFT size of the flowgraph */
+    uint32_t nfft_per_row;      /**< The number of FFTs performed to plot one row */
+    float center_freq;          /**< The center frequency of the observation. Just for viasualization purposes */
+    uint32_t endianness;        /**< The endianness of the rest of the file. Should be 0 for big endian */
+  } header_t;
+
   /**
    * The different types of operation of the waterfall
    */
@@ -41,8 +57,8 @@ private:
     WATERFALL_MODE_MEAN = 2       //!< WATERFALL_MODE_MEAN compute the mean energy of all the FFT snapshots between two consecutive pixel rows
   } wf_mode_t;
 
-  const double d_samp_rate;
-  double d_pps;
+  const float d_samp_rate;
+  const float d_center_freq;
   const size_t d_fft_size;
   wf_mode_t d_mode;
   size_t d_refresh;
@@ -54,13 +70,21 @@ private:
   float *d_hold_buffer;
   float *d_tmp_buffer;
   std::ofstream d_fos;
+  std::chrono::system_clock::time_point d_start;
+
+  void
+  apply_header();
+
+  void
+  write_timestamp();
 
 public:
-  waterfall_sink_impl(double samp_rate, double center_freq,
-                      double pps, size_t fft_size,
-                      const std::string &filename, int mode);
+  waterfall_sink_impl(float samp_rate, float center_freq, float rps,
+                      size_t fft_size, const std::string &filename, int mode);
   ~waterfall_sink_impl();
 
+  bool
+  start();
 
   int
   work(int noutput_items, gr_vector_const_void_star &input_items,

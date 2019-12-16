@@ -12,6 +12,9 @@ parameters:
   default: samp_rate
 
 inputs:
+- id: freq
+  domain: message
+
 - label: in
   domain: stream
   dtype: complex

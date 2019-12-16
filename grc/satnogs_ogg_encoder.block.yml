@@ -11,8 +11,8 @@ parameters:
   dtype: int
   default: 48000
 
-- id: Quality
-  label: Image Height
+- id: quality
+  label: Quality
   dtype: real
   default: 0.8
 

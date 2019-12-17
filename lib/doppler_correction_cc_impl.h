@@ -33,6 +33,7 @@ namespace satnogs {
 class doppler_correction_cc_impl : public doppler_correction_cc {
 private:
   const double d_target_freq;
+  const double d_offset;
   const double d_samp_rate;
   const size_t d_update_period;
   const size_t d_est_thrhld;
@@ -57,7 +58,9 @@ private:
   reset(pmt::pmt_t msg);
 
 public:
-  doppler_correction_cc_impl(double target_freq, double sampling_rate,
+  doppler_correction_cc_impl(double target_freq,
+                             double offset,
+                             double sampling_rate,
                              size_t corrections_per_sec);
   ~doppler_correction_cc_impl();
 

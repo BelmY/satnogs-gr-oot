@@ -31,11 +31,14 @@ namespace gr {
 namespace satnogs {
 
 doppler_correction_cc::sptr
-doppler_correction_cc::make(double target_freq, double sampling_rate,
+doppler_correction_cc::make(double target_freq,
+                            double offset,
+                            double sampling_rate,
                             size_t corrections_per_sec)
 {
   return gnuradio::get_initial_sptr(
-           new doppler_correction_cc_impl(target_freq, sampling_rate,
+           new doppler_correction_cc_impl(target_freq, offset,
+                                          sampling_rate,
                                           corrections_per_sec));
 }
 
@@ -43,19 +46,23 @@ doppler_correction_cc::make(double target_freq, double sampling_rate,
  * The private constructor
  */
 doppler_correction_cc_impl::doppler_correction_cc_impl(
-  double target_freq, double sampling_rate, size_t corrections_per_sec) :
+  double target_freq,
+  double offset,
+  double sampling_rate,
+  size_t corrections_per_sec) :
   gr::sync_block("doppler_correction_cc",
                  gr::io_signature::make(1, 1, sizeof(gr_complex)),
                  gr::io_signature::make(1, 1, sizeof(gr_complex))),
   d_target_freq(target_freq),
+  d_offset(offset),
   d_samp_rate(sampling_rate),
-  d_update_period(sampling_rate / (double) corrections_per_sec),
+  d_update_period(sampling_rate / corrections_per_sec),
   d_est_thrhld(7),
   d_corrections_per_sec(corrections_per_sec),
   d_nco(),
   /* A 3-rd order polynomial curve fitting is more than enough */
   d_doppler_fit_engine(3),
-  d_freq_diff(0.0),
+  d_freq_diff(offset),
   d_have_est(false),
   d_freq_est_num(0),
   d_corrections(0),
@@ -83,6 +90,7 @@ doppler_correction_cc_impl::doppler_correction_cc_impl(
     pmt::mp("reset"),
     boost::bind(&doppler_correction_cc_impl::reset, this, _1));
 
+  d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
   /* Allocate the buffer that will hold the predicted frequency differences */
   d_predicted_freqs = new double[d_corrections_per_sec];
 
@@ -100,7 +108,7 @@ doppler_correction_cc_impl::new_freq(pmt::pmt_t msg)
   boost::mutex::scoped_lock lock(d_mutex);
   double new_freq;
   new_freq = pmt::to_double(msg);
-  d_freq_diff = new_freq - d_target_freq;
+  d_freq_diff = new_freq - (d_target_freq - d_offset);
   if (!d_have_est) {
     d_freq_est_num++;
     d_doppler_freqs.push_back(

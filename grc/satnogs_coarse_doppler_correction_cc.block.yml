@@ -5,6 +5,7 @@ parameters:
 - id: target_freq
   label: Target frequency
   dtype: real
+  default: 0.0
 
 - id: offset
   label: Offset
@@ -33,7 +34,5 @@ outputs:
 templates:
   imports: import satnogs
   make: satnogs.coarse_doppler_correction_cc(${target_freq}, ${offset}, ${sampling_rate})
-  callbacks:
-    - set_new_freq_locked(${target_freq})
 
 file_format: 1

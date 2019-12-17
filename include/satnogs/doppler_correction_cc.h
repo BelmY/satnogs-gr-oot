@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016,2019 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ namespace satnogs {
 
 /*!
  * \brief This block corrects the doppler effect between the ground
- * station and the satellite. It takes the imput stream in baseband
+ * station and the satellite. It takes the input stream in baseband
  * and applies proper corrections to keep the carrier at the desired
  * frequency. To achieve that it uses messages containing the absolute
  * predicted frequency of the satellite from software like Gpredict.
@@ -47,12 +47,15 @@ public:
    * received periodically messages containing the predicted absolute
    * frequency of the satellite at that specific time.
    * @param target_freq the absolute frequency of the satellite
+   * @param offset the frequency offset from the actual target frequency.
+   * This is very common on SDR receivers to avoid DC spikes at the center
+   * frequency. This block can automatically compensate this offset
    * @param sampling_rate the sampling rate of the signal
    * @param corrections_per_sec the number of the corrections every second
    * that the block should perform
    */
   static sptr
-  make(double target_freq, double sampling_rate,
+  make(double target_freq, double offset, double sampling_rate,
        size_t corrections_per_sec = 1000);
 };
 

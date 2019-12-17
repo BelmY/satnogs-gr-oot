@@ -5,6 +5,12 @@ parameters:
 - id: target_freq
   label: Target frequency
   dtype: real
+  default: 0.0
+
+- id: offset
+  label: LO Offset
+  dtype: real
+  default: 0.0
 
 - id: sampling_rate
   label: Sample Rate
@@ -14,20 +20,20 @@ parameters:
 - id: corrections_per_sec
   label: Corrections per Second
   dtype: int
-  default: 1000
-
+  default: 100
 
 inputs:
+- label: in
+  domain: stream
+  dtype: complex
+
 - id: freq
   domain: message
+  optional: true
   
 - id: reset
   domain: message
   optional: true
-
-- label: in
-  domain: stream
-  dtype: complex
 
 outputs:
 - label: out
@@ -36,6 +42,6 @@ outputs:
 
 templates:
   imports: import satnogs
-  make: satnogs.doppler_correction_cc(${target_freq}, ${sampling_rate}, ${corrections_per_sec})
+  make: satnogs.doppler_correction_cc(${target_freq}, ${offset}, ${sampling_rate}, ${corrections_per_sec})
 
 file_format: 1

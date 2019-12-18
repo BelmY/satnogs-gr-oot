@@ -35,7 +35,6 @@ configure_file(satnogs_info.py.in ${CMAKE_BINARY_DIR}/satnogs_info.py
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    hw_settings.py
     utils.py
     ${CMAKE_BINARY_DIR}/satnogs_info.py
     doppler_compensation.py 

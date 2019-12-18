@@ -28,3 +28,13 @@ def lcm(p,q):
         if not p: return m // q
         q %= p
         if not q: return m // p
+
+def find_decimation(baudrate, min_decimation=4, audio_samp_rate=48e3,
+                    multiple = 2):
+    while(min_decimation * baudrate < audio_samp_rate):
+        min_decimation = min_decimation + 1
+    # Because we use a clock recovery that decimates,
+    # we need a number that is multiple of the clock recovery decimation
+    if min_decimation % multiple:
+        min_decimation = min_decimation + multiple - min_decimation % multiple
+    return min_decimation

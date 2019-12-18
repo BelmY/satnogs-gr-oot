@@ -23,7 +23,6 @@ add_subdirectory(flowgraphs/satellites)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    flowgraphs/satnogs_fm_demod.py
     flowgraphs/satnogs_cw_decoder.py
     flowgraphs/satnogs_afsk1200_ax25.py
     flowgraphs/satnogs_example_flowgraph.py

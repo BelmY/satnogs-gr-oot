@@ -1,0 +1,473 @@
+options:
+  parameters:
+    author: Manolis Surligas (surligas@gmail.com)
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: Generic IQ receiver with arbitrary output sampling rate
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: satnogs_iq_receiver
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: run
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: satnogs_iq_receiver
+    window_size: 2*1080,1080
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 4.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: antenna
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 12.0]
+    rotation: 0
+    state: enabled
+- name: bw
+  id: parameter
+  parameters:
+    alias: ''
+    comment: 'The bandwidth should configure RF filters on some devices.
+
+      Set to 0.0 for automatic calculation.'
+    hide: none
+    label: Bandwidth
+    short_id: ''
+    type: eng_float
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 12.0]
+    rotation: 0
+    state: enabled
+- name: dev_args
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Device arguments
+    short_id: ''
+    type: str
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 12.0]
+    rotation: 0
+    state: enabled
+- name: doppler_correction_per_sec
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: intx
+    value: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 548.0]
+    rotation: 0
+    state: enabled
+- name: enable_doppler_correction
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: intx
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 548.0]
+    rotation: 0
+    state: enabled
+- name: enable_iq_dump
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: intx
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 468.0]
+    rotation: 0
+    state: enabled
+- name: file_path
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: test.wav
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 468.0]
+    rotation: 180
+    state: enabled
+- name: gain
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: eng_float
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 12.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 164.0]
+    rotation: 0
+    state: enabled
+- name: iq_file_path
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: /tmp/iq.dat
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [384, 468.0]
+    rotation: 0
+    state: enabled
+- name: lo_offset
+  id: parameter
+  parameters:
+    alias: ''
+    comment: 'To avoid the SDR carrier at the DC
+
+      we shift the LO a little further'
+    hide: none
+    label: ''
+    short_id: ''
+    type: eng_float
+    value: 100e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 12.0]
+    rotation: 0
+    state: enabled
+- name: out_samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Output sampling rate
+    short_id: ''
+    type: eng_float
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1392, 12.0]
+    rotation: 0
+    state: enabled
+- name: rigctl_port
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: intx
+    value: '4532'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [384, 548.0]
+    rotation: 0
+    state: enabled
+- name: rx_freq
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: eng_float
+    value: 100e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate_rx
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Device Sampling rate
+    short_id: ''
+    type: eng_float
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 12.0]
+    rotation: 0
+    state: enabled
+- name: satnogs_doppler_compensation_0
+  id: satnogs_doppler_compensation
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    compensate: enable_doppler_correction
+    lo_offset: lo_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    out_samp_rate: out_samp_rate
+    samp_rate: samp_rate_rx
+    sat_freq: rx_freq
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 220.0]
+    rotation: 0
+    state: true
+- name: satnogs_iq_sink_0
+  id: satnogs_iq_sink
+  parameters:
+    activate: '1'
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    filename: iq_file_path
+    scale: '16768'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 340.0]
+    rotation: 0
+    state: enabled
+- name: satnogs_tcp_rigctl_msg_source_0
+  id: satnogs_tcp_rigctl_msg_source
+  parameters:
+    addr: '"127.0.0.1"'
+    affinity: ''
+    alias: ''
+    comment: ''
+    interval: int(1000.0/doppler_correction_per_sec) + 1
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: 'False'
+    mtu: '1500'
+    port: rigctl_port
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 332.0]
+    rotation: 0
+    state: enabled
+- name: satnogs_waterfall_sink_0
+  id: satnogs_waterfall_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: rx_freq
+    comment: ''
+    fft_size: '1024'
+    filename: waterfall_file_path
+    mode: '1'
+    rps: '10'
+    samp_rate: out_samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 212.0]
+    rotation: 0
+    state: enabled
+- name: soapy_rx_device
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: driver=invalid
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 12.0]
+    rotation: 0
+    state: enabled
+- name: soapy_source_0
+  id: soapy_source
+  parameters:
+    affinity: ''
+    alias: ''
+    amp_gain0: '0'
+    ant0: antenna
+    ant1: RX2
+    args: dev_args
+    balance0: '0'
+    balance1: '0'
+    bw0: bw
+    bw1: '0'
+    center_freq0: rx_freq - lo_offset
+    center_freq1: '0'
+    clock_rate: '0'
+    clock_source: ''
+    comment: ''
+    correction0: '0'
+    correction1: '0'
+    dc_offset0: '0'
+    dc_offset1: '0'
+    dc_offset_auto_mode0: 'False'
+    dc_offset_auto_mode1: 'False'
+    dev: soapy_rx_device
+    devname: custom
+    gain_auto_mode0: 'False'
+    gain_auto_mode1: 'False'
+    ifgr_gain: '59'
+    lna_gain0: '10'
+    lna_gain1: '10'
+    manual_gain0: 'False'
+    manual_gain1: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mix_gain0: '10'
+    mix_gain1: '10'
+    nchan: '1'
+    nco_freq0: '0'
+    nco_freq1: '0'
+    overall_gain0: gain
+    overall_gain1: '10'
+    pga_gain0: '24'
+    pga_gain1: '24'
+    rfgr_gain: '9'
+    samp_rate: samp_rate_rx
+    sdrplay_agc_setpoint: '-30'
+    sdrplay_biastee: 'True'
+    sdrplay_dabnotch: 'False'
+    sdrplay_if_mode: Zero-IF
+    sdrplay_rfnotch: 'False'
+    tia_gain0: '0'
+    tia_gain1: '0'
+    tuner_gain0: '10'
+    tuner_gain1: '10'
+    type: fc32
+    vga_gain0: '10'
+    vga_gain1: '10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 196.0]
+    rotation: 0
+    state: true
+- name: waterfall_file_path
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: str
+    value: /tmp/waterfall.dat
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 468.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [satnogs_doppler_compensation_0, '0', satnogs_iq_sink_0, '0']
+- [satnogs_doppler_compensation_0, '0', satnogs_waterfall_sink_0, '0']
+- [satnogs_tcp_rigctl_msg_source_0, freq, satnogs_doppler_compensation_0, doppler]
+- [soapy_source_0, '0', satnogs_doppler_compensation_0, '0']
+
+metadata:
+  file_format: 1

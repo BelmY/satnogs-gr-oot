@@ -23,7 +23,6 @@ GR_PYTHON_INSTALL(
     PROGRAMS
     satnogs_amsat_fox_duv_decoder.py
     satnogs_noaa_apt_decoder.py
-    satnogs_meteor_decoder.py
     satnogs_reaktor_hello_world_fsk9600_decoder.py
     DESTINATION bin
 )

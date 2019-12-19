@@ -33,6 +33,7 @@ inputs:
   
 - domain: message
   id: act_threshold
+  optional: true
 
 outputs:
 - domain: message
@@ -40,7 +41,7 @@ outputs:
 
 templates:
   imports: import satnogs
-  make: satnogs.cw_to_symbol(${sampling_rate}, ${threshold}, ${conf_level}, ${wpm}, ${hysteresis})
+  make: satnogs.cw_to_symbol(${samp_rate}, ${threshold}, ${conf_level}, ${wpm}, ${hysteresis})
   callbacks:
     - set_act_threshold(${threshold})
 

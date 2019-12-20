@@ -21,6 +21,8 @@ Build-Depends: cmake,
                libpng++-dev,
                libvorbis-dev,
                pkg-config,
+               python3-dev,
+               python3-six,
                swig
 Standards-Version: 4.1.0
 Homepage: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs

@@ -37,7 +37,8 @@ Package: gr-satnogs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
 Depends: libgnuradio-satnogs (= ${binary:Version}),
-         ${python:Depends},
+         python3,
+         ${python3:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
 Recommends: gnuradio

@@ -1,11 +1,10 @@
 variables:
-  GITLAB_CI_IMAGE_DEBIAN: 'debian:bullseye'
+  GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
 stages:
   - style 
   - test
   - build
   - deploy
-
 style:
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: style
@@ -15,11 +14,14 @@ style:
     - if (test $(astyle --dry-run --options=.astylerc --formatted lib/*.cc | wc -l) -eq 0); then (exit 0); else (exit 1); fi
     - if (test $(astyle --dry-run --options=.astylerc --formatted lib/*.h | wc -l) -eq 0); then (exit 0); else (exit 1); fi
     - if (test $(astyle --dry-run --options=.astylerc --formatted include/satnogs/*.h | wc -l) -eq 0); then (exit 0); else (exit 1); fi
-
 test:
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: test
   before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y gnupg libcurl4
+    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs-unstable/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs-unstable.list
+    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs-unstable/Debian_10/Release.key
     - apt-get update -qq -y
     - >
       apt-get install -q -y 
@@ -61,10 +63,9 @@ test:
     - make install
     - ldconfig
     - python3 -c "import satnogs"
-
 debian:
   stage: build
-  image: debian:buster
+  image: ${GITLAB_CI_IMAGE_DEBIAN}
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y gnupg libcurl4

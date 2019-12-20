@@ -2,31 +2,31 @@ Source: gr-satnogs
 Section: science
 Priority: optional
 Maintainer: SatNOGS project <dev@satnogs.org>
-Build-Depends: debhelper (>= 9.0.0~),
+Build-Depends: cmake,
+               build-essential,
+               debhelper (>= 9.0.0~),
                dh-python,
                doxygen,
-               libboost-dev,
+               git,
+               gnuradio-dev,
                libboost-date-time-dev,
+               libboost-dev,
                libboost-filesystem-dev,
                libboost-program-options-dev,
-               libboost-system-dev,
-               libboost-thread-dev,
                libboost-regex-dev,
+               libboost-system-dev,
                libboost-test-dev,
-               swig,
-               cmake,
-               build-essential,
-               pkg-config,
-               gnuradio-dev,
+               libboost-thread-dev,
                libconfig++-dev,
                libgmp-dev,
+               libjsoncpp-dev,
                liborc-0.4-0,
                liborc-0.4-dev,
                liborc-0.4-dev-bin,
-               libjsoncpp-dev,
                libpng++-dev,
                libvorbis-dev,
-               git
+               pkg-config,
+               swig
 X-Python-Version: >= 3.0, 
 Standards-Version: 3.9.8
 Homepage: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs

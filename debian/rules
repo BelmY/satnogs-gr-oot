@@ -14,9 +14,9 @@ override_dh_auto_configure:
 	dh_auto_configure -- -DLIB_SUFFIX="/$(DEB_HOST_MULTIARCH)" -DGR_GIT_COUNT="$(GITCOUNT)" -DGR_GIT_HASH="$(GITREV)"
 
 override_dh_auto_install:
-	dh_auto_install
 	rm -f debian/gr-satnogs/usr/lib/python3/dist-packages/satnogs/*pyc
 	rm -f debian/gr-satnogs/usr/lib/python3/dist-packages/satnogs/*pyo
+	dh_auto_install
 
 version-to-get:
 	echo $(VER) is $(GITREV)

@@ -15,8 +15,8 @@ override_dh_auto_configure:
 
 override_dh_auto_install:
 	dh_auto_install
-	rm -f debian/gr-satnogs/usr/lib/python3.7/dist-packages/satnogs/*pyc
-	rm -f debian/gr-satnogs/usr/lib/python3.7/dist-packages/satnogs/*pyo
+	rm -f debian/gr-satnogs/usr/lib/python3/dist-packages/satnogs/*pyc
+	rm -f debian/gr-satnogs/usr/lib/python3/dist-packages/satnogs/*pyo
 
 version-to-get:
 	echo $(VER) is $(GITREV)

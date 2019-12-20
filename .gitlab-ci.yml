@@ -1,7 +1,7 @@
 variables:
   GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
 stages:
-  - style 
+  - style
   - test
   - build
   - deploy
@@ -30,9 +30,9 @@ test:
       git
       gnuradio-dev
       gr-soapy
-      libboost-date-time-dev 
+      libboost-date-time-dev
       libboost-dev
-      libboost-filesystem-dev 
+      libboost-filesystem-dev
       libboost-program-options-dev
       libboost-regex-dev
       libboost-system-dev

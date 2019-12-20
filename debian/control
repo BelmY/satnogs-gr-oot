@@ -22,7 +22,6 @@ Build-Depends: cmake,
                libvorbis-dev,
                pkg-config,
                swig
-X-Python-Version: >= 3.0, 
 Standards-Version: 4.1.0
 Homepage: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs
 Vcs-Git: https://gitlab.com/librespacefoundation/satnogs/gr-satnogs.git

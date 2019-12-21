@@ -76,9 +76,9 @@ class satnogs_afsk1200_ax25(gr.top_block):
             f = f.replace('\"', '')
             f = f.replace("\\'", '')
             f = f.strip(',')
-            self.soapy_source_0 = soapy.source(1, dev, f, samp_rate_rx, "fc32")
+            self.soapy_source_0 = soapy.source(1, dev, "custom", f, samp_rate_rx, "fc32")
         else:
-            self.soapy_source_0 = soapy.source(1, dev, dev_args, samp_rate_rx, "fc32")
+            self.soapy_source_0 = soapy.source(1, dev, "custom", dev_args, samp_rate_rx, "fc32")
 
         if 0 != 0:
             self.soapy_source_0.set_master_clock_rate(0)
@@ -173,6 +173,7 @@ class satnogs_afsk1200_ax25(gr.top_block):
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
+        self.satnogs_json_converter_0 = satnogs.json_converter()
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, 1)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
         self.satnogs_frame_decoder_0_0_0 = satnogs.frame_decoder(variable_ax25_decoder_0_0, 1 * 1)
@@ -243,10 +244,10 @@ class satnogs_afsk1200_ax25(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
-        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
-        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0, 'out'), (self.satnogs_json_converter_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0_0_0, 'out'), (self.satnogs_json_converter_0, 'in'))
+        self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_frame_file_sink_0_1_0, 'frame'))
+        self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_doppler_compensation_0, 'doppler'))
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.dc_blocker_xx_0_0, 0))
         self.connect((self.analog_quadrature_demod_cf_0_0, 0), (self.band_pass_filter_0, 0))

@@ -520,7 +520,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 676.0]
+    coordinate: [1000, 676.0]
     rotation: 180
     state: enabled
 - name: satnogs_iq_sink_0
@@ -540,6 +540,22 @@ blocks:
     coordinate: [48, 628.0]
     rotation: 180
     state: enabled
+- name: satnogs_json_converter_0
+  id: satnogs_json_converter
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    extra: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1216, 684.0]
+    rotation: 180
+    state: true
 - name: satnogs_ogg_encoder_0
   id: satnogs_ogg_encoder
   parameters:
@@ -589,7 +605,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 740.0]
+    coordinate: [1024, 740.0]
     rotation: 180
     state: enabled
 - name: satnogs_waterfall_sink_0
@@ -782,8 +798,9 @@ connections:
 - [low_pass_filter_1, '0', dc_blocker_xx_0, '0']
 - [root_raised_cosine_filter_0, '0', digital_clock_recovery_mm_xx_0_0_0, '0']
 - [satnogs_doppler_compensation_0, '0', virtual_sink_0, '0']
-- [satnogs_frame_decoder_0, out, satnogs_frame_file_sink_0_1_0, frame]
-- [satnogs_frame_decoder_0, out, satnogs_udp_msg_sink_0_0, in]
+- [satnogs_frame_decoder_0, out, satnogs_json_converter_0, in]
+- [satnogs_json_converter_0, out, satnogs_frame_file_sink_0_1_0, frame]
+- [satnogs_json_converter_0, out, satnogs_udp_msg_sink_0_0, in]
 - [satnogs_tcp_rigctl_msg_source_0, freq, satnogs_doppler_compensation_0, doppler]
 - [soapy_source_0, '0', satnogs_doppler_compensation_0, '0']
 - [virtual_source_0, '0', low_pass_filter_0, '0']

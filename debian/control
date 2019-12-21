@@ -38,7 +38,8 @@ Depends: libgnuradio-satnogs (= ${binary:Version}),
          ${python3:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
-Recommends: gnuradio
+Recommends: gnuradio,
+            gr-soapy
 Description: SatNOGS GNU Radio Out-Of-Tree Module
  gr-satnogs is an out-of-tree GNU Radio module that provides all the necessary
  tools for decoding signals from various scientific and academic sattelites.

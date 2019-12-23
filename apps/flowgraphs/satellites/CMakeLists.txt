@@ -19,6 +19,19 @@
 
 include(GrPython)
 
+set(flowgraphs
+    amsat_fox_duv_decoder.grc
+    noaa_apt_decoder.grc
+    reaktor_hello_world_fsk9600_decoder.grc
+)
+message(“Compiling GRC SatNOGS satellite specific flowgraphs…”)
+foreach(grc_file ${flowgraphs})
+    
+    message("Compiling " ${grc_file})
+    execute_process(COMMAND grcc ${grc_file}
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endforeach()
 GR_PYTHON_INSTALL(
     PROGRAMS
     satnogs_amsat_fox_duv_decoder.py

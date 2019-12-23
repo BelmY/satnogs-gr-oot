@@ -311,7 +311,6 @@ class satnogs_fsk_ax25(gr.top_block):
 
     def set_iq_file_path(self, iq_file_path):
         self.iq_file_path = iq_file_path
-        self.satnogs_iq_sink_0.open(self.iq_file_path)
 
     def get_lo_offset(self):
         return self.lo_offset

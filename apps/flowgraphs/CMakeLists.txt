@@ -17,6 +17,32 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
+add_subdirectory(satellites)
 
-add_subdirectory(flowgraphs)
+set(flowgraphs
+    afsk1200_ax25.grc
+    bpsk_ax25.grc
+    cw_decoder.grc
+    example_flowgraph.grc
+    fsk_ax25.grc
+    iq_receiver.grc
+)
+message(“Compiling GRC SatNOGS flowgraphs…”)
+foreach(grc_file ${flowgraphs})
+    
+    message("Compiling " ${grc_file})
+    execute_process(COMMAND grcc ${grc_file}
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endforeach()
+
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    satnogs_afsk1200_ax25.py
+    satnogs_bpsk_ax25.py
+    satnogs_cw_decoder.py
+    satnogs_example_flowgraph.py
+    satnogs_fsk_ax25.py
+    satnogs_iq_receiver.py
+    DESTINATION bin
+)

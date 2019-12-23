@@ -23,7 +23,6 @@
 
 #include <satnogs/api.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/blocks/file_sink_base.h>
 
 namespace gr {
 namespace satnogs {
@@ -36,8 +35,7 @@ namespace satnogs {
  * \ingroup satnogs
  *
  */
-class SATNOGS_API iq_sink : virtual public gr::sync_block,
-  virtual public gr::blocks::file_sink_base {
+class SATNOGS_API iq_sink : virtual public gr::sync_block {
 public:
   typedef boost::shared_ptr<iq_sink> sptr;
 

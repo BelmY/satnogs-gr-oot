@@ -22,13 +22,14 @@
 #define INCLUDED_SATNOGS_IQ_SINK_IMPL_H
 
 #include <satnogs/iq_sink.h>
+#include <gnuradio/blocks/file_sink_base.h>
 #include <chrono>
 #include <fstream>
 
 namespace gr {
 namespace satnogs {
 
-class iq_sink_impl : public iq_sink {
+class iq_sink_impl : public iq_sink, public gr::blocks::file_sink_base {
 private:
   /**
    * The different values for iq sink status

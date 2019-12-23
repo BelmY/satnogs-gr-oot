@@ -26,6 +26,7 @@
 #include "iq_sink_impl.h"
 #include <volk/volk.h>
 #include <stdexcept>
+#include <gnuradio/blocks/null_sink.h>
 
 namespace gr {
 namespace satnogs {
@@ -46,11 +47,27 @@ iq_sink_impl::iq_sink_impl(const float scale, const char *filename,
   gr::sync_block("iq_sink",
                  gr::io_signature::make(1, 1, sizeof(gr_complex)),
                  gr::io_signature::make(0, 0, 0)),
-  file_sink_base(filename, true, append),
+  file_sink_base(),
   d_scale(scale),
   d_num_points(16384),
   d_status((iq_sink_status_t) status)
 {
+  d_fp = 0;
+  d_new_fp = 0;
+  d_updated = false;
+  d_is_binary = true;
+  d_append = append;
+  /*
+   * Because the constructor of the derived class explicitly calls the open()
+   * and we want to avoid trying to open and invalid file in case of the
+   * user option is for bypassing this block, we call it explicitly
+   */
+  if (status == IQ_SINK_STATUS_ACTIVE) {
+    if (!open(filename)) {
+      throw std::invalid_argument("IQ File Sink: Could not open file");
+    }
+  }
+
   set_max_noutput_items(d_num_points);
   unsigned int alignment = volk_get_alignment();
   d_out = (int16_t *) volk_malloc(sizeof(int16_t) * d_num_points * 2,

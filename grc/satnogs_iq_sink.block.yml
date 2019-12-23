@@ -33,7 +33,5 @@ inputs:
 templates:
   imports: import satnogs
   make: satnogs.iq_sink(${scale}, ${filename}, ${append}, ${activate})
-  callbacks:
-  - open(${filename})
 
 file_format: 1

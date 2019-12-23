@@ -167,7 +167,7 @@ class satnogs_noaa_apt_decoder(gr.top_block):
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 0.8)
         self.satnogs_noaa_apt_sink_1 = satnogs.noaa_apt_sink(decoded_data_file_path, 2080, 1800, True, False)
-        self.satnogs_iq_sink_0_0 = satnogs.iq_sink(16768, iq_file_path, False, 1)
+        self.satnogs_iq_sink_0_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, 4*4160*4, 1)
         self.rational_resampler_xxx_0_0 = filter.rational_resampler_fff(
                 interpolation=1,

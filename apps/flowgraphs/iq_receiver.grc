@@ -310,7 +310,7 @@ blocks:
 - name: satnogs_iq_sink_0
   id: satnogs_iq_sink
   parameters:
-    activate: '1'
+    activate: enable_iq_dump
     affinity: ''
     alias: ''
     append: 'False'

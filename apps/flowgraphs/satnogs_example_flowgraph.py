@@ -168,7 +168,7 @@ class satnogs_example_flowgraph(gr.top_block):
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(baudrate*decimation, rx_freq, 10, 1024, waterfall_file_path, 1)
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
-        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, 1)
+        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, audio_samp_rate, 1)
         self.dc_blocker_xx_0_0 = filter.dc_blocker_ff(1024, True)
         self.analog_quadrature_demod_cf_0_0_0 = analog.quadrature_demod_cf(0.9)

@@ -170,7 +170,7 @@ class satnogs_cw_decoder(gr.top_block):
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
         self.satnogs_morse_decoder_0 = satnogs.morse_decoder(ord('#'), 3)
-        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, 1)
+        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
         self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, audio_samp_rate, 1)
         self.satnogs_cw_to_symbol_1 = satnogs.cw_to_symbol(audio_samp_rate/10, 2.0, 0.9, wpm, dot_samples//dec)

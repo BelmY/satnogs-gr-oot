@@ -154,7 +154,7 @@ class satnogs_iq_receiver(gr.top_block):
             self.soapy_source_0.set_gain(0,"RFGR", 9, False  )
         self.satnogs_waterfall_sink_0 = satnogs.waterfall_sink(out_samp_rate, rx_freq, 10, 1024, waterfall_file_path, 1)
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
-        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, 1)
+        self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, out_samp_rate, enable_doppler_correction)
 
 

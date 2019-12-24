@@ -88,20 +88,27 @@ class doppler_compensation(gr.hier_block2):
         
         if(lo_offset > samp_rate // 4):
             gr.log.info("satnogs.doppler_compensation: The LO offset frequency "
-                        "should be > samp_rate / 4")
+                        "should be less than samp_rate/4")
             raise AttributeError
 
         self.decimation = 1
-        min_s = max(abs(2 * lo_offset) + 40e3, out_samp_rate + 2 * abs(lo_offset))
+        # FIXME: As we now the direction of the LO offset maybe we can narrow
+        # more
+        min_s = max(abs(4 * lo_offset), out_samp_rate + 4 * abs(lo_offset)) + 48e3
         while(samp_rate / (self.decimation + 1) > min_s):
             self.decimation = self.decimation + 1
 
         print(self.decimation)
         if(self.decimation > 1):
-            self.dec = filter.rational_resampler_ccc(interpolation=1,
-                                                     decimation=self.decimation,
-                                                     taps=None,
-                                                     fractional_bw=None)
+            # As we now that we are going to only decimate, we use a LPF
+            # filter instead of a resampler taking care of the passband
+            # to avoid aliasing. Also due to the fact that we know the output
+            # sampling rate we try to relax the transition woidth as much
+            # as possible to reduce CPU usage
+            self.dec = filter.fir_filter_ccf(self.decimation,
+                firdes.low_pass(1, samp_rate, out_samp_rate / 2.0,
+                                (samp_rate / 2.0) / self.decimation - out_samp_rate / 2.0,
+                                firdes.WIN_HAMMING))
 
         # Even with no doppler compensation enabled we need this
         # block to correct the LO offset

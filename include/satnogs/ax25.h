@@ -31,7 +31,7 @@ namespace gr {
 
 namespace satnogs {
 const size_t AX25_MIN_ADDR_LEN = 14;
-const size_t AX25_MAX_ADDR_LEN = 28;
+const size_t AX25_MAX_ADDR_LEN = (2 * 7 + 8 * 7);
 const size_t AX25_MIN_CTRL_LEN = 1;
 const size_t AX25_MAX_CTRL_LEN = 2;
 const size_t AX25_MAX_FRAME_LEN = 256;

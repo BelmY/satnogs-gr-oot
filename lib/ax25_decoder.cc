@@ -120,13 +120,8 @@ ax25_decoder::_decode(decoder_status_t &status)
          * AX.25 flag. We believe that such transmissions are yet rare.
          */
         bool have_sync = false;
-        if (d_descramble) {
-          have_sync = (d_shift_reg >> 8) == AX25_SYNC_FLAG;
-        }
-        else {
-          have_sync = ((d_shift_reg & 0xFF) == AX25_SYNC_FLAG)
-                      && (d_shift_reg >> 8) == AX25_SYNC_FLAG;
-        }
+        have_sync = ((d_shift_reg & 0xFF) == AX25_SYNC_FLAG)
+                    && (d_shift_reg >> 8) == AX25_SYNC_FLAG;
         if (have_sync) {
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);

@@ -27,30 +27,29 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup satnogs
-     *
-     */
-    class SATNOGS_API sstv_pd120_sink : virtual public gr::sync_block
-    {
-     public:
-      typedef boost::shared_ptr<sstv_pd120_sink> sptr;
+/*!
+ * \brief <+description of block+>
+ * \ingroup satnogs
+ *
+ */
+class SATNOGS_API sstv_pd120_sink : virtual public gr::sync_block {
+public:
+  typedef boost::shared_ptr<sstv_pd120_sink> sptr;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of satnogs::sstv_pd120_sink.
-       *
-       * To avoid accidental use of raw pointers, satnogs::sstv_pd120_sink's
-       * constructor is in a private implementation
-       * class. satnogs::sstv_pd120_sink::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(const char *filename_png);
-    };
+  /*!
+   * \brief Return a shared_ptr to a new instance of satnogs::sstv_pd120_sink.
+   *
+   * To avoid accidental use of raw pointers, satnogs::sstv_pd120_sink's
+   * constructor is in a private implementation
+   * class. satnogs::sstv_pd120_sink::make is the public interface for
+   * creating new instances.
+   */
+  static sptr make(const char *filename_png);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_SSTV_PD120_SINK_H */

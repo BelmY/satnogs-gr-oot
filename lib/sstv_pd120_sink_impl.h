@@ -28,40 +28,39 @@
 #include <png++/png.hpp>
 
 namespace gr {
-  namespace satnogs {
+namespace satnogs {
 
-    class sstv_pd120_sink_impl : public sstv_pd120_sink
-    {
-     private:
-      std::string d_filename_png;
-      bool d_has_sync;
-      bool d_initial_sync;
+class sstv_pd120_sink_impl : public sstv_pd120_sink {
+private:
+  std::string d_filename_png;
+  bool d_has_sync;
+  bool d_initial_sync;
 
-      float *d_line;
-      size_t d_line_pos;
-      size_t d_image_y;
-      size_t d_num_image;
+  float *d_line;
+  size_t d_line_pos;
+  size_t d_image_y;
+  size_t d_num_image;
 
-      png::image<png::rgb_pixel> d_image;
+  png::image<png::rgb_pixel> d_image;
 
-      float to_frequency(float sample);
-      int to_color(float sample);
-      void ycbcr_to_rgb(int ycbcr[3], int rgb[3]);
-      bool is_sync(size_t pos, const float *samples);
+  float to_frequency(float sample);
+  int to_color(float sample);
+  void ycbcr_to_rgb(int ycbcr[3], int rgb[3]);
+  bool is_sync(size_t pos, const float *samples);
 
-      void render_line();
+  void render_line();
 
-     public:
-      sstv_pd120_sink_impl(const char *filename_png);
-      ~sstv_pd120_sink_impl();
+public:
+  sstv_pd120_sink_impl(const char *filename_png);
+  ~sstv_pd120_sink_impl();
 
-      // Where all the action really happens
-      int work(int noutput_items,
-         gr_vector_const_void_star &input_items,
-         gr_vector_void_star &output_items);
-    };
+  // Where all the action really happens
+  int work(int noutput_items,
+           gr_vector_const_void_star &input_items,
+           gr_vector_void_star &output_items);
+};
 
-  } // namespace satnogs
+} // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_SSTV_PD120_SINK_IMPL_H */

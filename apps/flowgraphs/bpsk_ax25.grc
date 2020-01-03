@@ -241,11 +241,14 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: "Add a frequency offset of 1200 Hz \nto move the audio\n a bit higher\
-      \ than 0."
+    comment: 'Add a frequency offset equal the baudrate
+
+      to move the audio representation of the
+
+      signal to the audable frequencies'
     maxoutbuf: '0'
     minoutbuf: '0'
-    phase_inc: 2.0 * math.pi * (1200.0 / audio_samp_rate)
+    phase_inc: 2.0 * math.pi * (baudrate / audio_samp_rate)
   states:
     bus_sink: false
     bus_source: false

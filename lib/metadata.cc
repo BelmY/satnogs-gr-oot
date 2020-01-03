@@ -67,6 +67,8 @@ metadata::value(const key_t &k)
     return "sample_cnt";
   case SYMBOL_ERASURES:
     return "symbol_erasures";
+  case SNR:
+    return "snr";
   default:
     throw std::invalid_argument("metadata: invalid key");
   }
@@ -136,6 +138,18 @@ metadata::add_corrected_bits(pmt::pmt_t &m, uint32_t cnt)
   m = pmt::dict_add(m, pmt::mp(value(CORRECTED_BITS)), pmt::from_uint64(cnt));
 }
 
+void
+metadata::add_freq_offset(pmt::pmt_t &m, double offset)
+{
+  m = pmt::dict_add(m, pmt::mp(value(FREQ_OFFSET)), pmt::from_double(offset));
+}
+
+void
+metadata::add_snr(pmt::pmt_t &m, float snr)
+{
+  m = pmt::dict_add(m, pmt::mp(value(SNR)), pmt::from_float(snr));
+}
+
 Json::Value
 metadata::to_json(const pmt::pmt_t &m)
 {
@@ -175,6 +189,16 @@ metadata::to_json(const pmt::pmt_t &m)
   v = pmt::dict_ref(m, pmt::mp(value(CORRECTED_BITS)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
     root[value(CORRECTED_BITS)] = Json::Value::UInt64(pmt::to_uint64(v));
+  }
+
+  v = pmt::dict_ref(m, pmt::mp(value(FREQ_OFFSET)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(FREQ_OFFSET)] = pmt::to_double(v);
+  }
+
+  v = pmt::dict_ref(m, pmt::mp(value(SNR)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(SNR)] = pmt::to_float(v);
   }
   return root;
 }

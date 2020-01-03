@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2019, Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,31 +18,57 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_SATNOGS_MORSE_DECODER_IMPL_H
-#define INCLUDED_SATNOGS_MORSE_DECODER_IMPL_H
+#ifndef INCLUDED_SATNOGS_MOVING_SUM_H
+#define INCLUDED_SATNOGS_MOVING_SUM_H
 
-#include <satnogs/morse_decoder.h>
-#include <satnogs/morse_tree.h>
+#include <satnogs/api.h>
+#include <deque>
 
 namespace gr {
 namespace satnogs {
 
-class morse_decoder_impl : public morse_decoder {
-
+/*!
+ * \brief Simple moving sum template using std::deque
+ *
+ */
+template<typename T>
+class SATNOGS_API moving_sum {
 public:
-  morse_decoder_impl(char unrecognized_char, size_t min_frame_len);
+  moving_sum(int len, T init_val) :
+    d_val(len * init_val),
+    d_buf(len, init_val)
+  {
+  }
+
+  T
+  insert(T newval);
+
+  T
+  val();
 
 private:
-  morse_tree            d_morse_tree;
-  size_t                d_min_frame_len;
-  std::string           d_str;
-
-  void
-  symbol_msg_handler(pmt::pmt_t msg);
+  T                     d_val;
+  std::deque<T>         d_buf;
 };
+
+template<class T> T
+moving_sum<T>::insert(T newval)
+{
+  T old = d_buf.front();
+  d_buf.pop_front();
+  d_buf.push_back(newval);
+  d_val += newval;
+  d_val -= old;
+  return d_val;
+}
+
+template <class T> T
+moving_sum<T>::val()
+{
+  return d_val;
+}
 
 } // namespace satnogs
 } // namespace gr
 
-#endif /* INCLUDED_SATNOGS_MORSE_DECODER_IMPL_H */
-
+#endif /* INCLUDED_SATNOGS_MOVING_SUM_H */

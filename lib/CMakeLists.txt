@@ -39,7 +39,8 @@ list(APPEND satnogs_sources
     coarse_doppler_correction_cc_impl.cc
     convolutional_deinterleaver.cc
     crc.cc
-    cw_to_symbol_impl.cc
+    cw_decoder_priv.cc
+    cw_decoder.cc
     decoder.cc
     doppler_correction_cc_impl.cc
     doppler_fit.cc
@@ -53,7 +54,6 @@ list(APPEND satnogs_sources
     lrpt_decoder_impl.cc
     lrpt_sync_impl.cc
     metadata.cc
-    morse_decoder_impl.cc
     morse_tree.cc
     multi_format_msg_sink_impl.cc
     noaa_apt_sink_impl.cc

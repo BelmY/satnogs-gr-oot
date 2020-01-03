@@ -68,6 +68,26 @@ blocks:
     coordinate: [1360, 12.0]
     rotation: 0
     state: enabled
+- name: variable_cw_decoder_0
+  id: variable_cw_decoder
+  parameters:
+    channels: '4'
+    comment: ''
+    confidence: '0.90'
+    fft_size: '512'
+    max_frame_size: '96'
+    min_frame_size: '8'
+    overlapping: 512-8
+    samp_rate: audio_samp_rate/4
+    snr: '10'
+    wpm: wpm
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 220.0]
+    rotation: 0
+    state: true
 - name: analog_agc2_xx_0
   id: analog_agc2_xx
   parameters:
@@ -110,24 +130,6 @@ blocks:
     coordinate: [616, 348.0]
     rotation: 0
     state: enabled
-- name: analog_pll_carriertracking_cc_0
-  id: analog_pll_carriertracking_cc
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    max_freq: 2*math.pi*2500
-    maxoutbuf: '0'
-    min_freq: -2*math.pi*2500
-    minoutbuf: '0'
-    w: 2*math.pi/100
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [736, 476.0]
-    rotation: 0
-    state: enabled
 - name: antenna
   id: parameter
   parameters:
@@ -166,22 +168,6 @@ blocks:
     coordinate: [1368, 76.0]
     rotation: 0
     state: enabled
-- name: blocks_complex_to_mag_0
-  id: blocks_complex_to_mag
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1456, 616.0]
-    rotation: 180
-    state: enabled
 - name: blocks_complex_to_real_0
   id: blocks_complex_to_real
   parameters:
@@ -196,61 +182,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1000, 384.0]
-    rotation: 0
-    state: enabled
-- name: blocks_delay_0
-  id: blocks_delay
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    delay: int(dot_samples//dec)
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_ports: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1120, 540.0]
-    rotation: 0
-    state: enabled
-- name: blocks_keep_one_in_n_0
-  id: blocks_keep_one_in_n
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: 'Decimate manually so we
-
-      can avoid an extra filter'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    n: '10'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [592, 496.0]
-    rotation: 0
-    state: true
-- name: blocks_multiply_conjugate_cc_0
-  id: blocks_multiply_conjugate_cc
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1256, 496.0]
     rotation: 0
     state: enabled
 - name: blocks_rotator_cc_0_0
@@ -373,25 +304,6 @@ blocks:
     coordinate: [144, 668.0]
     rotation: 180
     state: enabled
-- name: fir_filter_xxx_0
-  id: fir_filter_xxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    decim: '1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_delay: '0'
-    taps: '[1.0] * int(dot_samples//dec)'
-    type: ccc
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1408, 500.0]
-    rotation: 0
-    state: enabled
 - name: gain
   id: parameter
   parameters:
@@ -471,30 +383,6 @@ blocks:
     coordinate: [800, 12.0]
     rotation: 0
     state: enabled
-- name: low_pass_filter_0
-  id: low_pass_filter
-  parameters:
-    affinity: ''
-    alias: ''
-    beta: '6.76'
-    comment: ''
-    cutoff_freq: '200'
-    decim: '1'
-    gain: '1'
-    interp: '1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_rate: audio_samp_rate/10
-    type: fir_filter_ccf
-    width: 0.1e3
-    win: firdes.WIN_HAMMING
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [936, 444.0]
-    rotation: 0
-    state: enabled
 - name: low_pass_filter_0_0
   id: low_pass_filter
   parameters:
@@ -519,6 +407,26 @@ blocks:
     coordinate: [432, 444.0]
     rotation: 0
     state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '4'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 468.0]
+    rotation: 0
+    state: true
 - name: rigctl_port
   id: parameter
   parameters:
@@ -570,26 +478,6 @@ blocks:
     coordinate: [568, 12.0]
     rotation: 0
     state: enabled
-- name: satnogs_cw_to_symbol_1
-  id: satnogs_cw_to_symbol
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    conf_level: '0.9'
-    hysteresis: dot_samples//dec
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_rate: audio_samp_rate/10
-    threshold: '2.0'
-    wpm: wpm
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1264, 596.0]
-    rotation: 180
-    state: true
 - name: satnogs_doppler_compensation_0
   id: satnogs_doppler_compensation
   parameters:
@@ -610,6 +498,24 @@ blocks:
     coordinate: [560, 140.0]
     rotation: 0
     state: true
+- name: satnogs_frame_decoder_0
+  id: satnogs_frame_decoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_object: variable_cw_decoder_0
+    itype: complex
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 496.0]
+    rotation: 0
+    state: true
 - name: satnogs_frame_file_sink_0_0
   id: satnogs_frame_file_sink
   parameters:
@@ -622,8 +528,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 620.0]
-    rotation: 180
+    coordinate: [1208, 564.0]
+    rotation: 0
     state: enabled
 - name: satnogs_iq_sink_0
   id: satnogs_iq_sink
@@ -642,22 +548,21 @@ blocks:
     coordinate: [40, 548.0]
     rotation: 180
     state: enabled
-- name: satnogs_morse_decoder_0
-  id: satnogs_morse_decoder
+- name: satnogs_json_converter_0
+  id: satnogs_json_converter
   parameters:
     affinity: ''
     alias: ''
     comment: ''
+    extra: ''
     maxoutbuf: '0'
-    min_frame_len: '3'
     minoutbuf: '0'
-    unrecognized_char: ord('#')
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1064, 620.0]
-    rotation: 180
+    coordinate: [1016, 508.0]
+    rotation: 0
     state: enabled
 - name: satnogs_ogg_encoder_0
   id: satnogs_ogg_encoder
@@ -708,8 +613,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 692.0]
-    rotation: 180
+    coordinate: [1208, 476.0]
+    rotation: 0
     state: enabled
 - name: satnogs_waterfall_sink_0
   id: satnogs_waterfall_sink
@@ -910,22 +815,15 @@ blocks:
 connections:
 - [analog_agc2_xx_0, '0', low_pass_filter_0_0, '0']
 - [analog_agc2_xx_0_0, '0', blocks_rotator_cc_0_0, '0']
-- [analog_pll_carriertracking_cc_0, '0', low_pass_filter_0, '0']
-- [blocks_complex_to_mag_0, '0', satnogs_cw_to_symbol_1, '0']
 - [blocks_complex_to_real_0, '0', satnogs_ogg_encoder_0, '0']
-- [blocks_delay_0, '0', blocks_multiply_conjugate_cc_0, '1']
-- [blocks_keep_one_in_n_0, '0', analog_pll_carriertracking_cc_0, '0']
-- [blocks_multiply_conjugate_cc_0, '0', fir_filter_xxx_0, '0']
 - [blocks_rotator_cc_0_0, '0', blocks_complex_to_real_0, '0']
-- [fir_filter_xxx_0, '0', blocks_complex_to_mag_0, '0']
-- [low_pass_filter_0, '0', blocks_delay_0, '0']
-- [low_pass_filter_0, '0', blocks_multiply_conjugate_cc_0, '0']
 - [low_pass_filter_0_0, '0', analog_agc2_xx_0_0, '0']
-- [low_pass_filter_0_0, '0', blocks_keep_one_in_n_0, '0']
-- [satnogs_cw_to_symbol_1, out, satnogs_morse_decoder_0, in]
+- [low_pass_filter_0_0, '0', rational_resampler_xxx_0, '0']
+- [rational_resampler_xxx_0, '0', satnogs_frame_decoder_0, '0']
 - [satnogs_doppler_compensation_0, '0', virtual_sink_0, '0']
-- [satnogs_morse_decoder_0, out, satnogs_frame_file_sink_0_0, frame]
-- [satnogs_morse_decoder_0, out, satnogs_udp_msg_sink_0_0, in]
+- [satnogs_frame_decoder_0, out, satnogs_json_converter_0, in]
+- [satnogs_json_converter_0, out, satnogs_frame_file_sink_0_0, frame]
+- [satnogs_json_converter_0, out, satnogs_udp_msg_sink_0_0, in]
 - [satnogs_tcp_rigctl_msg_source_0, freq, satnogs_doppler_compensation_0, doppler]
 - [soapy_source_0, '0', satnogs_doppler_compensation_0, '0']
 - [virtual_source_0, '0', analog_agc2_xx_0, '0']

@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016, 2019, Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #define INCLUDED_SATNOGS_MORSE_TREE_H
 
 #include <satnogs/api.h>
-#include <memory>
 #include <string>
 #include <satnogs/morse.h>
 
@@ -67,8 +66,8 @@ public:
  */
 class SATNOGS_API morse_tree {
 public:
-  morse_tree();
-  morse_tree(char unrecognized);
+  morse_tree(size_t max_len = 128);
+  morse_tree(char unrecognized, size_t max_len = 128);
   ~morse_tree();
   void
   reset();
@@ -87,7 +86,7 @@ private:
   tree_node *d_current;
   const size_t d_buff_len;
   size_t d_word_len;
-  std::unique_ptr<char[]> d_word_buffer;
+  char *d_word_buffer;
 
   void
   construct_tree();

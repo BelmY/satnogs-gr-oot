@@ -43,6 +43,7 @@ public:
     SAMPLE_START,
     SAMPLE_CNT,
     SYMBOL_ERASURES,
+    SNR,
     KEYS_NUM
   } key_t;
 
@@ -75,6 +76,12 @@ public:
 
   static void
   add_corrected_bits(pmt::pmt_t &m, uint32_t cnt);
+
+  static void
+  add_freq_offset(pmt::pmt_t &m, double offset);
+
+  static void
+  add_snr(pmt::pmt_t &m, float snr);
 
   static Json::Value
   to_json(const pmt::pmt_t &m);

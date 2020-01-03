@@ -56,6 +56,7 @@ class satnogs_cw_decoder(gr.top_block):
         # Variables
         ##################################################
         self.audio_samp_rate = audio_samp_rate = 48000
+        self.variable_cw_decoder_0 = variable_cw_decoder_0 = satnogs.cw_decoder_make(audio_samp_rate/4, 512, 512-8, wpm, 10, 0.90, 4, 8, 96)
         self.dot_samples = dot_samples = int((1.2 / wpm) / (1.0 / (audio_samp_rate / 10.0)))
         self.dec = dec = 8
 
@@ -169,11 +170,16 @@ class satnogs_cw_decoder(gr.top_block):
         self.satnogs_udp_msg_sink_0_0 = satnogs.udp_msg_sink(udp_IP, udp_port, 1500)
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 1.0)
-        self.satnogs_morse_decoder_0 = satnogs.morse_decoder(ord('#'), 3)
+        self.satnogs_json_converter_0 = satnogs.json_converter()
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
+        self.satnogs_frame_decoder_0 = satnogs.frame_decoder(variable_cw_decoder_0, 8 * 1)
         self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, audio_samp_rate, 1)
-        self.satnogs_cw_to_symbol_1 = satnogs.cw_to_symbol(audio_samp_rate/10, 2.0, 0.9, wpm, dot_samples//dec)
+        self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
+                interpolation=1,
+                decimation=4,
+                taps=None,
+                fractional_bw=None)
         self.low_pass_filter_0_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(
@@ -183,24 +189,8 @@ class satnogs_cw_decoder(gr.top_block):
                 1e3,
                 firdes.WIN_HAMMING,
                 6.76))
-        self.low_pass_filter_0 = filter.fir_filter_ccf(
-            1,
-            firdes.low_pass(
-                1,
-                audio_samp_rate/10,
-                200,
-                0.1e3,
-                firdes.WIN_HAMMING,
-                6.76))
-        self.fir_filter_xxx_0 = filter.fir_filter_ccc(1, [1.0] * int(dot_samples//dec))
-        self.fir_filter_xxx_0.declare_sample_delay(0)
         self.blocks_rotator_cc_0_0 = blocks.rotator_cc(2.0 * math.pi * (bfo_freq / audio_samp_rate))
-        self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)
-        self.blocks_keep_one_in_n_0 = blocks.keep_one_in_n(gr.sizeof_gr_complex*1, 10)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, int(dot_samples//dec))
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
-        self.blocks_complex_to_mag_0 = blocks.complex_to_mag(1)
-        self.analog_pll_carriertracking_cc_0 = analog.pll_carriertracking_cc(2*math.pi/100, 2*math.pi*2500, -2*math.pi*2500)
         self.analog_agc2_xx_0_0 = analog.agc2_cc(0.01, 0.001, 0.015, 0.0)
         self.analog_agc2_xx_0_0.set_max_gain(65536)
         self.analog_agc2_xx_0 = analog.agc2_cc(1e-4, 1e-4, 1.0, 1.0)
@@ -211,24 +201,17 @@ class satnogs_cw_decoder(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.satnogs_cw_to_symbol_1, 'out'), (self.satnogs_morse_decoder_0, 'in'))
-        self.msg_connect((self.satnogs_morse_decoder_0, 'out'), (self.satnogs_frame_file_sink_0_0, 'frame'))
-        self.msg_connect((self.satnogs_morse_decoder_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
+        self.msg_connect((self.satnogs_frame_decoder_0, 'out'), (self.satnogs_json_converter_0, 'in'))
+        self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_frame_file_sink_0_0, 'frame'))
+        self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_doppler_compensation_0, 'doppler'))
         self.connect((self.analog_agc2_xx_0, 0), (self.low_pass_filter_0_0, 0))
         self.connect((self.analog_agc2_xx_0_0, 0), (self.blocks_rotator_cc_0_0, 0))
-        self.connect((self.analog_pll_carriertracking_cc_0, 0), (self.low_pass_filter_0, 0))
-        self.connect((self.blocks_complex_to_mag_0, 0), (self.satnogs_cw_to_symbol_1, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.satnogs_ogg_encoder_0, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_multiply_conjugate_cc_0, 1))
-        self.connect((self.blocks_keep_one_in_n_0, 0), (self.analog_pll_carriertracking_cc_0, 0))
-        self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.fir_filter_xxx_0, 0))
         self.connect((self.blocks_rotator_cc_0_0, 0), (self.blocks_complex_to_real_0, 0))
-        self.connect((self.fir_filter_xxx_0, 0), (self.blocks_complex_to_mag_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.blocks_delay_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.blocks_multiply_conjugate_cc_0, 0))
         self.connect((self.low_pass_filter_0_0, 0), (self.analog_agc2_xx_0_0, 0))
-        self.connect((self.low_pass_filter_0_0, 0), (self.blocks_keep_one_in_n_0, 0))
+        self.connect((self.low_pass_filter_0_0, 0), (self.rational_resampler_xxx_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.satnogs_frame_decoder_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.analog_agc2_xx_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.satnogs_iq_sink_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.satnogs_waterfall_sink_0, 0))
@@ -362,24 +345,25 @@ class satnogs_cw_decoder(gr.top_block):
         self.audio_samp_rate = audio_samp_rate
         self.set_dot_samples(int((1.2 / self.wpm) / (1.0 / (self.audio_samp_rate / 10.0))))
         self.blocks_rotator_cc_0_0.set_phase_inc(2.0 * math.pi * (self.bfo_freq / self.audio_samp_rate))
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.audio_samp_rate/10, 200, 0.1e3, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.audio_samp_rate, 3000, 1e3, firdes.WIN_HAMMING, 6.76))
+
+    def get_variable_cw_decoder_0(self):
+        return self.variable_cw_decoder_0
+
+    def set_variable_cw_decoder_0(self, variable_cw_decoder_0):
+        self.variable_cw_decoder_0 = variable_cw_decoder_0
 
     def get_dot_samples(self):
         return self.dot_samples
 
     def set_dot_samples(self, dot_samples):
         self.dot_samples = dot_samples
-        self.blocks_delay_0.set_dly(int(self.dot_samples//self.dec))
-        self.fir_filter_xxx_0.set_taps([1.0] * int(self.dot_samples//self.dec))
 
     def get_dec(self):
         return self.dec
 
     def set_dec(self, dec):
         self.dec = dec
-        self.blocks_delay_0.set_dly(int(self.dot_samples//self.dec))
-        self.fir_filter_xxx_0.set_taps([1.0] * int(self.dot_samples//self.dec))
 
 
 def argument_parser():

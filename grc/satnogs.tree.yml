@@ -4,7 +4,7 @@
     - variable_ax25_decoder
     - variable_ax100_decoder
     - variable_ieee802_15_4_variant_decoder
-    - satnogs_morse_decoder
+    - variable_cw_decoder
   - Satellites:
       - NOAA:
         - satnogs_noaa_apt_sink
@@ -29,7 +29,6 @@
   - satnogs_whitening
   - Debug:
     - satnogs_cw_encoder
-    - satnogs_cw_to_symbol
     - satnogs_debug_msg_source_raw
     - satnogs_debug_msg_source
     - satnogs_morse_debug_source

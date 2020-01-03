@@ -2,8 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016,2017
- *  Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016, 2017, 2019, Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,13 +33,13 @@ namespace satnogs {
 /*!
  * Constructs a Morse code tree for Morse code decoding
  */
-morse_tree::morse_tree() :
+morse_tree::morse_tree(size_t max_len) :
   d_unrecognized_symbol('#'),
   d_root(new tree_node(0)),
   d_current(d_root),
-  d_buff_len(4096),
+  d_buff_len(max_len),
   d_word_len(0),
-  d_word_buffer(new char[d_buff_len])
+  d_word_buffer(new char[max_len])
 {
   construct_tree();
 }
@@ -49,14 +48,15 @@ morse_tree::morse_tree() :
  * Constructs a Morse code tree for Morse code decoding
  * @param unrecognized the character that will be placed
  * in the place of unrecognized symbols
+ * @param max_len the maximum frame length
  */
-morse_tree::morse_tree(char unrecognized) :
+morse_tree::morse_tree(char unrecognized, size_t max_len) :
   d_unrecognized_symbol(unrecognized),
   d_root(new tree_node(0)),
   d_current(d_root),
-  d_buff_len(4096),
+  d_buff_len(max_len),
   d_word_len(0),
-  d_word_buffer(new char[d_buff_len])
+  d_word_buffer(new char[max_len])
 {
   construct_tree();
 }
@@ -64,6 +64,7 @@ morse_tree::morse_tree(char unrecognized) :
 morse_tree::~morse_tree()
 {
   delete_tree(d_root);
+  delete [] d_word_buffer;
 }
 
 /*!
@@ -74,7 +75,7 @@ morse_tree::reset()
 {
   d_current = d_root;
   d_word_len = 0;
-  memset(d_word_buffer.get(), 0, d_buff_len);
+  memset(d_word_buffer, 0, d_buff_len);
 }
 
 /*!
@@ -244,7 +245,7 @@ morse_tree::received_symbol(morse_symbol_t s)
 std::string
 morse_tree::get_word()
 {
-  return std::string(d_word_buffer.get(), d_word_len);
+  return std::string(d_word_buffer, d_word_len);
 }
 
 size_t
@@ -272,8 +273,8 @@ morse_tree::delete_tree(tree_node *node)
 
 tree_node::tree_node(char c) :
   d_char(c),
-  d_left(NULL),
-  d_right(NULL)
+  d_left(nullptr),
+  d_right(nullptr)
 {
 }
 

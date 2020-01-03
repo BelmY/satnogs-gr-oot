@@ -42,6 +42,7 @@ list(APPEND HEADER_FILES
     config.h
     convolutional_deinterleaver.h
     crc.h
+    cw_decoder.h
     cw_to_symbol.h
     decoder.h
     doppler_correction_cc.h
@@ -58,6 +59,7 @@ list(APPEND HEADER_FILES
     lrpt_sync.h
     metadata.h
     morse.h
+    moving_sum.h
     morse_decoder.h
     morse_tree.h
     multi_format_msg_sink.h

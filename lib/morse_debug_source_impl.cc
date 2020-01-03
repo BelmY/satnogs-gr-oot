@@ -139,7 +139,7 @@ morse_debug_source_impl::send_debug_msg(std::string sentence)
               message_port_pub(port, pmt::from_long(MORSE_INTRA_SPACE));
             }
           }
-          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         /* Send also a character delimiter */
@@ -153,7 +153,7 @@ morse_debug_source_impl::send_debug_msg(std::string sentence)
     }
 
     /* Perform a true sleep, to avoid message overload */
-    std::this_thread::sleep_for(std::chrono::milliseconds(d_seq_pause_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(d_seq_pause_ms / 10));
   }
 }
 

@@ -67,7 +67,9 @@ sstv_pd120_sink_impl::sstv_pd120_sink_impl(const char *filename_png)
 {
   set_history(sync_length);
   d_line = new float[line_length];
+
   d_image = png::image<png::rgb_pixel>(image_width, image_height);
+  blank_image();
 }
 
 /*
@@ -179,6 +181,18 @@ sstv_pd120_sink_impl::render_line()
     d_image_y = 0;
     d_initial_sync = true;
     d_num_image++;
+    blank_image();
+  }
+}
+
+void
+sstv_pd120_sink_impl::blank_image()
+{
+  std::cout << "Blanking Image" << std::endl;
+  for (size_t y = 0; y < image_height; y++) {
+    for (size_t x = 0; x < image_width; x++) {
+      d_image.set_pixel(x, y, png::rgb_pixel(0, 0, 0));
+    }
   }
 }
 

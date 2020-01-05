@@ -49,6 +49,7 @@ private:
   bool is_sync(size_t pos, const float *samples);
 
   void render_line();
+  void blank_image();
 
 public:
   sstv_pd120_sink_impl(const char *filename_png);

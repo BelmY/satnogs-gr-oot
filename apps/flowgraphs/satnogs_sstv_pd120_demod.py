@@ -54,6 +54,7 @@ class satnogs_sstv_pd120_demod(gr.top_block):
         ##################################################
         # Variables
         ##################################################
+        self.sstv_low_pass = sstv_low_pass = firdes.low_pass(1.0, 4*4160*4 , 1e3,2e3, firdes.WIN_HAMMING, 6.76)
         self.intermediate_samp_rate = intermediate_samp_rate = int(4*4160*4 / 5)
         self.audio_samp_rate = audio_samp_rate = 48000
 
@@ -198,7 +199,7 @@ class satnogs_sstv_pd120_demod(gr.top_block):
                 firdes.WIN_HAMMING,
                 6.76))
         self.hilbert_fc_0 = filter.hilbert_fc(65, firdes.WIN_HAMMING, 6.76)
-        self.freq_xlating_fir_filter_xxx_0_0 = filter.freq_xlating_fir_filter_ccc(5, [63], 1750, (4*4160*4 ))
+        self.freq_xlating_fir_filter_xxx_0_0 = filter.freq_xlating_fir_filter_ccc(5, sstv_low_pass, 1750, (4*4160*4 ))
         self.analog_wfm_rcv_0 = analog.wfm_rcv(
         	quad_rate=4*4160*4,
         	audio_decimation=1,
@@ -348,6 +349,13 @@ class satnogs_sstv_pd120_demod(gr.top_block):
 
     def set_waterfall_file_path(self, waterfall_file_path):
         self.waterfall_file_path = waterfall_file_path
+
+    def get_sstv_low_pass(self):
+        return self.sstv_low_pass
+
+    def set_sstv_low_pass(self, sstv_low_pass):
+        self.sstv_low_pass = sstv_low_pass
+        self.freq_xlating_fir_filter_xxx_0_0.set_taps(self.sstv_low_pass)
 
     def get_intermediate_samp_rate(self):
         return self.intermediate_samp_rate

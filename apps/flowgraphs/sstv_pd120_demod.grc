@@ -53,7 +53,24 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 644.0]
+    coordinate: [864, 636.0]
+    rotation: 0
+    state: true
+- name: sstv_low_pass
+  id: variable_low_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: 1e3
+    gain: '1.0'
+    samp_rate: '4*4160*4 '
+    width: 2e3
+    win: firdes.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 636.0]
     rotation: 0
     state: true
 - name: analog_nbfm_rx_0
@@ -241,7 +258,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     samp_rate: (4*4160*4 )
-    taps: '63'
+    taps: sstv_low_pass
     type: ccc
   states:
     bus_sink: false
@@ -526,7 +543,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1848, 540.0]
+    coordinate: [1856, 548.0]
     rotation: 0
     state: enabled
 - name: satnogs_tcp_rigctl_msg_source_0

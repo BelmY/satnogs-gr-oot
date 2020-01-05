@@ -193,8 +193,6 @@ class satnogs_cw_decoder(gr.top_block):
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.analog_agc2_xx_0_0 = analog.agc2_cc(0.01, 0.001, 0.015, 0.0)
         self.analog_agc2_xx_0_0.set_max_gain(65536)
-        self.analog_agc2_xx_0 = analog.agc2_cc(1e-4, 1e-4, 1.0, 1.0)
-        self.analog_agc2_xx_0.set_max_gain(65536)
 
 
 
@@ -205,14 +203,13 @@ class satnogs_cw_decoder(gr.top_block):
         self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_frame_file_sink_0_0, 'frame'))
         self.msg_connect((self.satnogs_json_converter_0, 'out'), (self.satnogs_udp_msg_sink_0_0, 'in'))
         self.msg_connect((self.satnogs_tcp_rigctl_msg_source_0, 'freq'), (self.satnogs_doppler_compensation_0, 'doppler'))
-        self.connect((self.analog_agc2_xx_0, 0), (self.low_pass_filter_0_0, 0))
         self.connect((self.analog_agc2_xx_0_0, 0), (self.blocks_rotator_cc_0_0, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.satnogs_ogg_encoder_0, 0))
         self.connect((self.blocks_rotator_cc_0_0, 0), (self.blocks_complex_to_real_0, 0))
         self.connect((self.low_pass_filter_0_0, 0), (self.analog_agc2_xx_0_0, 0))
         self.connect((self.low_pass_filter_0_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.satnogs_frame_decoder_0, 0))
-        self.connect((self.satnogs_doppler_compensation_0, 0), (self.analog_agc2_xx_0, 0))
+        self.connect((self.satnogs_doppler_compensation_0, 0), (self.low_pass_filter_0_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.satnogs_iq_sink_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.satnogs_waterfall_sink_0, 0))
         self.connect((self.soapy_source_0, 0), (self.satnogs_doppler_compensation_0, 0))

@@ -88,27 +88,6 @@ blocks:
     coordinate: [1376, 220.0]
     rotation: 0
     state: true
-- name: analog_agc2_xx_0
-  id: analog_agc2_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    attack_rate: 1e-4
-    comment: ''
-    decay_rate: 1e-4
-    gain: '1.0'
-    max_gain: '65536'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    reference: '1.0'
-    type: complex
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [280, 460.0]
-    rotation: 0
-    state: enabled
 - name: analog_agc2_xx_0_0
   id: analog_agc2_xx
   parameters:
@@ -813,7 +792,6 @@ blocks:
     state: enabled
 
 connections:
-- [analog_agc2_xx_0, '0', low_pass_filter_0_0, '0']
 - [analog_agc2_xx_0_0, '0', blocks_rotator_cc_0_0, '0']
 - [blocks_complex_to_real_0, '0', satnogs_ogg_encoder_0, '0']
 - [blocks_rotator_cc_0_0, '0', blocks_complex_to_real_0, '0']
@@ -826,7 +804,7 @@ connections:
 - [satnogs_json_converter_0, out, satnogs_udp_msg_sink_0_0, in]
 - [satnogs_tcp_rigctl_msg_source_0, freq, satnogs_doppler_compensation_0, doppler]
 - [soapy_source_0, '0', satnogs_doppler_compensation_0, '0']
-- [virtual_source_0, '0', analog_agc2_xx_0, '0']
+- [virtual_source_0, '0', low_pass_filter_0_0, '0']
 - [virtual_source_0, '0', satnogs_iq_sink_0, '0']
 - [virtual_source_0, '0', satnogs_waterfall_sink_0, '0']
 

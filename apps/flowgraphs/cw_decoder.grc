@@ -464,6 +464,7 @@ blocks:
     alias: ''
     comment: ''
     compensate: '1'
+    fine_correction: '1'
     lo_offset: lo_offset
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -474,7 +475,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 140.0]
+    coordinate: [568, 132.0]
     rotation: 0
     state: true
 - name: satnogs_frame_decoder_0

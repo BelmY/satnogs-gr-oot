@@ -3,7 +3,7 @@ label: Doppler Compensation
 
 templates:
   imports: import satnogs
-  make: satnogs.doppler_compensation(${samp_rate}, ${sat_freq}, ${lo_offset}, ${out_samp_rate}, ${compensate})
+  make: satnogs.doppler_compensation(${samp_rate}, ${sat_freq}, ${lo_offset}, ${out_samp_rate}, ${compensate}, ${fine_correction})
 
 
 parameters:
@@ -29,6 +29,13 @@ parameters:
   options: [0, 1]
   option_labels: ['Off', 'On']
   default: 1
+  
+- id: fine_correction
+  label: Correction
+  dtype: int
+  options: [0, 1]
+  option_labels: ['Coarse', 'Fine']
+  default: 0
 
 inputs:
 - label: in

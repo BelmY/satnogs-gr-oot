@@ -175,7 +175,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_1_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
         self.satnogs_frame_decoder_0_0 = satnogs.frame_decoder(variable_ieee802_15_4_variant_decoder_0, 1 * 1)
-        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, baudrate*decimation, 1)
+        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, baudrate*decimation, 1, 0)
         self.pfb_arb_resampler_xxx_1 = pfb.arb_resampler_fff(
             audio_samp_rate / (baudrate*decimation),
             taps=None,

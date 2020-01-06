@@ -67,10 +67,17 @@ class doppler_compensation(gr.hier_block2):
         This parameter instructs the Doppler correction block to apply doppler
         compensation. The LO offset compensation is still applied regardless of
         the value of this field.
+    fine_correction : bool
+        This parameters defines which Doppler correction mechanism will be used.
+        If set to False the coarse method is used that salters the frequency
+        with the frequency offset received at the message queue with the name
+        doppler. If set to True, a curve fitting engine is added to the 
+        coarse Doppler correction mechanism.
     """
 
     def __init__(self, samp_rate, sat_freq, lo_offset, out_samp_rate,
-                 compensate=True):
+                 compensate=True,
+                 fine_correction=False):
         gr.hier_block2.__init__(self,
                                 "doppler_compensation",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),
@@ -112,9 +119,15 @@ class doppler_compensation(gr.hier_block2):
 
         # Even with no doppler compensation enabled we need this
         # block to correct the LO offset
-        self.doppler = satnogs.coarse_doppler_correction_cc(sat_freq,
-                                                            lo_offset,
-                                                            samp_rate / self.decimation)
+        if fine_correction:
+            self.doppler = satnogs.doppler_correction_cc(sat_freq,
+                                                         lo_offset,
+                                                         samp_rate / self.decimation,
+                                                         min(4000, max(100, samp_rate / self.decimation / 200)))
+        else:
+            self.doppler = satnogs.coarse_doppler_correction_cc(sat_freq,
+                                                                lo_offset,
+                                                                samp_rate / self.decimation)                                                                
 
         self.pfb_rs = pfb.arb_resampler_ccf(
             out_samp_rate / (samp_rate / self.decimation),

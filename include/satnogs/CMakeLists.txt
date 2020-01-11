@@ -47,7 +47,9 @@ list(APPEND HEADER_FILES
     decoder.h
     doppler_correction_cc.h
     doppler_fit.h
+    encoder.h
     frame_decoder.h
+    frame_encoder.h
     frame_file_sink.h
     freq_drift.h
     golay24.h
@@ -78,7 +80,7 @@ list(APPEND HEADER_FILES
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})
-	list(APPEND HEADER_FILES ${DEBUG_HEADER_FILES})
+    list(APPEND HEADER_FILES ${DEBUG_HEADER_FILES})
 endif()
 
 install(FILES

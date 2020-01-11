@@ -35,7 +35,7 @@ int decoder::base_unique_id = 1;
  * @return the unique id of the decoder object
  */
 int
-decoder::unique_id()
+decoder::unique_id() const
 {
   return d_id;
 }

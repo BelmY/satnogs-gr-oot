@@ -69,7 +69,7 @@ public:
   static int base_unique_id;
 
   int
-  unique_id();
+  unique_id() const;
 
   decoder(int input_item_size, size_t max_frame_len = 8192);
   virtual ~decoder();
@@ -122,7 +122,7 @@ protected:
 private:
   const int     d_sizeof_in;
   const size_t  d_max_frame_len;
-  int           d_id;
+  const int     d_id;
   uint64_t      d_nitems_read;
 };
 

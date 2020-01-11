@@ -44,7 +44,9 @@ list(APPEND satnogs_sources
     decoder.cc
     doppler_correction_cc_impl.cc
     doppler_fit.cc
+    encoder.cc
     frame_decoder_impl.cc
+    frame_encoder_impl.cc
     frame_file_sink_impl.cc
     freq_drift.cc
     golay24.cc

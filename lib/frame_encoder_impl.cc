@@ -48,7 +48,7 @@ frame_encoder_impl::frame_encoder_impl(encoder::encoder_sptr enc)
   message_port_register_in(pmt::mp("pdu"));
   message_port_register_out(pmt::mp("pdu"));
 
-  set_msg_handler(pmt::mp("reset"),
+  set_msg_handler(pmt::mp("pdu"),
                   boost::bind(&frame_encoder_impl::encode, this, _1));
 }
 

@@ -52,7 +52,7 @@ public:
 
   encoder();
 
-  ~encoder();
+  virtual ~encoder();
 
   virtual pmt::pmt_t
   encode(pmt::pmt_t pdu) = 0;

@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2019, Libre Space Foundation <http://libre.space>
+ *  Copyright (C) 2019, 2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 
 #include <gnuradio/io_signature.h>
 #include <satnogs/crc.h>
+#include <cstring>
+#include <arpa/inet.h>
 
 namespace gr {
 namespace satnogs {
@@ -231,6 +233,58 @@ crc::crc32_c(const uint8_t *data, size_t len)
     crc = (crc >> 8) ^ crc::crc32_c_table[(crc ^ data[i]) & 0xff];
   }
   return crc ^ 0xFFFFFFFF;
+}
+
+size_t
+crc::append(crc_t t, uint8_t *out, const uint8_t *data, size_t len,
+            bool nbo)
+{
+  switch (t) {
+  case CRC_NONE:
+    return 0;
+  case CRC16_CCITT: {
+    uint16_t x = crc16_ccitt(data, len);
+    if (nbo) {
+      x = htons(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  case CRC16_CCITT_REVERSED: {
+    uint16_t x = crc16_ccitt_reversed(data, len);
+    if (nbo) {
+      x = htons(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  case CRC16_AX25: {
+    uint16_t x = crc16_ax25(data, len);
+    if (nbo) {
+      x = htons(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  case CRC16_IBM: {
+    uint16_t x = crc16_ibm(data, len);
+    if (nbo) {
+      x = htons(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  case CRC32_C: {
+    uint32_t x = crc32_c(data, len);
+    if (nbo) {
+      x = htonl(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  default:
+    throw std::invalid_argument("crc: Invalid CRC method");
+  }
 }
 
 } /* namespace satnogs */

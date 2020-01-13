@@ -5,6 +5,8 @@
     - variable_ax100_decoder
     - variable_ieee802_15_4_variant_decoder
     - variable_cw_decoder
+  - Encoders:
+    - variable_ieee802_15_4_encoder
   - Satellites:
       - NOAA:
         - satnogs_noaa_apt_sink
@@ -16,6 +18,7 @@
   - satnogs_doppler_compensation
   - satnogs_doppler_correction_cc
   - satnogs_frame_decoder
+  - satnogs_frame_encoder
   - satnogs_frame_file_sink
   - satnogs_iq_sink
   - satnogs_json_converter

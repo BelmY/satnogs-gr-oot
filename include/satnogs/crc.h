@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2019, Libre Space Foundation <http://libre.space>
+ *  Copyright (C) 2019, 2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,6 +59,9 @@ public:
 
   static size_t
   crc_size(crc_t t);
+
+  static size_t
+  append(crc_t t, uint8_t *out, const uint8_t *data, size_t len, bool nbo = true);
 
 private:
   static const uint16_t crc16_ccitt_table_reverse[256];

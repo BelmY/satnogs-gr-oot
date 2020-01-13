@@ -45,6 +45,7 @@
 #include "satnogs/lrpt_sync.h"
 #include "satnogs/metadata.h"
 #include "satnogs/crc.h"
+#include "satnogs/ieee802_15_4_encoder.h"
 #include "satnogs/ieee802_15_4_variant_decoder.h"
 %}
 
@@ -60,6 +61,7 @@
 
 /* crc.h should come first. All classes using it should be included afterwards */ 
 %include "satnogs/crc.h"
+%include "satnogs/ieee802_15_4_encoder.h"
 %include "satnogs/ieee802_15_4_variant_decoder.h"
 %include "satnogs/ax100_decoder.h"
 

@@ -35,7 +35,9 @@ list(APPEND enabled_blocks
     satnogs_doppler_compensation.block.yml
     satnogs_doppler_correction_cc.block.yml
     satnogs_frame_decoder.block.yml
+    satnogs_frame_encoder.block.yml
     satnogs_frame_file_sink.block.yml
+    satnogs_ieee802_15_4_encoder.block.yml
     satnogs_ieee802_15_4_variant_decoder.block.yml
     satnogs_iq_sink.block.yml
     satnogs_json_converter.block.yml

@@ -50,6 +50,7 @@ list(APPEND satnogs_sources
     frame_file_sink_impl.cc
     freq_drift.cc
     golay24.cc
+    ieee802_15_4_encoder.cc
     ieee802_15_4_variant_decoder.cc
     iq_sink_impl.cc
     json_converter_impl.cc

@@ -53,6 +53,7 @@ list(APPEND HEADER_FILES
     frame_file_sink.h
     freq_drift.h
     golay24.h
+    ieee802_15_4_encoder.h 
     ieee802_15_4_variant_decoder.h
     iq_sink.h
     json_converter.h

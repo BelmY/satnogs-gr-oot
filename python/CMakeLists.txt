@@ -37,7 +37,8 @@ GR_PYTHON_INSTALL(
     __init__.py
     utils.py
     ${CMAKE_BINARY_DIR}/satnogs_info.py
-    doppler_compensation.py 
+    doppler_compensation.py
+    generic_mod.py
     DESTINATION ${GR_PYTHON_DIR}/satnogs
 )
 

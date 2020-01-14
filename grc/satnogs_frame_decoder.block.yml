@@ -18,7 +18,7 @@ parameters:
   hide: ${ 'part' if vlen == 1 else 'none' }
 
 - id: decoder_object
-  label: Decoder_object
+  label: Decoder object
   dtype: raw
   default: None
 

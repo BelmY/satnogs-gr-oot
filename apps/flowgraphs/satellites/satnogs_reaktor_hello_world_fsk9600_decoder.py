@@ -59,7 +59,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
         self.variable_whitening_0 = variable_whitening_0 = satnogs.whitening_make(0x21, 0x1FF, 8)
         self.audio_samp_rate = audio_samp_rate = 48000
         self.variable_ieee802_15_4_variant_decoder_0 = variable_ieee802_15_4_variant_decoder_0 = satnogs.ieee802_15_4_variant_decoder_make([0x55, 0x55, 0x55, 0x55, 0x55], 2, [0x35, 0x2E, 0x35, 0x2E], 1, satnogs.crc.CRC16_IBM, variable_whitening_0, True, 256)
-        self.decimation = decimation = satnogs.find_decimation(baudrate, 2, audio_samp_rate)
+        self.decimation = decimation = max(4,satnogs.find_decimation(baudrate, 2, audio_samp_rate))
 
         ##################################################
         # Blocks
@@ -253,7 +253,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
 
     def set_baudrate(self, baudrate):
         self.baudrate = baudrate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.75 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate*1.25, self.baudrate / 2.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_1.set_taps(firdes.low_pass(1, 2 * self.baudrate, self.baudrate * 0.60, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
@@ -370,7 +370,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
 
     def set_audio_samp_rate(self, audio_samp_rate):
         self.audio_samp_rate = audio_samp_rate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
         self.pfb_arb_resampler_xxx_1.set_rate(self.audio_samp_rate / (self.baudrate*self.decimation))
 
     def get_variable_ieee802_15_4_variant_decoder_0(self):

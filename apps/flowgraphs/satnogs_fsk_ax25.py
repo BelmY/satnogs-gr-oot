@@ -59,7 +59,7 @@ class satnogs_fsk_ax25(gr.top_block):
         self.audio_samp_rate = audio_samp_rate = 48000
         self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
         self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
-        self.decimation = decimation = satnogs.find_decimation(baudrate, 2, audio_samp_rate)
+        self.decimation = decimation = max(4,satnogs.find_decimation(baudrate, 2, audio_samp_rate))
 
         ##################################################
         # Blocks
@@ -256,7 +256,7 @@ class satnogs_fsk_ax25(gr.top_block):
 
     def set_baudrate(self, baudrate):
         self.baudrate = baudrate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.75 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate*1.25, self.baudrate / 2.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_1.set_taps(firdes.low_pass(1, 2 * self.baudrate, self.baudrate * 0.60, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
@@ -367,7 +367,7 @@ class satnogs_fsk_ax25(gr.top_block):
 
     def set_audio_samp_rate(self, audio_samp_rate):
         self.audio_samp_rate = audio_samp_rate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
         self.pfb_arb_resampler_xxx_1.set_rate(self.audio_samp_rate / (self.baudrate*self.decimation))
 
     def get_variable_ax25_decoder_0_0(self):

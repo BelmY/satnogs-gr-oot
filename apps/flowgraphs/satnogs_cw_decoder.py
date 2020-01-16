@@ -58,7 +58,6 @@ class satnogs_cw_decoder(gr.top_block):
         self.audio_samp_rate = audio_samp_rate = 48000
         self.variable_cw_decoder_0 = variable_cw_decoder_0 = satnogs.cw_decoder_make(audio_samp_rate/4, 512, 512-8, wpm, 10, 0.90, 4, 8, 96)
         self.dot_samples = dot_samples = int((1.2 / wpm) / (1.0 / (audio_samp_rate / 10.0)))
-        self.dec = dec = 8
 
         ##################################################
         # Blocks
@@ -355,12 +354,6 @@ class satnogs_cw_decoder(gr.top_block):
 
     def set_dot_samples(self, dot_samples):
         self.dot_samples = dot_samples
-
-    def get_dec(self):
-        return self.dec
-
-    def set_dec(self, dec):
-        self.dec = dec
 
 
 def argument_parser():

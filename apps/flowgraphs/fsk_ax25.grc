@@ -48,7 +48,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: satnogs.find_decimation(baudrate, 2, audio_samp_rate)
+    value: max(4,satnogs.find_decimation(baudrate, 2, audio_samp_rate))
   states:
     bus_sink: false
     bus_source: false
@@ -641,6 +641,7 @@ blocks:
     alias: ''
     comment: ''
     compensate: '1'
+    fine_correction: '0'
     lo_offset: lo_offset
     maxoutbuf: '0'
     minoutbuf: '0'

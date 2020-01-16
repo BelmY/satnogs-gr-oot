@@ -56,7 +56,7 @@ class satnogs_example_flowgraph(gr.top_block):
         self.audio_samp_rate = audio_samp_rate = 48000
         self.xlate_filter_taps = xlate_filter_taps = firdes.low_pass(1, samp_rate_rx, 125000, 25000, firdes.WIN_HAMMING, 6.76)
         self.filter_rate = filter_rate = 250000
-        self.decimation = decimation = satnogs.find_decimation(baudrate, 2, audio_samp_rate)
+        self.decimation = decimation = max(4,satnogs.find_decimation(baudrate, 2, audio_samp_rate))
         self.audio_samp_rate_0 = audio_samp_rate_0 = 48000
 
         ##################################################
@@ -198,7 +198,7 @@ class satnogs_example_flowgraph(gr.top_block):
 
     def set_baudrate(self, baudrate):
         self.baudrate = baudrate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
 
     def get_bw(self):
         return self.bw
@@ -306,7 +306,7 @@ class satnogs_example_flowgraph(gr.top_block):
 
     def set_audio_samp_rate(self, audio_samp_rate):
         self.audio_samp_rate = audio_samp_rate
-        self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate))
+        self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
 
     def get_xlate_filter_taps(self):
         return self.xlate_filter_taps

@@ -31,6 +31,10 @@ namespace satnogs {
 
 /**
  * The status of the decoder
+ *
+ * This class contains all the necessary information that the
+ * \ref decoder::decode() method returns and used by the frame_decoder()
+ * to properly inform the GNU Radio scheduler and/or propagate decoded frames
  */
 class decoder_status {
 public:
@@ -75,25 +79,24 @@ public:
   virtual ~decoder();
 
   /**
-   * Decodes a buffer. The difference with the decoder::decode_once() is that
-   * this method does not reset the internal state of the decoder.
-   * Therefore, it can be called again and continue the decoding when
-   * data are available.
+   * Decodes a buffer of input items contained in the in buffer.
+   * This method is called continuously by the frame_decoder.
+   * Based on the returned status data, the frame_decoder() instructs
+   * properly the GNU Radio scheduler and/or propagates decoded data.
    *
-   * @param out the output buffer that will hold the decoded data
+   * As the number of input items may not enough to decode a frame, each decoder
+   * should keep internal state, so decoding can be accomplished after an
+   * arbitrary number of calls to this method
    *
    * @param in the input items
    *
-   * @param len the length of the input buffer in <b>bits</b>
+   * @param nitems the number of input items contained in the in buffer
    *
-   * @return the number of decoded <b>bits</b>. Due to the fact that
-   * some coding schemes may not produce an output that is a multiple of
-   * 8 bits, it is necessary to count in a per bit basis. If the result
-   * is not a multiple of 8 bits, the LS bits are padded with zeros.
-   * If an error occurred an appropriate negative error code is returned
+   * @return the status of the decoder after the call of this method. For
+   * more information refer to decoder_status()
    */
   virtual decoder_status_t
-  decode(const void *in, int len) = 0;
+  decode(const void *in, int nitems) = 0;
 
 
   /**

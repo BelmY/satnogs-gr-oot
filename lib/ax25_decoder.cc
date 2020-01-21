@@ -251,7 +251,6 @@ ax25_decoder::enter_sync_state()
 void
 ax25_decoder::enter_decoding_state()
 {
-  uint8_t tmp;
   d_state = DECODING;
   d_decoded_bits = 0;
   d_received_bytes = 0;
@@ -275,9 +274,6 @@ ax25_decoder::enter_decoding_state()
 bool
 ax25_decoder::enter_frame_end(decoder_status_t &status)
 {
-  uint16_t fcs;
-  uint16_t recv_fcs = 0x0;
-
   /* First check if the size of the frame is valid */
   if (d_received_bytes < AX25_MIN_ADDR_LEN + sizeof(uint16_t)) {
     reset_state();
@@ -326,7 +322,6 @@ ax25_decoder::frame_check()
 {
   uint16_t fcs;
   uint16_t recv_fcs = 0x0;
-  uint8_t orig_byte;
 
   /* Check if the frame is correct using the FCS field */
   fcs = ax25_fcs(d_frame_buffer, d_received_bytes - sizeof(uint16_t));

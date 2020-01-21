@@ -77,8 +77,8 @@ amsat_duv_decoder::amsat_duv_decoder(const std::string &control_symbol,
   d_nwrong(0),
   d_nwrong_neg(0),
   d_word_cnt(0),
-  d_bitstream_idx(0),
-  d_state(SEARCH_SYNC)
+  d_state(SEARCH_SYNC),
+  d_bitstream_idx(0)
 {
   d_8b_words = new uint8_t[max_frame_len];
   d_erasures_indexes = new int[max_frame_len];

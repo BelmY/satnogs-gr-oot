@@ -223,7 +223,7 @@ ax100_decoder::decode_frame_len(const uint8_t *in, int len)
       if (g.decode24(&len, coded_len)) {
         d_len = len & 0xFF;
         //d_len += crc::crc_size(d_crc);
-        LOG_WARN("Len: %u", d_len);
+        LOG_DEBUG("Len: %zu", d_len);
         if (d_len > max_frame_len()) {
           reset();
           return (i + 1) * 8;

@@ -195,7 +195,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
             firdes.low_pass(
                 1,
                 baudrate*decimation,
-                0.75 * baudrate,
+                0.625 * baudrate,
                 baudrate / 8.0,
                 firdes.WIN_HAMMING,
                 6.76))
@@ -254,9 +254,8 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
     def set_baudrate(self, baudrate):
         self.baudrate = baudrate
         self.set_decimation(max(4,satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate)))
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.75 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.625 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate*1.25, self.baudrate / 2.0, firdes.WIN_HAMMING, 6.76))
-        self.low_pass_filter_1.set_taps(firdes.low_pass(1, 2 * self.baudrate, self.baudrate * 0.60, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
         self.pfb_arb_resampler_xxx_1.set_rate(self.audio_samp_rate / (self.baudrate*self.decimation))
 
     def get_bw(self):
@@ -384,7 +383,7 @@ class satnogs_reaktor_hello_world_fsk9600_decoder(gr.top_block):
 
     def set_decimation(self, decimation):
         self.decimation = decimation
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.75 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, 0.625 * self.baudrate, self.baudrate / 8.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate*1.25, self.baudrate / 2.0, firdes.WIN_HAMMING, 6.76))
         self.pfb_arb_resampler_xxx_1.set_rate(self.audio_samp_rate / (self.baudrate*self.decimation))
 

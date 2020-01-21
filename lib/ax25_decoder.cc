@@ -286,7 +286,6 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
 
   /*
    * Check if the frame is correct using the FCS field
-   * Using this field also try to correct up to 2 error bits
    */
   if (frame_check()) {
     metadata::add_pdu(status.data, d_frame_buffer,

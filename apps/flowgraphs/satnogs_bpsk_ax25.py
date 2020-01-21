@@ -28,7 +28,7 @@ import soapy
 
 class satnogs_bpsk_ax25(gr.top_block):
 
-    def __init__(self, antenna='', baudrate=9600.0, bw=0.0, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args='', doppler_correction_per_sec=20, enable_iq_dump=0, excess_bw=0.35, file_path='test.wav', gain=0.0, iq_file_path='/tmp/iq.dat', lo_offset=100e3, max_cfo=1000.0, rigctl_port=4532, rx_freq=100e6, samp_rate_rx=0.0, soapy_rx_device='driver=invalid', udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
+    def __init__(self, antenna='', baudrate=9600.0, bw=0.0, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args='', doppler_correction_per_sec=20, enable_iq_dump=0, excess_bw=0.5, file_path='test.wav', gain=0.0, iq_file_path='/tmp/iq.dat', lo_offset=100e3, max_cfo=2000.0, rigctl_port=4532, rx_freq=100e6, samp_rate_rx=0.0, soapy_rx_device='driver=invalid', udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
         gr.top_block.__init__(self, "satnogs_bpsk_ax25")
 
         ##################################################
@@ -202,12 +202,11 @@ class satnogs_bpsk_ax25(gr.top_block):
             firdes.low_pass(
                 1,
                 baudrate*decimation,
-                ((1.0 + excess_bw) * baudrate/2.0) + min(baudrate, abs(max_cfo)),
+                baudrate/2 + excess_bw *baudrate/2 + abs(max_cfo),
                 baudrate / 10.0,
                 firdes.WIN_HAMMING,
                 6.76))
         self.digital_pfb_clock_sync_xxx_0 = digital.pfb_clock_sync_ccf(sps, 2.0 * math.pi/100.0, rrc_taps, nfilts, nfilts/2, 1.5, 1)
-        self.digital_costas_loop_cc_0_0 = digital.costas_loop_cc(2.0 * math.pi / 100.0, 2, True)
         self.digital_constellation_receiver_cb_0 = digital.constellation_receiver_cb(bpsk_constellation, 2.0 * math.pi/100.0, -0.25, 0.25)
         self.blocks_rotator_cc_0_0 = blocks.rotator_cc(2.0 * math.pi * (baudrate / audio_samp_rate))
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
@@ -233,9 +232,8 @@ class satnogs_bpsk_ax25(gr.top_block):
         self.connect((self.blocks_rotator_cc_0_0, 0), (self.blocks_complex_to_real_0, 0))
         self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_frame_decoder_0_0, 0))
         self.connect((self.digital_constellation_receiver_cb_0, 0), (self.satnogs_frame_decoder_0_0_0, 0))
-        self.connect((self.digital_costas_loop_cc_0_0, 0), (self.digital_pfb_clock_sync_xxx_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0, 0), (self.digital_constellation_receiver_cb_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.digital_costas_loop_cc_0_0, 0))
+        self.connect((self.low_pass_filter_0, 0), (self.digital_pfb_clock_sync_xxx_0, 0))
         self.connect((self.low_pass_filter_0_0, 0), (self.blocks_rotator_cc_0_0, 0))
         self.connect((self.pfb_arb_resampler_xxx_0, 0), (self.analog_agc2_xx_0_0, 0))
         self.connect((self.satnogs_doppler_compensation_0, 0), (self.analog_agc2_xx_0, 0))
@@ -257,7 +255,7 @@ class satnogs_bpsk_ax25(gr.top_block):
         self.baudrate = baudrate
         self.set_decimation(satnogs.find_decimation(self.baudrate, 2, self.audio_samp_rate,self.sps))
         self.blocks_rotator_cc_0_0.set_phase_inc(2.0 * math.pi * (self.baudrate / self.audio_samp_rate))
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate/2 + self.excess_bw *self.baudrate/2 + abs(self.max_cfo), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.audio_samp_rate, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
         self.pfb_arb_resampler_xxx_0.set_rate(self.audio_samp_rate/(self.baudrate*self.decimation))
 
@@ -298,7 +296,7 @@ class satnogs_bpsk_ax25(gr.top_block):
     def set_excess_bw(self, excess_bw):
         self.excess_bw = excess_bw
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), self.excess_bw, 11*self.sps*self.nfilts))
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate/2 + self.excess_bw *self.baudrate/2 + abs(self.max_cfo), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.audio_samp_rate, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
 
     def get_file_path(self):
@@ -332,7 +330,7 @@ class satnogs_bpsk_ax25(gr.top_block):
 
     def set_max_cfo(self, max_cfo):
         self.max_cfo = max_cfo
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate/2 + self.excess_bw *self.baudrate/2 + abs(self.max_cfo), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.audio_samp_rate, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
 
     def get_rigctl_port(self):
@@ -427,7 +425,7 @@ class satnogs_bpsk_ax25(gr.top_block):
 
     def set_decimation(self, decimation):
         self.decimation = decimation
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, ((1.0 + self.excess_bw) * self.baudrate/2.0) + min(self.baudrate, abs(self.max_cfo)), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.baudrate*self.decimation, self.baudrate/2 + self.excess_bw *self.baudrate/2 + abs(self.max_cfo), self.baudrate / 10.0, firdes.WIN_HAMMING, 6.76))
         self.pfb_arb_resampler_xxx_0.set_rate(self.audio_samp_rate/(self.baudrate*self.decimation))
 
     def get_bpsk_constellation(self):
@@ -462,7 +460,7 @@ def argument_parser():
         "--enable-iq-dump", dest="enable_iq_dump", type=intx, default=0,
         help="Set enable_iq_dump [default=%(default)r]")
     parser.add_argument(
-        "--excess-bw", dest="excess_bw", type=eng_float, default="350.0m",
+        "--excess-bw", dest="excess_bw", type=eng_float, default="500.0m",
         help="Set excess_bw [default=%(default)r]")
     parser.add_argument(
         "--file-path", dest="file_path", type=str, default='test.wav',
@@ -477,7 +475,7 @@ def argument_parser():
         "--lo-offset", dest="lo_offset", type=eng_float, default="100.0k",
         help="Set lo_offset [default=%(default)r]")
     parser.add_argument(
-        "--max-cfo", dest="max_cfo", type=eng_float, default="1.0k",
+        "--max-cfo", dest="max_cfo", type=eng_float, default="2.0k",
         help="Set max_cfo [default=%(default)r]")
     parser.add_argument(
         "--rigctl-port", dest="rigctl_port", type=intx, default=4532,

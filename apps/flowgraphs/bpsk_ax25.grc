@@ -329,24 +329,6 @@ blocks:
     coordinate: [1064, 608.0]
     rotation: 0
     state: enabled
-- name: digital_costas_loop_cc_0_0
-  id: digital_costas_loop_cc
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    order: '2'
-    use_snr: 'True'
-    w: 2.0 * math.pi / 100.0
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [592, 608.0]
-    rotation: 0
-    state: enabled
 - name: digital_pfb_clock_sync_xxx_0
   id: digital_pfb_clock_sync_xxx
   parameters:
@@ -415,7 +397,7 @@ blocks:
     label: ''
     short_id: ''
     type: eng_float
-    value: '0.35'
+    value: '0.5'
   states:
     bus_sink: false
     bus_source: false
@@ -513,7 +495,7 @@ blocks:
     alias: ''
     beta: '6.76'
     comment: ''
-    cutoff_freq: ((1.0 + excess_bw) * baudrate/2.0) + min(baudrate, abs(max_cfo))
+    cutoff_freq: baudrate/2 + excess_bw *baudrate/2 + abs(max_cfo)
     decim: decimation // sps
     gain: '1'
     interp: '1'
@@ -527,7 +509,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [408, 588.0]
+    coordinate: [416, 612.0]
     rotation: 0
     state: enabled
 - name: low_pass_filter_0_0
@@ -565,7 +547,7 @@ blocks:
     label: ''
     short_id: ''
     type: eng_float
-    value: '1000.0'
+    value: '2000.0'
   states:
     bus_sink: false
     bus_source: false
@@ -652,6 +634,7 @@ blocks:
     alias: ''
     comment: ''
     compensate: '1'
+    fine_correction: '0'
     lo_offset: lo_offset
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -988,9 +971,8 @@ connections:
 - [blocks_rotator_cc_0_0, '0', blocks_complex_to_real_0, '0']
 - [digital_constellation_receiver_cb_0, '0', satnogs_frame_decoder_0_0, '0']
 - [digital_constellation_receiver_cb_0, '0', satnogs_frame_decoder_0_0_0, '0']
-- [digital_costas_loop_cc_0_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_constellation_receiver_cb_0, '0']
-- [low_pass_filter_0, '0', digital_costas_loop_cc_0_0, '0']
+- [low_pass_filter_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [low_pass_filter_0_0, '0', blocks_rotator_cc_0_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', analog_agc2_xx_0_0, '0']
 - [satnogs_doppler_compensation_0, '0', virtual_sink_0, '0']

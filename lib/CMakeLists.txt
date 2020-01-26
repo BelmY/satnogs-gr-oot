@@ -63,12 +63,12 @@ list(APPEND satnogs_sources
     ogg_encoder_impl.cc
     ogg_source_impl.cc
     shift_reg.cc
+    sstv_pd120_sink_impl.cc
     tcp_rigctl_msg_source_impl.cc
     udp_msg_sink_impl.cc
     udp_msg_source_impl.cc
     waterfall_sink_impl.cc
     whitening.cc
-    sstv_pd120_sink_impl.cc
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

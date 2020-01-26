@@ -25,13 +25,13 @@
   - satnogs_json_converter
   - satnogs_ogg_encoder
   - satnogs_ogg_source
+  - satnogs_sstv_pd120_sink
   - satnogs_tcp_rigctl_msg_source
   - satnogs_udp_msg_sink
   - satnogs_udp_msg_source
   - satnogs_waterfall_sink
   - satnogs_whitening_ccsds
   - satnogs_whitening
-  - satnogs_sstv_pd120_sink
   - Debug:
     - satnogs_cw_encoder
     - satnogs_debug_msg_source_raw

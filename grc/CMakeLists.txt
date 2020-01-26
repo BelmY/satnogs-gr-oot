@@ -49,13 +49,13 @@ list(APPEND enabled_blocks
     satnogs_noaa_apt_sink.block.yml
     satnogs_ogg_encoder.block.yml
     satnogs_ogg_source.block.yml
+    satnogs_sstv_pd120_sink.block.yml
     satnogs_tcp_rigctl_msg_source.block.yml
     satnogs_udp_msg_sink.block.yml
     satnogs_udp_msg_source.block.yml
     satnogs_waterfall_sink.block.yml
     satnogs_whitening_ccsds.block.yml
     satnogs_whitening.block.yml
-    satnogs_sstv_pd120_sink.block.yml
     satnogs.tree.yml
 )
 

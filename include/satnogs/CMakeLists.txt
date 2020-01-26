@@ -71,6 +71,7 @@ list(APPEND HEADER_FILES
     ogg_source.h
     qb50_deframer.h
     shift_reg.h
+    sstv_pd120_sink.h
     tcp_rigctl_msg_source.h
     udp_msg_sink.h
     udp_msg_source.h
@@ -78,7 +79,6 @@ list(APPEND HEADER_FILES
     utils.h
     waterfall_sink.h
     whitening.h
-    sstv_pd120_sink.h
 )
 
 if(${INCLUDE_DEBUG_BLOCKS})

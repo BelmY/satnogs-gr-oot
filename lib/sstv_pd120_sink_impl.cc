@@ -2,7 +2,8 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2018, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2019, 2020,
+ *  Libre Space Foundation <http://librespacefoundation.org/>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -124,7 +125,6 @@ sstv_pd120_sink_impl::is_sync(size_t pos, const float *samples)
   size_t count = 0;
   for (size_t i = 0; i < sync_length; i++) {
     float sample = to_frequency(samples[pos - (sync_length - 1) + i]);
-    //std::cout << sample << std::endl;
     if (sample < color_low) {
       count += 1;
     }
@@ -169,15 +169,11 @@ sstv_pd120_sink_impl::render_line()
 
   std::string file_name = std::string(d_filename_png) + "_" + std::to_string(
                             d_num_image) + ".png";
-  std::cout << "Writing " << file_name << std::endl;
   d_image.write(file_name.c_str());
-
-  std::cout << "Line number: " << d_image_y << std::endl;
 
   d_image_y += 2;
 
   if (d_image_y >= image_height) {
-    std::cout << "Finished image, resetting." << std::endl;
     d_image_y = 0;
     d_initial_sync = true;
     d_num_image++;
@@ -188,7 +184,6 @@ sstv_pd120_sink_impl::render_line()
 void
 sstv_pd120_sink_impl::blank_image()
 {
-  std::cout << "Blanking Image" << std::endl;
   for (size_t y = 0; y < image_height; y++) {
     for (size_t x = 0; x < image_width; x++) {
       d_image.set_pixel(x, y, png::rgb_pixel(0, 0, 0));
@@ -215,7 +210,6 @@ sstv_pd120_sink_impl::work(int noutput_items,
         d_image_y = 0;
       }
       else if (!d_initial_sync && d_line_pos > line_length - porch_length) {
-        std::cout << "Rendering after: " << d_line_pos << std::endl;
         render_line();
       }
       d_line_pos = 0;

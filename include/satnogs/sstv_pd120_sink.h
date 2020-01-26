@@ -30,7 +30,7 @@ namespace gr {
 namespace satnogs {
 
 /*!
- * \brief <+description of block+>
+ * \brief SSTV demodulator block
  * \ingroup satnogs
  *
  */

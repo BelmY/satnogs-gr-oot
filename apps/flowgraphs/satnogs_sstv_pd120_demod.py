@@ -169,7 +169,7 @@ class satnogs_sstv_pd120_demod(gr.top_block):
         self.satnogs_sstv_pd120_sink_0 = satnogs.sstv_pd120_sink(decoded_data_file_path)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 0.8)
         self.satnogs_iq_sink_0_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
-        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, 4*4160*4, 1)
+        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, 4*4160*4, 1, 0)
         self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
                 interpolation=5263,
                 decimation=intermediate_samp_rate,

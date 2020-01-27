@@ -56,8 +56,8 @@ class satnogs_afsk1200_ax25(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
-        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 1024)
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 1024)
         self.max_modulation_freq = max_modulation_freq = 3000
         self.deviation = deviation = 5000
         self.baudrate = baudrate = 1200

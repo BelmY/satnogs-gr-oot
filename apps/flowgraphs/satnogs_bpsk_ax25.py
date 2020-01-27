@@ -61,8 +61,8 @@ class satnogs_bpsk_ax25(gr.top_block):
         self.sps = sps = 4
         self.nfilts = nfilts = 32
         self.audio_samp_rate = audio_samp_rate = 48000
-        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
-        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 1024)
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 1024)
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), excess_bw, 11*sps*nfilts)
         self.decimation = decimation = satnogs.find_decimation(baudrate, 2, audio_samp_rate,sps)
         self.bpsk_constellation = bpsk_constellation = digital.constellation_bpsk().base()

@@ -57,8 +57,8 @@ class satnogs_fsk_ax25(gr.top_block):
         # Variables
         ##################################################
         self.audio_samp_rate = audio_samp_rate = 48000
-        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 512)
-        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 512)
+        self.variable_ax25_decoder_0_0 = variable_ax25_decoder_0_0 = satnogs.ax25_decoder_make('GND', 0, True, False, True, 1024)
+        self.variable_ax25_decoder_0 = variable_ax25_decoder_0 = satnogs.ax25_decoder_make('GND', 0, True, True, True, 1024)
         self.decimation = decimation = max(4,satnogs.find_decimation(baudrate, 2, audio_samp_rate))
 
         ##################################################

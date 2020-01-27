@@ -63,7 +63,7 @@ blocks:
     comment: ''
     crc_check: 'True'
     descrambling: 'True'
-    frame_len: '512'
+    frame_len: '1024'
     promisc: 'True'
     ssid: '0'
   states:
@@ -80,7 +80,7 @@ blocks:
     comment: ''
     crc_check: 'True'
     descrambling: 'False'
-    frame_len: '512'
+    frame_len: '1024'
     promisc: 'True'
     ssid: '0'
   states:

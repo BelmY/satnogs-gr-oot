@@ -452,7 +452,7 @@ blocks:
     alias: ''
     comment: ''
     compensate: '1'
-    fine_correction: '1'
+    fine_correction: '0'
     lo_offset: lo_offset
     maxoutbuf: '0'
     minoutbuf: '0'

@@ -173,7 +173,7 @@ class satnogs_cw_decoder(gr.top_block):
         self.satnogs_iq_sink_0 = satnogs.iq_sink(16768, iq_file_path, False, enable_iq_dump)
         self.satnogs_frame_file_sink_0_0 = satnogs.frame_file_sink(decoded_data_file_path, 0)
         self.satnogs_frame_decoder_0 = satnogs.frame_decoder(variable_cw_decoder_0, 8 * 1)
-        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, audio_samp_rate, 1, 1)
+        self.satnogs_doppler_compensation_0 = satnogs.doppler_compensation(samp_rate_rx, rx_freq, lo_offset, audio_samp_rate, 1, 0)
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=1,
                 decimation=4,

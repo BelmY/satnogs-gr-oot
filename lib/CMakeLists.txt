@@ -48,7 +48,6 @@ list(APPEND satnogs_sources
     frame_decoder_impl.cc
     frame_encoder_impl.cc
     frame_file_sink_impl.cc
-    freq_drift.cc
     golay24.cc
     ieee802_15_4_encoder.cc
     ieee802_15_4_variant_decoder.cc

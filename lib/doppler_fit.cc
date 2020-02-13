@@ -24,89 +24,72 @@
 
 #include <gnuradio/io_signature.h>
 #include <satnogs/doppler_fit.h>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/lu.hpp>
 
 namespace gr {
 namespace satnogs {
 
 /**
- * Creates a polynomial fitting routine.
+ * Creates a Doppler frequency Lagrange extrapolation engine
  * @param degree the degree of the polynomial
  */
 doppler_fit::doppler_fit(size_t degree) :
   d_degree(degree),
-  d_last_x(0.0)
+  d_ready(false)
 {
 }
 
+
 /**
- * This method calculates the coefficients of the polynomial that will
- * be used by the predict_freqs() method to produce simulated frequency
- * differences
- * @param drifts the queue containing the frequency differences and the
- * corresponding timings that these frequencies diffrences occured. Time is
- * measured in samples since the start of the flowgraph execution.
+ * Takes a new measurement to calculate the extrapolation
+ * @param x the index of the sample
+ * @param y the frequency
  */
 void
-doppler_fit::fit(std::deque<freq_drift> drifts)
+doppler_fit::fit(uint64_t x, double y)
 {
-  size_t i;
-  size_t j;
-  size_t s;
-  size_t singular;
-  double val;
-  s = drifts.size();
-
-  boost::numeric::ublas::matrix<double> x_matrix(s, d_degree + 1);
-  boost::numeric::ublas::matrix<double> y_matrix(s, 1);
-
-  for (i = 0; i < s; i++) {
-    y_matrix(i, 0) = drifts[i].get_freq_drift();
-  }
-
-  for (i = 0; i < s; i++) {
-    val = 1.0;
-    for (j = 0; j < d_degree + 1; j++) {
-      x_matrix(i, j) = val;
-      val *= drifts[i].get_x();
+  std::lock_guard<std::mutex> lock(d_mtx);
+  if (!d_ready) {
+    d_data.push_back({x, y});
+    if (d_data.size() == d_degree) {
+      d_ready = true;
+      return;
     }
+    return;
   }
 
-  /* Transpose the matrix with the x values */
-  boost::numeric::ublas::matrix<double> tx_matrix(
-    boost::numeric::ublas::trans(x_matrix));
+  d_data.pop_front();
+  d_data.push_back({x, y});
+}
 
-  boost::numeric::ublas::matrix<double> txx_matrix(
-    boost::numeric::ublas::prec_prod(tx_matrix, x_matrix));
-
-  boost::numeric::ublas::matrix<double> txy_matrix(
-    boost::numeric::ublas::prec_prod(tx_matrix, y_matrix));
-
-  boost::numeric::ublas::permutation_matrix<int> perm(txx_matrix.size1());
-  singular = boost::numeric::ublas::lu_factorize(txx_matrix, perm);
-  BOOST_ASSERT(singular == 0);
-
-  boost::numeric::ublas::lu_substitute(txx_matrix, perm, txy_matrix);
-
-  /*
-   * Lock the mutex to make sure that no one uses at the same time the
-   * coefficients
-   */
-  boost::mutex::scoped_lock lock(d_mutex);
-  d_coeff = std::vector<double> (txy_matrix.data().begin(),
-                                 txy_matrix.data().end());
-  d_last_x = drifts[s - 1].get_x();
+double
+doppler_fit::L(uint64_t x)
+{
+  if (!d_ready) {
+    return 0.0;
+  }
+  double ret = 0.0;
+  for (size_t i = 0; i < d_degree; i++) {
+    double m = d_data[i].second;
+    for (size_t j = 0; j < d_degree; j++) {
+      if (i != j && d_data[i].first != d_data[j].first) {
+        m *= ((x - d_data[j].first) / (d_data[i].first - d_data[j].first));
+      }
+    }
+    ret += m;
+  }
+  return ret;
 }
 
 /**
- * Creates a number of frequency differences predictions using polynomial
- * curve fitting.
+ * Creates a number of frequency shift predictions using the Lagrange extrapolation
+ *
  * @param freqs buffer that will hold the predicted frequency differences.
  * It is responsibility of the caller to provide enough memory for at most
  * \p ncorrections double numbers.
+ *
  * @param ncorrections the number predicted frequencies that the method
  * will produce.
+ *
  * @param samples_per_correction the number of samples elapsed between each
  * correction.
  */
@@ -114,28 +97,17 @@ void
 doppler_fit::predict_freqs(double *freqs, size_t ncorrections,
                            size_t samples_per_correction)
 {
-  size_t i;
-  size_t j;
-  double predicted_freq_diff;
-  double x;
-  double xT;
-  boost::mutex::scoped_lock lock(d_mutex);
-  for (i = 0; i < ncorrections; i++) {
-    predicted_freq_diff = 0.0;
-    xT = 1.0;
-    x = d_last_x + i * samples_per_correction;
-    for (j = 0; j < d_degree + 1; j++) {
-      predicted_freq_diff += d_coeff[j] * xT;
-      xT *= x;
+  std::lock_guard<std::mutex> lock(d_mtx);
+  if (!d_ready) {
+    for (size_t i = 0; i < ncorrections; i++) {
+      freqs[i] = 0.0;
     }
-    freqs[i] = predicted_freq_diff;
+    return;
   }
 
-  /*
-   * The predict method can be called multiple times without update the
-   * fitness of the polynomial. For this reason we alter the last x
-   */
-  d_last_x = d_last_x + (ncorrections + 1) * samples_per_correction;
+  for (size_t i = 0; i < ncorrections; i++) {
+    freqs[i] = L(d_data[d_degree - 1].first + i * samples_per_correction);
+  }
 }
 
 } /* namespace satnogs */

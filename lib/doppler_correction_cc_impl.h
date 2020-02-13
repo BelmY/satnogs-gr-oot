@@ -22,7 +22,6 @@
 #define INCLUDED_SATNOGS_DOPPLER_CORRECTION_CC_IMPL_H
 
 #include <satnogs/doppler_correction_cc.h>
-#include <satnogs/freq_drift.h>
 #include <satnogs/doppler_fit.h>
 #include <gnuradio/fxpt_nco.h>
 #include <deque>
@@ -42,11 +41,9 @@ private:
   gr::fxpt_nco d_nco;
   doppler_fit d_doppler_fit_engine;
   double d_freq_diff;
-  bool d_have_est;
   size_t d_freq_est_num;
   size_t d_corrections;
   size_t d_corrected_samples;
-  std::deque<freq_drift> d_doppler_freqs;
   double *d_predicted_freqs;
   gr_complex *d_nco_buff;
   boost::mutex d_mutex;

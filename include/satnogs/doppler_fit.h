@@ -22,15 +22,14 @@
 #define INCLUDED_SATNOGS_DOPPLER_FIT_H
 
 #include <satnogs/api.h>
-#include <satnogs/freq_drift.h>
 #include <deque>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 namespace gr {
 namespace satnogs {
 
 /*!
- * \brief Doppler frequency polynomial fitting tool
+ * \brief Doppler frequency fitting using Lagrange extrapolation
  * \ingroup satnogs
  */
 class SATNOGS_API doppler_fit {
@@ -38,17 +37,20 @@ public:
   doppler_fit(size_t degree);
 
   void
-  fit(std::deque<freq_drift> drifts);
+  fit(uint64_t x, double y);
 
   void
   predict_freqs(double *freqs, size_t ncorrections,
                 size_t samples_per_correction);
 
 private:
-  const size_t d_degree;
-  double d_last_x;
-  std::vector<double> d_coeff;
-  boost::mutex d_mutex;
+  const size_t                            d_degree;
+  bool                                    d_ready;
+  std::deque<std::pair<uint64_t, double>> d_data;
+  std::mutex                              d_mtx;
+
+  double
+  L(uint64_t x);
 };
 
 } // namespace satnogs

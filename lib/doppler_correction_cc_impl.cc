@@ -60,10 +60,8 @@ doppler_correction_cc_impl::doppler_correction_cc_impl(
   d_est_thrhld(7),
   d_corrections_per_sec(corrections_per_sec),
   d_nco(),
-  /* A 3-rd order polynomial curve fitting is more than enough */
-  d_doppler_fit_engine(3),
+  d_doppler_fit_engine(4),
   d_freq_diff(offset),
-  d_have_est(false),
   d_freq_est_num(0),
   d_corrections(0),
   d_corrected_samples(0)
@@ -109,41 +107,20 @@ doppler_correction_cc_impl::new_freq(pmt::pmt_t msg)
   double new_freq;
   new_freq = pmt::to_double(msg);
   d_freq_diff = new_freq - (d_target_freq - d_offset);
-  if (!d_have_est) {
-    d_freq_est_num++;
-    d_doppler_freqs.push_back(
-      freq_drift(nitems_written(0), d_freq_diff));
-    if (d_freq_est_num > d_est_thrhld - 1) {
-      d_doppler_fit_engine.fit(d_doppler_freqs);
-      d_doppler_fit_engine.predict_freqs(d_predicted_freqs,
-                                         d_corrections_per_sec,
-                                         d_update_period);
-      d_have_est = true;
-    }
-  }
-  else {
-    d_doppler_freqs.pop_front();
-    d_doppler_freqs.push_back(
-      freq_drift(nitems_written(0), d_freq_diff));
-
-    /* Fit the doppler drift based on the new estimated frequency */
-    d_doppler_fit_engine.fit(d_doppler_freqs);
-    /* Predict the frequency differences for the near future */
-    d_doppler_fit_engine.predict_freqs(d_predicted_freqs,
-                                       d_corrections_per_sec,
-                                       d_update_period);
-    d_corrections = 0;
-  }
+  d_doppler_fit_engine.fit(nitems_written(0), d_freq_diff);
+  /* Predict the frequency differences for the near future */
+  d_doppler_fit_engine.predict_freqs(d_predicted_freqs,
+                                     d_corrections_per_sec,
+                                     d_update_period);
+  d_corrections = 0;
 }
 
 void
 doppler_correction_cc_impl::reset(pmt::pmt_t msg)
 {
   boost::mutex::scoped_lock lock(d_mutex);
-  d_doppler_freqs.clear();
   d_freq_est_num = 0;
   d_corrections = 0;
-  d_have_est = false;
 }
 
 /*
@@ -165,52 +142,42 @@ doppler_correction_cc_impl::work(int noutput_items,
   int produced = 0;
   size_t cnt;
 
-  /*
-   * If we do not have an estimation yet, just copy the input to the output.
-   * Otherwise perform Doppler correction, using the fitted curve indicating
-   * the frequency drift.
-   */
-  if (d_have_est) {
-    while (produced < noutput_items) {
+  while (produced < noutput_items) {
+    /*
+     * If no samples have been corrected from the current correction step
+     * compute and store the NCO buffer with the corresponding frequency
+     */
+    if (d_corrected_samples == 0) {
+      d_nco.set_freq(
+        2 * M_PI * (-d_predicted_freqs[d_corrections]) / d_samp_rate);
+      d_nco.sincos(d_nco_buff, d_update_period, 1.0);
+      d_corrections++;
+
       /*
-       * If no samples have been corrected from the current correction step
-       * compute and store the NCO buffer with the corresponding frequency
+       * The doppler estimation may fail/delay. In such a case the block
+       * should continue using the predicted frequencies
        */
-      if (d_corrected_samples == 0) {
-        d_nco.set_freq(
-          2 * M_PI * (-d_predicted_freqs[d_corrections]) / d_samp_rate);
-        d_nco.sincos(d_nco_buff, d_update_period, 1.0);
-        d_corrections++;
-
-        /*
-         * The doppler estimation may fail/delay. In such a case the block
-         * should continue using the predicted frequencies
-         */
-        if (d_corrections == d_corrections_per_sec) {
-          d_doppler_fit_engine.predict_freqs(d_predicted_freqs,
-                                             d_corrections_per_sec,
-                                             d_update_period);
-          d_corrections = 0;
-        }
-      }
-
-      cnt = std::min(d_update_period - d_corrected_samples,
-                     (size_t)(noutput_items - produced));
-      /* Perform the doppler shift correction */
-      volk_32fc_x2_multiply_32fc(out + produced, in + produced,
-                                 d_nco_buff + d_corrected_samples, cnt);
-
-      /* Make the proper advances */
-      produced += (int) cnt;
-      d_corrected_samples += cnt;
-
-      if (d_corrected_samples == d_update_period) {
-        d_corrected_samples = 0;
+      if (d_corrections == d_corrections_per_sec) {
+        d_doppler_fit_engine.predict_freqs(d_predicted_freqs,
+                                           d_corrections_per_sec,
+                                           d_update_period);
+        d_corrections = 0;
       }
     }
-  }
-  else {
-    memcpy(out, in, noutput_items * sizeof(gr_complex));
+
+    cnt = std::min(d_update_period - d_corrected_samples,
+                   (size_t)(noutput_items - produced));
+    /* Perform the doppler shift correction */
+    volk_32fc_x2_multiply_32fc(out + produced, in + produced,
+                               d_nco_buff + d_corrected_samples, cnt);
+
+    /* Make the proper advances */
+    produced += (int) cnt;
+    d_corrected_samples += cnt;
+
+    if (d_corrected_samples == d_update_period) {
+      d_corrected_samples = 0;
+    }
   }
 
   return noutput_items;

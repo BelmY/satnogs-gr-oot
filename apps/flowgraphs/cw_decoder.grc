@@ -106,7 +106,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
@@ -195,7 +195,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/.satnogs/data/data
+    value: '"/tmp/.satnogs/data/data"'
   states:
     bus_sink: false
     bus_source: false
@@ -212,7 +212,7 @@ blocks:
     label: Device arguments
     short_id: ''
     type: str
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
@@ -263,7 +263,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: test.wav
+    value: '"test.wav"'
   states:
     bus_sink: false
     bus_source: false
@@ -323,7 +323,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/iq.dat
+    value: '"/tmp/iq.dat"'
   states:
     bus_sink: false
     bus_source: false
@@ -612,7 +612,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: driver=invalid
+    value: '"driver=invalid"'
   states:
     bus_sink: false
     bus_source: false
@@ -694,7 +694,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: 127.0.0.1
+    value: '"127.0.0.1"'
   states:
     bus_sink: false
     bus_source: false
@@ -754,7 +754,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/waterfall.dat
+    value: '"/tmp/waterfall.dat"'
   states:
     bus_sink: false
     bus_source: false

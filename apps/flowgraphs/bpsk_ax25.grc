@@ -195,7 +195,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
@@ -284,12 +284,12 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/.satnogs/data/data
+    value: '"/tmp/.satnogs/data/data"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [-32, 908.0]
+    coordinate: [40, 908.0]
     rotation: 0
     state: enabled
 - name: dev_args
@@ -301,7 +301,7 @@ blocks:
     label: Device arguments
     short_id: ''
     type: str
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
@@ -366,7 +366,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [128, 908.0]
+    coordinate: [216, 908.0]
     rotation: 0
     state: enabled
 - name: enable_iq_dump
@@ -383,7 +383,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 828.0]
+    coordinate: [256, 828.0]
     rotation: 0
     state: enabled
 - name: excess_bw
@@ -414,12 +414,12 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: test.wav
+    value: '"test.wav"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [112, 828.0]
+    coordinate: [160, 828.0]
     rotation: 180
     state: enabled
 - name: gain
@@ -461,7 +461,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/iq.dat
+    value: '"/tmp/iq.dat"'
   states:
     bus_sink: false
     bus_source: false
@@ -812,7 +812,7 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: driver=invalid
+    value: '"driver=invalid"'
   states:
     bus_sink: false
     bus_source: false
@@ -894,12 +894,12 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: 127.0.0.1
+    value: '"127.0.0.1"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 828.0]
+    coordinate: [472, 828.0]
     rotation: 0
     state: enabled
 - name: udp_port
@@ -954,12 +954,12 @@ blocks:
     label: ''
     short_id: ''
     type: str
-    value: /tmp/waterfall.dat
+    value: '"/tmp/waterfall.dat"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [-32, 828.0]
+    coordinate: [8, 828.0]
     rotation: 0
     state: enabled
 

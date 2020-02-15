@@ -26,7 +26,7 @@ import soapy
 
 class satnogs_noaa_apt_decoder(gr.top_block):
 
-    def __init__(self, antenna='', bw=0.0, decoded_data_file_path='/tmp/.satnogs/data/data', dev_args='', doppler_correction_per_sec=20, enable_iq_dump=0, file_path='test.wav', flip_images=0, gain=0.0, iq_file_path='/tmp/iq.dat', lo_offset=100e3, rigctl_port=4532, rx_freq=100e6, samp_rate_rx=0.0, soapy_rx_device='driver=invalid', sync=1, udp_IP='127.0.0.1', udp_port=16887, waterfall_file_path='/tmp/waterfall.dat'):
+    def __init__(self, antenna="", bw=0.0, decoded_data_file_path="/tmp/.satnogs/data/data", dev_args="", doppler_correction_per_sec=20, enable_iq_dump=0, file_path="test.wav", flip_images=0, gain=0.0, iq_file_path="/tmp/iq.dat", lo_offset=100e3, rigctl_port=4532, rx_freq=100e6, samp_rate_rx=0.0, soapy_rx_device="driver=invalid", sync=1, udp_IP="127.0.0.1", udp_port=16887, waterfall_file_path="/tmp/waterfall.dat"):
         gr.top_block.__init__(self, "NOAA APT Decoder")
 
         ##################################################
@@ -134,35 +134,37 @@ class satnogs_noaa_apt_decoder(gr.top_block):
 
                 self.soapy_source_0.set_antenna(1,'RX2')
 
-        self.soapy_source_0.set_overall_gain(0,gain, False  )
-        self.soapy_source_0.set_overall_gain(1,10, True  )
-
-        # Prevent some weird double-gain setting issues for systems with an overall_gain setting
-        # noticed weird behavior with uhd
-        if "custom" == 'uhd' or "custom" == 'sidekiq' or "custom" == 'bladerf' or "custom" == 'lime':
-            self.soapy_source_0.set_gain(0,"PGA", 24, False  )
-            self.soapy_source_0.set_gain(1,"PGA", 24, True  )
+        if "False" == 'True':
+            self.soapy_source_0.set_gain(0,gain)
+            self.soapy_source_0.set_gain(1,10)
         else:
-            if "custom" == 'custom':
-                # If we're here and we're custom, let's still call overall gain
-                self.soapy_source_0.set_overall_gain(0,gain, False  )
-                self.soapy_source_0.set_overall_gain(1,10, True  )
-
-            self.soapy_source_0.set_gain(0,"LNA", 10, False  )
-            self.soapy_source_0.set_gain(1,"LNA", 10, True  )
-            self.soapy_source_0.set_gain(0,"TIA", 0, False  )
-            self.soapy_source_0.set_gain(1,"TIA", 0, True  )
-            self.soapy_source_0.set_gain(0,"MIX", 10, False  )
-            self.soapy_source_0.set_gain(1,"MIX", 10, True  )
-            self.soapy_source_0.set_gain(0,"VGA", 10, False  )
-            self.soapy_source_0.set_gain(1,"VGA", 10, True  )
-            # Only rtl-sdr uses TUNER, so just ch0
-            self.soapy_source_0.set_gain(0,"TUNER", 10, False  )
-            # Only hackrf uses "AMP", so just ch0
-            self.soapy_source_0.set_gain(0,"AMP", 0, False  )
-            # Only sdrplay uses IFGR so just ch0 for each
-            self.soapy_source_0.set_gain(0,"IFGR", 59, False  )
-            self.soapy_source_0.set_gain(0,"RFGR", 9, False  )
+            if "custom" == 'uhd' or "custom" == 'sidekiq' or "custom" == 'bladerf' or "custom" == 'lime':
+                self.soapy_source_0.set_gain(0,"PGA", 24)
+                self.soapy_source_0.set_gain(1,"PGA", 24)
+            else:
+                if "custom" == 'custom':
+                    # If we're here and we're custom, let's still call overall gain
+                    self.soapy_source_0.set_gain(0,gain)
+                    self.soapy_source_0.set_gain(1,10)
+                elif "custom" == 'hackrf':
+                    self.soapy_source_0.set_gain(0,"LNA", 10)
+                    self.soapy_source_0.set_gain(0,"VGA", 10)
+                    # Only hackrf uses "AMP", so just ch0
+                    self.soapy_source_0.set_gain(0,"AMP", 0)
+                else:
+                    self.soapy_source_0.set_gain(0,"LNA", 10)
+                    self.soapy_source_0.set_gain(1,"LNA", 10)
+                    self.soapy_source_0.set_gain(0,"TIA", 0)
+                    self.soapy_source_0.set_gain(1,"TIA", 0)
+                    self.soapy_source_0.set_gain(0,"MIX", 10)
+                    self.soapy_source_0.set_gain(1,"MIX", 10)
+                    self.soapy_source_0.set_gain(0,"VGA", 10)
+                    self.soapy_source_0.set_gain(1,"VGA", 10)
+                    # Only rtl-sdr uses TUNER, so just ch0
+                    self.soapy_source_0.set_gain(0,"TUNER", 10)
+                    # Only sdrplay uses IFGR so just ch0 for each
+                    self.soapy_source_0.set_gain(0,"IFGR", 59)
+                    self.soapy_source_0.set_gain(0,"RFGR", 9)
         self.satnogs_waterfall_sink_0_0 = satnogs.waterfall_sink(4*4160*4, rx_freq, 10, 1024, waterfall_file_path, 1)
         self.satnogs_tcp_rigctl_msg_source_0 = satnogs.tcp_rigctl_msg_source("127.0.0.1", rigctl_port, False, int(1000.0/doppler_correction_per_sec) + 1, 1500)
         self.satnogs_ogg_encoder_0 = satnogs.ogg_encoder(file_path, audio_samp_rate, 0.8)
@@ -279,7 +281,7 @@ class satnogs_noaa_apt_decoder(gr.top_block):
 
     def set_gain(self, gain):
         self.gain = gain
-        self.soapy_source_0.set_overall_gain(0,self.gain, False  )
+        self.soapy_source_0.set_gain(0,self.gain)
 
     def get_iq_file_path(self):
         return self.iq_file_path
@@ -355,16 +357,16 @@ def argument_parser():
     description = 'A NOAA APT Decoder with automatic image synchronization'
     parser = ArgumentParser(description=description)
     parser.add_argument(
-        "--antenna", dest="antenna", type=str, default='',
+        "--antenna", dest="antenna", type=str, default="",
         help="Set antenna [default=%(default)r]")
     parser.add_argument(
         "--bw", dest="bw", type=eng_float, default="0.0",
         help="Set Bandwidth [default=%(default)r]")
     parser.add_argument(
-        "--decoded-data-file-path", dest="decoded_data_file_path", type=str, default='/tmp/.satnogs/data/data',
+        "--decoded-data-file-path", dest="decoded_data_file_path", type=str, default="/tmp/.satnogs/data/data",
         help="Set decoded_data_file_path [default=%(default)r]")
     parser.add_argument(
-        "--dev-args", dest="dev_args", type=str, default='',
+        "--dev-args", dest="dev_args", type=str, default="",
         help="Set Device arguments [default=%(default)r]")
     parser.add_argument(
         "--doppler-correction-per-sec", dest="doppler_correction_per_sec", type=intx, default=20,
@@ -373,7 +375,7 @@ def argument_parser():
         "--enable-iq-dump", dest="enable_iq_dump", type=intx, default=0,
         help="Set enable_iq_dump [default=%(default)r]")
     parser.add_argument(
-        "--file-path", dest="file_path", type=str, default='test.wav',
+        "--file-path", dest="file_path", type=str, default="test.wav",
         help="Set file_path [default=%(default)r]")
     parser.add_argument(
         "--flip-images", dest="flip_images", type=intx, default=0,
@@ -382,7 +384,7 @@ def argument_parser():
         "--gain", dest="gain", type=eng_float, default="0.0",
         help="Set gain [default=%(default)r]")
     parser.add_argument(
-        "--iq-file-path", dest="iq_file_path", type=str, default='/tmp/iq.dat',
+        "--iq-file-path", dest="iq_file_path", type=str, default="/tmp/iq.dat",
         help="Set iq_file_path [default=%(default)r]")
     parser.add_argument(
         "--lo-offset", dest="lo_offset", type=eng_float, default="100.0k",
@@ -397,19 +399,19 @@ def argument_parser():
         "--samp-rate-rx", dest="samp_rate_rx", type=eng_float, default="0.0",
         help="Set Device Sampling rate [default=%(default)r]")
     parser.add_argument(
-        "--soapy-rx-device", dest="soapy_rx_device", type=str, default='driver=invalid',
+        "--soapy-rx-device", dest="soapy_rx_device", type=str, default="driver=invalid",
         help="Set soapy_rx_device [default=%(default)r]")
     parser.add_argument(
         "--sync", dest="sync", type=intx, default=1,
         help="Set sync [default=%(default)r]")
     parser.add_argument(
-        "--udp-IP", dest="udp_IP", type=str, default='127.0.0.1',
+        "--udp-IP", dest="udp_IP", type=str, default="127.0.0.1",
         help="Set udp_IP [default=%(default)r]")
     parser.add_argument(
         "--udp-port", dest="udp_port", type=intx, default=16887,
         help="Set udp_port [default=%(default)r]")
     parser.add_argument(
-        "--waterfall-file-path", dest="waterfall_file_path", type=str, default='/tmp/waterfall.dat',
+        "--waterfall-file-path", dest="waterfall_file_path", type=str, default="/tmp/waterfall.dat",
         help="Set waterfall_file_path [default=%(default)r]")
     return parser
 

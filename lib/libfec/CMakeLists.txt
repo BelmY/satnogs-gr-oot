@@ -196,6 +196,14 @@ list(APPEND libfec_sources
 
 # generate ccsds_tab.c
 add_executable(gen_ccsds gen_ccsds.c init_rs_char.c)
+target_include_directories(gen_ccsds
+  PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/satnogs/libfec>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/satnogs/libfec>
+         $<INSTALL_INTERFACE:include>
+         $<TARGET_PROPERTY:gnuradio::gnuradio-runtime,INTERFACE_INCLUDE_DIRECTORIES>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+)
+
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ccsds_tab.c
     COMMAND  ${CMAKE_CURRENT_BINARY_DIR}/gen_ccsds > ccsds_tab.c
@@ -204,6 +212,14 @@ add_custom_command(
 
 # generate ccsds_tal.c
 add_executable(gen_ccsds_tal gen_ccsds_tal.c)
+target_include_directories(gen_ccsds_tal
+  PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/satnogs/libfec>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/satnogs/libfec>
+         $<INSTALL_INTERFACE:include>
+         $<TARGET_PROPERTY:gnuradio::gnuradio-runtime,INTERFACE_INCLUDE_DIRECTORIES>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+)
+
 add_custom_command(
     OUTPUT   ${CMAKE_CURRENT_BINARY_DIR}/ccsds_tal.c
     COMMAND  ${CMAKE_CURRENT_BINARY_DIR}/gen_ccsds_tal > ccsds_tal.c
@@ -216,11 +232,12 @@ add_library(gnuradio-satnogs-fec SHARED ${libfec_sources})
 target_link_libraries(gnuradio-satnogs-fec ${M_LIB})
 
 target_include_directories(gnuradio-satnogs-fec
-  PUBLIC
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/satnogs/libfec>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/satnogs/libfec>
+  PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/satnogs/libfec>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/satnogs/libfec>
+         $<INSTALL_INTERFACE:include>
+         $<TARGET_PROPERTY:gnuradio::gnuradio-runtime,INTERFACE_INCLUDE_DIRECTORIES>
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
-  )
+)
 
 if(APPLE)
     set_target_properties(gnuradio-satnogs-fec PROPERTIES

@@ -137,13 +137,14 @@ maintainers may add a special branch on the repository.
 However, it will be removed at the time it will be merged on the `master` branch.
 All developers should derive the `master` branch for their feature branches and merge
 requests should also issued at this branch.
-Developers should ensure that do **not** alter the CMake version tags in any
-way.
- It is a responsibility of the maintainers team.  
+Developers should ensure that do **not** alter the CMake version tags in any way.
+It is a responsibility of the maintainers team.  
 
 Before submitting a new merge request, rebase the `master` branch and
 confirm that the automated CI tests have successfully completed for all platforms
 mandated by the `.gitlab-ci.yml` recipe.
+Make sure also that you sign your work following the rules described in the
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Coding style
 For the C++ code, `gr-satnogs` uses a slightly modified version of the 
@@ -172,17 +173,6 @@ convention (`do_this`) instead of camel cases (`DoNotDoThis`).
 Exception to this rule is the CMake module filenames. In addition,
 all private variables of a C++ class, should start with the prefix 
 `d_` allowing the developers to spot easily private members of the object.
-
-
-### Adding a new Satellite Demodulator
-Demodulators are responsible for filtering, resampling and demodulating an
-analog signal and converting it into suitable form, for a decoder to be able 
-to extract the frame and its data. In most cases this is a simple bit stream.
-
-If the existing demodulators (FSK, AFSK, BPSK, DUV) do not meet
-the requirements of a satellite, you may submit your custom demodulator.
-Please make sure that you put the GNU Radio Companion files in the `apps/flowgraphs`
-directory.
 
 ### Adding a new Satellite Decoder
 With the new architecture, adding a new satellite has become an easy and straight
@@ -241,6 +231,12 @@ decoded and its data are available on the `data` field.
 information regarding it, using the `gr-satnogs` metadata format. More about them
 in the [Metadata](#metadata) section
 
+### Adding a new Satellite Flowgraph
+In most cases, a satellite decoder needs also a GNU Radio flowgraph
+with the necessary blocks that will process the input signal before passing it
+to the decoder (e.g. filtering, clock recovery, etc).
+We maintain these flowgraphs inside a separate repository called [satnogs-flowgraphs](https://gitlab.com/librespacefoundation/satnogs/satnogs-flowgraphs).
+Please follow the development guide of this repository to submit your flowgraphs.
 
 ### Metadata
 Each decoder generates a `pmt::pmt_t` dictionary containing the decoded data and

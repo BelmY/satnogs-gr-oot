@@ -19,4 +19,3 @@
 
 include(GrPython)
 
-add_subdirectory(flowgraphs)

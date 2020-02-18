@@ -24,6 +24,7 @@ FIND_LIBRARY(
           /usr/lib64
 )
 
+include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-satnogs-fecTargets.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-satnogsTargets.cmake")
 
 INCLUDE(FindPackageHandleStandardArgs)

@@ -239,6 +239,10 @@ target_include_directories(gnuradio-satnogs-fec
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
+set_target_properties(gnuradio-satnogs-fec 
+    PROPERTIES DEFINE_SYMBOL "gnuradio_satnogs_fec_EXPORTS"
+)
+
 if(APPLE)
     set_target_properties(gnuradio-satnogs-fec PROPERTIES
         INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"

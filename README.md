@@ -4,7 +4,8 @@
 gr-satnogs is an out-of-tree GNU Radio module that provides all the necessary tools
 for decoding signals from various scientific and academic satellites.
 It also provides blocks for debugging and experimenting with known satellite
-telecommunication schemes. 
+telecommunication schemes. Pre-built packages for gr-satnogs are available for some distributions at
+[open SUSE build service: librespace:satnogs](https://build.opensuse.org/project/show/home:librespace:satnogs).
 
 ## Installation
 

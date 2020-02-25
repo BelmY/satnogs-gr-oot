@@ -29,7 +29,7 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 
 #### Debian / Ubuntu
 ```bash
-sudo apt install -y 
+sudo apt install -y \
       libboost-dev \
       libboost-date-time-dev \
       libboost-filesystem-dev \

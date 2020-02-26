@@ -7,7 +7,7 @@ Build-Depends: cmake,
                dh-python,
                doxygen,
                git,
-               gnuradio-dev (>=3.8),
+               gnuradio-dev (>= 3.8), gnuradio-dev (<< 3.9),
                gr-soapy,
                libboost-date-time-dev,
                libboost-dev,
@@ -38,7 +38,7 @@ Depends: libgnuradio-satnogs (= ${binary:Version}),
          ${python3:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
-Recommends: gnuradio,
+Recommends: gnuradio (>= 3.8), gnuradio (<< 3.9),
             gr-soapy
 Description: SatNOGS GNU Radio Out-Of-Tree Module
  gr-satnogs is an out-of-tree GNU Radio module that provides all the necessary

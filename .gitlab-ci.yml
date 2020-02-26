@@ -1,5 +1,7 @@
 variables:
   GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
+  GITLAB_CI_APT_REPOSITORY: 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /'
+  GITLAB_CI_APT_KEY_URL: 'https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key'
 stages:
   - style
   - test
@@ -19,8 +21,8 @@ test:
   before_script:
     - apt-get -q update
     - apt-get -qy install gnupg libcurl4
-    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs.list
-    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key
+    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - apt-key adv --fetch-keys "$GITLAB_CI_APT_KEY_URL"
     - apt-get -q update
     - >
       apt-get -qy install
@@ -68,8 +70,8 @@ debian:
   before_script:
     - apt-get -q update
     - apt-get -qy install gnupg libcurl4
-    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs.list
-    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key
+    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - apt-key adv --fetch-keys "$GITLAB_CI_APT_KEY_URL"
     - apt-get -q update
     - apt-get -qy install devscripts git-buildpackage
   script:

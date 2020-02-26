@@ -19,8 +19,8 @@ test:
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y gnupg libcurl4
-    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs-unstable/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs-unstable.list
-    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs-unstable/Debian_10/Release.key
+    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key
     - apt-get update -qq -y
     - >
       apt-get install -q -y
@@ -68,8 +68,8 @@ debian:
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y gnupg libcurl4
-    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs-unstable/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs-unstable.list
-    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs-unstable/Debian_10/Release.key
+    - echo 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /' > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key
     - apt-get update
     - apt-get install -y devscripts git-buildpackage
   script:

@@ -37,77 +37,17 @@ namespace satnogs {
  * repeated preamble
  *
  */
-class SATNOGS_API ax100_decoder : public decoder {
+class SATNOGS_API ax100_decoder {
 public:
-  static decoder_sptr
-  make(const std::vector<uint8_t> &preamble,
-       size_t preamble_threshold,
-       const std::vector<uint8_t> &sync,
-       size_t sync_threshold,
-       crc::crc_t crc,
-       whitening::whitening_sptr descrambler,
-       bool enable_rs);
+  static decoder::decoder_sptr
+  mode5_make(const std::vector<uint8_t> &preamble,
+             size_t preamble_threshold,
+             const std::vector<uint8_t> &sync,
+             size_t sync_threshold,
+             crc::crc_t crc,
+             whitening::whitening_sptr descrambler,
+             bool enable_rs);
 
-  ax100_decoder(const std::vector<uint8_t> &preamble,
-                size_t preamble_threshold,
-                const std::vector<uint8_t> &sync,
-                size_t sync_threshold,
-                crc::crc_t crc,
-                whitening::whitening_sptr descrambler,
-                bool enable_rs);
-  ~ax100_decoder();
-
-  decoder_status_t
-  decode(const void *in, int len);
-
-  void
-  reset();
-
-  size_t
-  input_multiple() const;
-
-private:
-  /**
-   * Decoding FSM
-   */
-  typedef enum {
-    SEARCHING,                  //!< when searching for the start of the preamble
-    SEARCHING_SYNC,             //!< We have preamble, search for sync
-    DECODING_FRAME_LEN,         //!< Decoding the frame length
-    DECODING_PAYLOAD            //!< Decoding the payload
-  } decoding_state_t;
-
-  shift_reg                     d_preamble;
-  shift_reg                     d_preamble_shift_reg;
-  const size_t                  d_preamble_len;
-  const size_t                  d_preamble_thrsh;
-  shift_reg                     d_sync;
-  shift_reg                     d_sync_shift_reg;
-  const size_t                  d_sync_len;
-  const size_t                  d_sync_thrsh;
-  crc::crc_t                    d_crc;
-  whitening::whitening_sptr     d_descrambler;
-  const bool                    d_rs;
-  decoding_state_t              d_state;
-  size_t                        d_cnt;
-  size_t                        d_len;
-  size_t                        d_length_field_len;
-  uint8_t                       *d_pdu;
-
-  int
-  search_preamble(const uint8_t *in, int len);
-
-  int
-  search_sync(const uint8_t *in, int len);
-
-  int
-  decode_frame_len(const uint8_t *in, int len);
-
-  void
-  decode_payload(decoder_status_t &status, const uint8_t *in, int len);
-
-  bool
-  check_crc();
 };
 
 } // namespace satnogs

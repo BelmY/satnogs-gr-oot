@@ -35,6 +35,7 @@ list(APPEND satnogs_sources
     amsat_duv_decoder.cc
     argos_ldr_decoder.cc
     ax100_decoder.cc
+    ax100_mode5.cc
     ax25_decoder.cc
     ax25_encoder_mb_impl.cc
     coarse_doppler_correction_cc_impl.cc

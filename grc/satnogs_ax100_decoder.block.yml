@@ -44,6 +44,6 @@ value: ${satnogs.ax100_decoder_make(preamble, preamble_thrsh, sync_word, sync_th
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.ax100_decoder_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${rs)}
+  var_make: self.${id} = ${id} = satnogs.ax100_decoder_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${rs})
 
 file_format: 1

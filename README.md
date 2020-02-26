@@ -22,7 +22,6 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 * libjsoncpp
 * git
 * swig
-* gr-soapy (>= 2.0.0)
 
 **Optional**
 * [iqzip](https://gitlab.com/librespacefoundation/sdrmakerspace/iqzip) (for compresses IQ storage)
@@ -69,8 +68,6 @@ sudo zypper in -y \
       cmake \
       gcc-c++ \
       gcc \
-      soapy-sdr \
-      soapy-sdr-devel \
       gnuradio \
       gnuradio-devel \
       gmp-devel \

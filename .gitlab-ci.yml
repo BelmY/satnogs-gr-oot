@@ -2,6 +2,8 @@ variables:
   GITLAB_CI_IMAGE_DEBIAN: 'debian:buster'
   GITLAB_CI_APT_REPOSITORY: 'deb http://download.opensuse.org/repositories/home:/librespace:/satnogs/Debian_10/ /'
   GITLAB_CI_APT_KEY_URL: 'https://download.opensuse.org/repositories/home:librespace:satnogs/Debian_10/Release.key'
+  GITLAB_CI_OBS_PROJECT: 'home:librespace:satnogs'
+  GITLAB_CI_OBS_PROJECT_UNSTABLE: 'home:librespace:satnogs-unstable'
 stages:
   - style
   - test
@@ -21,7 +23,7 @@ test:
   before_script:
     - apt-get -q update
     - apt-get -qy install gnupg libcurl4
-    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/${GITLAB_CI_OBS_PROJECT}.list
     - apt-key adv --fetch-keys "$GITLAB_CI_APT_KEY_URL"
     - apt-get -q update
     - >
@@ -70,7 +72,7 @@ debian:
   before_script:
     - apt-get -q update
     - apt-get -qy install gnupg libcurl4
-    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/home:librespace:satnogs.list
+    - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/${GITLAB_CI_OBS_PROJECT}.list
     - apt-key adv --fetch-keys "$GITLAB_CI_APT_KEY_URL"
     - apt-get -q update
     - apt-get -qy install devscripts git-buildpackage
@@ -110,25 +112,26 @@ deploy:
       pass = $OBS_PASS
       EOF
     - |
-      PROJECT="${CI_COMMIT_TAG:+home:librespace:satnogs}"
-      PROJECT="${PROJECT:-home:librespace:satnogs-unstable}"
-      BASE_DIR="$(pwd)"
-      OSC_WORKDIR="$BASE_DIR/osc_workdir"
-      ARTIFACTS_DIR="$BASE_DIR/artifacts"
-      DSC_FILENAME=$(basename $(ls "$ARTIFACTS_DIR"/*.dsc))
-      PACKAGE="${CI_COMMIT_TAG:+${DSC_FILENAME%.dsc}}"
-      PACKAGE="${PACKAGE:-${DSC_FILENAME%%_*}}"
-      mkdir -p "$OSC_WORKDIR"
-      cd "$OSC_WORKDIR"
-      [ -d "$PROJECT" ] || osc co "$PROJECT"
-      cd "$PROJECT"
-      [ -d "$PACKAGE" ] || osc mkpac "$PACKAGE"
-      rm -f "$PACKAGE"/*.{dsc,debian.tar.xz,orig.tar.gz}
-      cp -a "$ARTIFACTS_DIR"/*.{dsc,debian.tar.xz,orig.tar.gz} "$PACKAGE"
-      osc addremove -r
-      osc ci -m "$DSC_FILENAME"
-      cd "$BASE_DIR"
-      rm -r "$OSC_WORKDIR"
+      PROJECTS="${GITLAB_CI_OBS_PROJECT_UNSTABLE}${CI_COMMIT_TAG:+ ${GITLAB_CI_OBS_PROJECT}}"
+      for project in $PROJECTS; do
+          BASE_DIR="$(pwd)"
+          OSC_WORKDIR="$BASE_DIR/osc_workdir"
+          ARTIFACTS_DIR="$BASE_DIR/artifacts"
+          DSC_FILENAME=$(basename $(ls "$ARTIFACTS_DIR"/*.dsc))
+          PACKAGE="${CI_COMMIT_TAG:+${DSC_FILENAME%.dsc}}"
+          PACKAGE="${PACKAGE:-${DSC_FILENAME%%_*}}"
+          mkdir -p "$OSC_WORKDIR"
+          cd "$OSC_WORKDIR"
+          [ -d "$project" ] || osc co "$project"
+          cd "$project"
+          [ -d "$PACKAGE" ] || osc mkpac "$PACKAGE"
+          rm -f "$PACKAGE"/*.{dsc,debian.tar.xz,orig.tar.gz}
+          cp -a "$ARTIFACTS_DIR"/*.{dsc,debian.tar.xz,orig.tar.gz} "$PACKAGE"
+          osc addremove -r
+          osc ci -m "$DSC_FILENAME"
+          cd "$BASE_DIR"
+          rm -r "$OSC_WORKDIR"
+      done
   only:
     refs:
       - master

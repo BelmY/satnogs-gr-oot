@@ -71,7 +71,7 @@ debian:
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   before_script:
     - apt-get -q update
-    - apt-get -qy install gnupg libcurl4
+    - apt-get -qy install gnupg libcurl4 git
     - echo "$GITLAB_CI_APT_REPOSITORY" > /etc/apt/sources.list.d/${GITLAB_CI_OBS_PROJECT}.list
     - apt-key adv --fetch-keys "$GITLAB_CI_APT_KEY_URL"
     - apt-get -q update

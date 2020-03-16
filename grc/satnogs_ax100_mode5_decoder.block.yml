@@ -1,5 +1,5 @@
-id: variable_ax100_decoder
-label: AX.100 Decoder Definition
+id: variable_ax100_mode5_decoder
+label: AX.100 Mode 5 Decoder Definition
 flags: [show_id]
 
 parameters:
@@ -40,10 +40,10 @@ parameters:
   options: ['True', 'False']
   option_labels: ['Enable', 'Disable']
 
-value: ${satnogs.ax100_decoder_make(preamble, preamble_thrsh, sync_word, sync_thrsh, crc, whitening, rs)}
+value: ${satnogs.ax100_decoder_mode5_make(preamble, preamble_thrsh, sync_word, sync_thrsh, crc, whitening, rs)}
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.ax100_decoder_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${rs})
+  var_make: self.${id} = ${id} = satnogs.ax100_decoder_mode5_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${rs})
 
 file_format: 1

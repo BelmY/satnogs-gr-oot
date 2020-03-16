@@ -3,7 +3,7 @@
     - variable_amsat_duv_decoder
     - variable_argos_ldr_decoder
     - variable_ax25_decoder
-    - variable_ax100_decoder
+    - variable_ax100_mode5_decoder
     - variable_ieee802_15_4_variant_decoder
     - variable_cw_decoder
   - Encoders:

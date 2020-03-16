@@ -219,13 +219,11 @@ ax100_mode5::decode_frame_len(const uint8_t *in, int len)
 
     if (d_cnt == d_length_field_len) {
       uint32_t coded_len = (d_pdu[0] << 16) | (d_pdu[1] << 8) | d_pdu[2];
-      print_pdu((const uint8_t *)&coded_len, 4);
       uint32_t len;
       golay24 g = golay24();
       if (g.decode24(&len, coded_len)) {
         d_len = len & 0xFF;
-        //d_len += crc::crc_size(d_crc);
-        LOG_WARN("FRAME LEN: %zu", d_len);
+        LOG_DEBUG("FRAME LEN: %zu", d_len);
         if (d_len > max_frame_len()) {
           reset();
           return (i + 1) * 8;
@@ -266,10 +264,11 @@ ax100_mode5::decode_payload(decoder_status_t &status,
       if (d_descrambler) {
         d_descrambler->descramble(d_pdu, d_pdu, d_len, true);
       }
-      metadata::add_time_iso8601(status.data);
-      /* If RS is used tru to decode the received frame */
+
+      /* If RS is used try to decode the received frame */
       if (d_rs) {
         int ret = decode_rs_8(d_pdu, NULL, 0, 255 - d_len);
+
         /* Drop the parity */
         d_len -= 32;
         if (ret > - 1) {
@@ -307,8 +306,7 @@ ax100_mode5::check_crc()
     crc32_c = crc::crc32_c(d_pdu, d_len - 4);
     memcpy(&crc32_received, d_pdu + d_len - 4, 4);
     crc32_received = ntohl(crc32_received);
-    LOG_WARN("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
-    //print_pdu(d_pdu, d_len);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
     if (crc32_c == crc32_received) {
       return true;
     }

@@ -30,7 +30,7 @@ list(APPEND enabled_blocks
     satnogs_argos_ldr_decoder.block.yml
     satnogs_ax25_decoder.block.yml
     satnogs_ax25_encoder_mb.block.yml
-    satnogs_ax100_decoder.block.yml
+    satnogs_ax100_mode5_decoder.block.yml
     satnogs_coarse_doppler_correction_cc.block.yml
     satnogs_constellation_modulator.block.yml
     satnogs_cw_decoder.block.yml

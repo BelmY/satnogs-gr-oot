@@ -18,6 +18,7 @@
 
 %{
 #include "satnogs/amsat_duv_decoder.h"
+#include "satnogs/argos_ldr_decoder.h"
 #include "satnogs/ax100_decoder.h"
 #include "satnogs/ax25_decoder.h"
 #include "satnogs/morse_tree.h"
@@ -56,6 +57,7 @@
 %include "satnogs/decoder.h"
 %include "satnogs/encoder.h"
 %include "satnogs/amsat_duv_decoder.h"
+%include "satnogs/argos_ldr_decoder.h"
 %include "satnogs/ax25_decoder.h"
 %include "satnogs/cw_decoder.h"
 %include "satnogs/metadata.h"

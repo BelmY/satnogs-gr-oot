@@ -33,6 +33,7 @@ list(APPEND satnogs_debug_sources
 )
 list(APPEND satnogs_sources
     amsat_duv_decoder.cc
+    argos_ldr_decoder.cc
     ax100_decoder.cc
     ax25_decoder.cc
     ax25_encoder_mb_impl.cc

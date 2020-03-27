@@ -27,6 +27,7 @@ list(APPEND debug_blocks
 
 list(APPEND enabled_blocks
     satnogs_amsat_duv_decoder.block.yml
+    satnogs_argos_ldr_decoder.block.yml
     satnogs_ax25_decoder.block.yml
     satnogs_ax25_encoder_mb.block.yml
     satnogs_ax100_decoder.block.yml

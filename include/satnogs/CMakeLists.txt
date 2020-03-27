@@ -33,6 +33,7 @@ list(APPEND DEBUG_HEADER_FILES
 list(APPEND HEADER_FILES
     amsat_duv_decoder.h
     api.h
+    argos_ldr_decoder.h
     ax25.h
     ax25_decoder.h
     ax25_encoder_mb.h

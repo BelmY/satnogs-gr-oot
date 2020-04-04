@@ -34,16 +34,20 @@ namespace gr {
 namespace satnogs {
 
 decoder::decoder_sptr
-ax100_mode6::make(crc::crc_t crc, bool descramble)
+ax100_mode6::make(crc::crc_t crc, whitening::whitening_sptr descrambler,
+                  bool ax25_descramble)
 {
-  return decoder::decoder_sptr(new ax100_mode6(crc, descramble));
+  return decoder::decoder_sptr(new ax100_mode6(crc, descrambler,
+                               ax25_descramble));
 }
 
-ax100_mode6::ax100_mode6(crc::crc_t crc, bool descramble) :
+ax100_mode6::ax100_mode6(crc::crc_t crc, whitening::whitening_sptr descrambler,
+                         bool ax25_descramble) :
   decoder(sizeof(uint8_t), 255 * 8),
   d_crc(crc),
-  d_descramble(descramble),
+  d_ax25_descramble(ax25_descramble),
   d_max_frame_len(255),
+  d_descrambler(descrambler),
   d_state(NO_SYNC),
   d_shift_reg(0x0),
   d_dec_b(0x0),
@@ -65,7 +69,7 @@ ax100_mode6::decode(const void *in, int len)
 {
   const uint8_t *input = (const uint8_t *) in;
   decoder_status_t status;
-  if (d_descramble) {
+  if (d_ax25_descramble) {
     for (int i = 0; i < len; i++) {
       /* Perform NRZI decoding */
       uint8_t b = (~((input[i] - d_prev_bit_nrzi) % 2)) & 0x1;
@@ -185,12 +189,6 @@ ax100_mode6::_decode(decoder_status_t &status)
           /*This was a stuffed bit */
           d_dec_b <<= 1;
         }
-        else if (((d_shift_reg >> 16) & 0xfe) == 0xfe) {
-          LOG_DEBUG("Invalid shift register value %u", d_received_bytes);
-          reset_state();
-          cont = true;
-          break;
-        }
         else {
           d_decoded_bits++;
           if (d_decoded_bits == 8) {
@@ -229,6 +227,9 @@ ax100_mode6::~ax100_mode6()
 void
 ax100_mode6::reset_state()
 {
+  if (d_descrambler) {
+    d_descrambler->reset();
+  }
   d_state = NO_SYNC;
   d_dec_b = 0x0;
   d_shift_reg = 0x0;
@@ -272,15 +273,20 @@ ax100_mode6::enter_decoding_state()
 bool
 ax100_mode6::enter_frame_end(decoder_status_t &status)
 {
-  /* First check if the size of the frame is valid */
-  if (d_received_bytes < AX25_MIN_ADDR_LEN + 2 + crc::crc_size(crc::CRC16_AX25)) {
+  /*
+   * First check if the size of the frame is valid
+   * The minimum frame is the sizeof the AX.25 header (14 bytes),
+   * the AX.25 CRC and a minimum 32 byte long field for the RS
+   */
+  if (d_received_bytes < AX25_MIN_ADDR_LEN + 2 + crc::crc_size(
+        crc::CRC16_AX25) + 32) {
     reset_state();
     return false;
   }
 
   /* If RS is enabled and the frame is larger than the RS block mark as faulty*/
-  if (d_received_bytes > 255 + 2 + AX25_MIN_ADDR_LEN + crc::crc_size(
-        crc::CRC16_AX25)) {
+  if (d_received_bytes > 255 + 2 + AX25_MIN_ADDR_LEN
+      + crc::crc_size(crc::CRC16_AX25)) {
     reset_state();
     return false;
   }
@@ -291,8 +297,16 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
    */
   size_t payload_len = d_received_bytes
                        - (2 + AX25_MIN_ADDR_LEN + crc::crc_size(crc::CRC16_AX25));
-  int ret = decode_rs_8(d_frame_buffer + 2 + AX25_MIN_ADDR_LEN, NULL, 0,
-                        255 - payload_len);
+  /* Skip the AX.25 header, not part of the RS block */
+  uint8_t *payload = d_frame_buffer + 2 + AX25_MIN_ADDR_LEN;
+  LOG_DEBUG("LEN: %u", payload_len);
+  if (d_descrambler) {
+    d_descrambler->descramble(payload, payload, payload_len, true);
+  }
+  int ret = decode_rs_8(payload, NULL, 0, 255 - payload_len);
+  /* Discard RS parity*/
+  payload_len -= 32;
+
   if (ret < 0) {
     LOG_DEBUG("RS failed");
     reset_state();
@@ -302,26 +316,31 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
 
   switch (d_crc) {
   case crc::CRC_NONE:
-    metadata::add_pdu(status.data, d_frame_buffer + 2 + AX25_MIN_ADDR_LEN,
-                      payload_len);
+    metadata::add_pdu(status.data, payload, payload_len);
     metadata::add_time_iso8601(status.data);
-    metadata::add_crc_valid(status.data, true);
+    metadata::add_crc_valid(status.data, false);
     metadata::add_sample_start(status.data, d_frame_start);
     metadata::add_sample_cnt(status.data, d_sample_cnt);
+    metadata::add_corrected_bits(status.data, ret);
     status.decode_success = true;
     reset_state();
     return true;
   case crc::CRC32_C: {
     uint32_t crc32_c;
     uint32_t crc32_received;
-    crc32_c = crc::crc32_c(d_frame_buffer + 2 + AX25_MIN_ADDR_LEN,
-                           payload_len - 4);
-    memcpy(&crc32_received,
-           d_frame_buffer + 2 + AX25_MIN_ADDR_LEN + payload_len - 4, 4);
+    crc32_c = crc::crc32_c(payload, payload_len - 4);
+    memcpy(&crc32_received, payload + payload_len - 4, 4);
     crc32_received = ntohl(crc32_received);
-    LOG_WARN("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
-    //print_pdu(d_pdu, d_len);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
     if (crc32_c == crc32_received) {
+      metadata::add_pdu(status.data, payload, payload_len - 4);
+      metadata::add_time_iso8601(status.data);
+      metadata::add_crc_valid(status.data, true);
+      metadata::add_sample_start(status.data, d_frame_start);
+      metadata::add_sample_cnt(status.data, d_sample_cnt);
+      metadata::add_corrected_bits(status.data, ret);
+      status.decode_success = true;
+      reset_state();
       return true;
     }
     return false;

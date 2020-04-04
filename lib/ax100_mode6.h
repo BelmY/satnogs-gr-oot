@@ -25,6 +25,7 @@
 #include <satnogs/decoder.h>
 #include <gnuradio/digital/lfsr.h>
 #include <satnogs/crc.h>
+#include <satnogs/whitening.h>
 
 #include <deque>
 
@@ -34,6 +35,18 @@ namespace satnogs {
 /*!
  * \brief AX.100 mode 6 decoder
  *
+ * Mode 6 Decoder for the AX100 modem of GomSpace.
+ *
+ * In this particular mode, the modem encapsulates the payload inside an
+ * AX.25 frame. The payload is appended with a Castagnoli CRC32, scrambled with
+ * a CCSDS scrambler and encoded using the CCSDS compliant Reed Solomon.
+ *
+ * This non-sense framing scheme is used mainly for getting data
+ * from legacy ham stations receiving and reporting AX.25 frames.
+ *
+ * The implementation drops any kind of AX.25 information and does not check
+ * the 16-bit CRC, allowing the Reed Solomon to correct any error bits.
+ *
  * \ingroup satnogs
  *
  */
@@ -42,9 +55,12 @@ public:
 
 
   static decoder::decoder_sptr
-  make(crc::crc_t crc, bool descramble = true);
+  make(crc::crc_t crc = crc::CRC32_C,
+       whitening::whitening_sptr descrambler = whitening::make_ccsds(),
+       bool ax25_descramble = true);
 
-  ax100_mode6(crc::crc_t crc, bool descramble);
+  ax100_mode6(crc::crc_t crc, whitening::whitening_sptr descrambler,
+              bool ax25_descramble);
 
   ~ax100_mode6();
 
@@ -64,8 +80,9 @@ private:
    * forwards all successfully decoded frames
    */
   const crc::crc_t d_crc;
-  const bool d_descramble;
+  const bool d_ax25_descramble;
   const size_t d_max_frame_len;
+  whitening::whitening_sptr d_descrambler;
   decoding_state_t d_state;
   uint32_t d_shift_reg;
   uint8_t d_dec_b;

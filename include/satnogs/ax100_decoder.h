@@ -48,6 +48,11 @@ public:
              whitening::whitening_sptr descrambler,
              bool enable_rs);
 
+  static decoder::decoder_sptr
+  mode6_make(crc::crc_t crc = crc::CRC32_C,
+             whitening::whitening_sptr descrambler = whitening::make_ccsds(),
+             bool ax25_descramble = true);
+
 };
 
 } // namespace satnogs

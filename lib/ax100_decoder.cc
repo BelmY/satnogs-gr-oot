@@ -23,14 +23,10 @@
 #endif
 
 #include "ax100_mode5.h"
+#include "ax100_mode6.h"
 
 #include <gnuradio/io_signature.h>
 #include <satnogs/ax100_decoder.h>
-#include <satnogs/golay24.h>
-#include <satnogs/metadata.h>
-#include <satnogs/utils.h>
-#include <satnogs/log.h>
-#include <satnogs/libfec/fec.h>
 
 namespace gr {
 namespace satnogs {
@@ -47,6 +43,13 @@ ax100_decoder::mode5_make(const std::vector<uint8_t> &preamble,
                            crc, descrambler, enable_rs);
 }
 
+decoder::decoder_sptr
+ax100_decoder::mode6_make(crc::crc_t crc,
+                          whitening::whitening_sptr descrambler,
+                          bool ax25_descramble)
+{
+  return ax100_mode6::make(crc, descrambler, ax25_descramble);
+}
 
 } /* namespace satnogs */
 } /* namespace gr */

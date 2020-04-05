@@ -296,6 +296,18 @@ argos_ldr_decoder::frame_check()
   uint16_t fcs;
   uint16_t recv_fcs = 0x0;
 
+  /* CRC16-CCITT fails miserably if all bytes are zero */
+  bool all_zeros = true;
+  for (size_t i = 0; i < d_received_bytes; i++) {
+    if (d_frame_buffer[i] != 0x0) {
+      all_zeros = false;
+      break;
+    }
+  }
+  if (all_zeros) {
+    return false;
+  }
+
   /* Check if the frame is correct using the FCS field */
   fcs = crc::crc16_ccitt(d_frame_buffer, d_received_bytes - sizeof(uint16_t));
   recv_fcs = (((uint16_t) d_frame_buffer[d_received_bytes - 2]) << 8)

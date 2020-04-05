@@ -6,6 +6,8 @@ include_directories(
 ########################################################################
 # Compiler specific setup
 ########################################################################
+enable_language(ASM)
+
 if(BUILD_32BIT_ON_64BIT)
     set(CMAKE_SYSTEM_PROCESSOR "i386")
     set(CMAKE_SIZEOF_VOID_P 4)

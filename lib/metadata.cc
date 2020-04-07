@@ -69,6 +69,10 @@ metadata::value(const key_t &k)
     return "symbol_erasures";
   case SNR:
     return "snr";
+  case DECODER_NAME:
+    return "decoder_name";
+  case DECODER_VERSION:
+    return "decoder_version";
   default:
     throw std::invalid_argument("metadata: invalid key");
   }
@@ -150,6 +154,31 @@ metadata::add_snr(pmt::pmt_t &m, float snr)
   m = pmt::dict_add(m, pmt::mp(value(SNR)), pmt::from_float(snr));
 }
 
+void
+metadata::add_decoder(pmt::pmt_t &m, const std::string &name,
+                      const std::string &version)
+{
+  m = pmt::dict_add(m, pmt::mp(value(DECODER_NAME)), pmt::mp(name));
+  m = pmt::dict_add(m, pmt::mp(value(DECODER_VERSION)), pmt::mp(version));
+}
+
+
+/**
+ * Adds to the m the name and the version of the decoder dec
+ * @param m reference to a PMT dictionary
+ * @param dec pointer to a decoder object. If null the call of this method
+ * has no effect
+ */
+void
+metadata::add_decoder(pmt::pmt_t &m, const decoder *dec)
+{
+  if (!dec) {
+    return;
+  }
+  m = pmt::dict_add(m, pmt::mp(value(DECODER_NAME)), pmt::mp(dec->name()));
+  m = pmt::dict_add(m, pmt::mp(value(DECODER_VERSION)), pmt::mp(dec->version()));
+}
+
 Json::Value
 metadata::to_json(const pmt::pmt_t &m)
 {
@@ -199,6 +228,16 @@ metadata::to_json(const pmt::pmt_t &m)
   v = pmt::dict_ref(m, pmt::mp(value(SNR)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
     root[value(SNR)] = pmt::to_float(v);
+  }
+
+  v = pmt::dict_ref(m, pmt::mp(value(DECODER_NAME)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(DECODER_NAME)] = pmt::symbol_to_string(v);
+  }
+
+  v = pmt::dict_ref(m, pmt::mp(value(DECODER_VERSION)), pmt::PMT_NIL);
+  if (!pmt::equal(v, pmt::PMT_NIL)) {
+    root[value(DECODER_VERSION)] = pmt::symbol_to_string(v);
   }
   return root;
 }

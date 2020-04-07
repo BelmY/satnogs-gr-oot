@@ -48,7 +48,7 @@ cw_decoder::cw_decoder(double samp_rate, int fft_len, int overlapping,
                        size_t channels,
                        size_t min_frame_size,
                        size_t max_frame_size) :
-  decoder(sizeof(gr_complex), max_frame_size),
+  decoder("cw", "1.0", sizeof(gr_complex), max_frame_size),
   d_samp_rate(samp_rate),
   d_fft_len(fft_len),
   d_overlapping(overlapping),
@@ -189,6 +189,7 @@ cw_decoder::process_psd()
                              d_psd[win_i * d_channel_carriers + i] - d_nf_buf[win_i * d_channel_carriers +
                                  i]);
         if (d.decode_success) {
+          metadata::add_decoder(d.data, this);
           d_frames.push_back(d);
         }
         trigger = true;
@@ -198,6 +199,7 @@ cw_decoder::process_psd()
     if (!trigger) {
       decoder_status_t d = d_decoders[win_i]->decode(0.0f, 0.0f);
       if (d.decode_success) {
+        metadata::add_decoder(d.data, this);
         d_frames.push_back(d);
       }
     }

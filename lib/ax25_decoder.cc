@@ -41,7 +41,7 @@ ax25_decoder::make(const std::string &addr, uint8_t ssid, bool promisc,
 
 ax25_decoder::ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc,
                            bool descramble, bool crc_check, size_t max_frame_len) :
-  decoder(sizeof(uint8_t), 2 * max_frame_len * 8),
+  decoder("ax25", "1.0", sizeof(uint8_t), 2 * max_frame_len * 8),
   d_promisc(promisc),
   d_descramble(descramble),
   d_crc_check(crc_check),
@@ -284,6 +284,7 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
    * Check if the frame is correct using the FCS field
    */
   if (frame_check()) {
+    metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, d_frame_buffer,
                       d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);
@@ -295,6 +296,7 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
     return true;
   }
   else if (!d_crc_check) {
+    metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, d_frame_buffer,
                       d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);

@@ -38,7 +38,7 @@ argos_ldr_decoder::make(bool crc_check, size_t max_frame_len)
 }
 
 argos_ldr_decoder::argos_ldr_decoder(bool crc_check, size_t max_frame_len) :
-  decoder(sizeof(uint8_t), 2 * max_frame_len * 8),
+  decoder("argos_ldr", "1.0", sizeof(uint8_t), 2 * max_frame_len * 8),
   d_crc_check(crc_check),
   d_max_frame_len(max_frame_len),
   d_state(NO_SYNC),
@@ -254,6 +254,7 @@ argos_ldr_decoder::enter_frame_end(decoder_status_t &status)
    * Check if the frame is correct using the FCS field
    */
   if (frame_check()) {
+    metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, d_frame_buffer,
                       d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);
@@ -265,6 +266,7 @@ argos_ldr_decoder::enter_frame_end(decoder_status_t &status)
     return true;
   }
   else if (!d_crc_check) {
+    metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, d_frame_buffer,
                       d_received_bytes - sizeof(uint16_t));
     metadata::add_time_iso8601(status.data);

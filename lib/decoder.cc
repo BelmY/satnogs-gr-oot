@@ -43,11 +43,17 @@ decoder::unique_id() const
 /**
  * @brief Construct a new decoder::decoder object
  *
+ * @param name the name of the decoder
+ * @param version the version of the decoder. The version string
+ * should conform with the Semantic Versioning 2.0.0 scheme (https://semver.org/)
  * @param input_item_size the sizeof() the input stream item
  * @param max_frame_len the maximum allowed frame size in bytes
  */
-decoder::decoder(int input_item_size, size_t max_frame_len)
-  : d_sizeof_in(input_item_size),
+decoder::decoder(const std::string &name, const std::string &version,
+                 int input_item_size, size_t max_frame_len)
+  : d_name(name),
+    d_version(version),
+    d_sizeof_in(input_item_size),
     d_max_frame_len(max_frame_len),
     d_id(base_unique_id++),
     d_nitems_read(0)
@@ -56,6 +62,27 @@ decoder::decoder(int input_item_size, size_t max_frame_len)
 
 decoder::~decoder()
 {
+}
+
+/**
+ *
+ * @return the name of the decoder
+ */
+std::string
+decoder::name() const
+{
+  return d_name;
+}
+
+/**
+ *
+ * @return the version of the decoder. The string return conforms with the
+ * Semantic Versioning 2.0.0 scheme
+ */
+std::string
+decoder::version() const
+{
+  return d_version;
 }
 
 /**

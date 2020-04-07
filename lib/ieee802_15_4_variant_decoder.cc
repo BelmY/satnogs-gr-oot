@@ -57,7 +57,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   crc::crc_t crc,
   whitening::whitening_sptr descrambler,
   bool var_len, size_t max_len) :
-  decoder(sizeof(uint8_t), max_len),
+  decoder("IEEE-802.15.4", "1.0", sizeof(uint8_t), max_len),
   d_preamble(preamble.size() * 8),
   d_preamble_shift_reg(preamble.size() * 8),
   d_preamble_len(preamble.size() * 8),
@@ -308,6 +308,7 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
 
       status.decode_success = true;
       status.consumed = (i + 1) * 8;
+      metadata::add_decoder(status.data, this);
       metadata::add_time_iso8601(status.data);
       metadata::add_sample_start(status.data, d_frame_start_idx);
       metadata::add_sample_cnt(status.data,

@@ -53,7 +53,7 @@ ax100_mode5::ax100_mode5(const std::vector<uint8_t> &preamble,
                          crc::crc_t crc,
                          whitening::whitening_sptr descrambler,
                          bool enable_rs) :
-  decoder(sizeof(uint8_t), enable_rs ? 255 : 1024),
+  decoder("ax100_mode5", "1.0", sizeof(uint8_t), enable_rs ? 255 : 1024),
   d_preamble(preamble.size() * 8),
   d_preamble_shift_reg(preamble.size() * 8),
   d_preamble_len(preamble.size() * 8),
@@ -281,7 +281,7 @@ ax100_mode5::decode_payload(decoder_status_t &status,
         }
       }
 
-
+      metadata::add_decoder(status.data, this);
       metadata::add_time_iso8601(status.data);
       metadata::add_pdu(status.data, d_pdu, d_len - crc::crc_size(d_crc));
       metadata::add_crc_valid(status.data, check_crc());

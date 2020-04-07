@@ -67,7 +67,7 @@ amsat_duv_decoder::make(const std::string &control_symbol,
  */
 amsat_duv_decoder::amsat_duv_decoder(const std::string &control_symbol,
                                      size_t max_frame_len) :
-  decoder(1, max_frame_len),
+  decoder("amsat_duv", "1.0", 1, max_frame_len),
   d_erasure_cnt(0),
   d_control_symbol_pos(0),
   d_control_symbol_neg(0),
@@ -263,6 +263,7 @@ amsat_duv_decoder::decode(const void *in, int len)
           if (ret > -1) {
             uint8_t fox_id = d_8b_words[0] & 0x7;
             if (is_spacecraft_valid(fox_id)) {
+              metadata::add_decoder(status.data, this);
               metadata::add_pdu(status.data, d_8b_words,
                                 amsat_fox_duv_frame_size);
               metadata::add_symbol_erasures(status.data, d_erasure_cnt);

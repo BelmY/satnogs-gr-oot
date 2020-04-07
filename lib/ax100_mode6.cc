@@ -43,7 +43,7 @@ ax100_mode6::make(crc::crc_t crc, whitening::whitening_sptr descrambler,
 
 ax100_mode6::ax100_mode6(crc::crc_t crc, whitening::whitening_sptr descrambler,
                          bool ax25_descramble) :
-  decoder(sizeof(uint8_t), 255 * 8),
+  decoder("ax100_mode6", "1.0", sizeof(uint8_t), 255 * 8),
   d_crc(crc),
   d_ax25_descramble(ax25_descramble),
   d_max_frame_len(255),
@@ -316,6 +316,7 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
 
   switch (d_crc) {
   case crc::CRC_NONE:
+    metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, payload, payload_len);
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, false);
@@ -333,6 +334,7 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
     crc32_received = ntohl(crc32_received);
     LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
     if (crc32_c == crc32_received) {
+      metadata::add_decoder(status.data, this);
       metadata::add_pdu(status.data, payload, payload_len - 4);
       metadata::add_time_iso8601(status.data);
       metadata::add_crc_valid(status.data, true);

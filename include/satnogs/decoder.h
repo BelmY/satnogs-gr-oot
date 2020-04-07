@@ -75,7 +75,8 @@ public:
   int
   unique_id() const;
 
-  decoder(int input_item_size, size_t max_frame_len = 8192);
+  decoder(const std::string &name, const std::string &version,
+          int input_item_size, size_t max_frame_len = 8192);
   virtual ~decoder();
 
   /**
@@ -115,6 +116,12 @@ public:
   int
   sizeof_input_item() const;
 
+  std::string
+  name() const;
+
+  std::string
+  version() const;
+
 protected:
   void
   incr_nitems_read(size_t nitems);
@@ -123,10 +130,12 @@ protected:
   nitems_read() const;
 
 private:
-  const int     d_sizeof_in;
-  const size_t  d_max_frame_len;
-  const int     d_id;
-  uint64_t      d_nitems_read;
+  const std::string     d_name;
+  const std::string     d_version;
+  const int             d_sizeof_in;
+  const size_t          d_max_frame_len;
+  const int             d_id;
+  uint64_t              d_nitems_read;
 };
 
 } // namespace satnogs

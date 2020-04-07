@@ -22,6 +22,7 @@
 #define INCLUDE_SATNOGS_METADATA_H_
 
 #include <satnogs/api.h>
+#include <satnogs/decoder.h>
 #include <string>
 #include <pmt/pmt.h>
 #include <json/json.h>
@@ -44,6 +45,8 @@ public:
     SAMPLE_CNT,
     SYMBOL_ERASURES,
     SNR,
+    DECODER_NAME,
+    DECODER_VERSION,
     KEYS_NUM
   } key_t;
 
@@ -82,6 +85,13 @@ public:
 
   static void
   add_snr(pmt::pmt_t &m, float snr);
+
+  static void
+  add_decoder(pmt::pmt_t &m, const std::string &name,
+              const std::string &version);
+
+  static void
+  add_decoder(pmt::pmt_t &m, const decoder *dec);
 
   static Json::Value
   to_json(const pmt::pmt_t &m);

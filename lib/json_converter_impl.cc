@@ -25,7 +25,7 @@
 #include <gnuradio/io_signature.h>
 #include "json_converter_impl.h"
 #include <satnogs/metadata.h>
-#include <json/json.h>
+#include <nlohmann/json.hpp>
 
 
 namespace gr {
@@ -62,18 +62,16 @@ json_converter_impl::~json_converter_impl()
 void
 json_converter_impl::convert(pmt::pmt_t m)
 {
-  Json::CharReaderBuilder crb;
-  Json::CharReader *cr = crb.newCharReader();
-  Json::Value extra;
-  std::string err;
-
-
-  Json::Value root = metadata::to_json(m);
-  if (cr->parse(d_extra.c_str(), d_extra.c_str() + d_extra.size(), &extra,
-                &err)) {
-    root["extra"] = extra;
+  nlohmann::json j = metadata::to_json(m);
+  try {
+    nlohmann::json extra = nlohmann::json::parse(d_extra);
+    j["extra"] = extra;
   }
-  const std::string &s = root.toStyledString();
+  catch (std::exception &e) {
+
+  }
+  /* Covert it to string ensuring ASCII conpatibility */
+  const std::string &s = j.dump(4, ' ', true);
   const char *c = s.c_str();
   message_port_pub(pmt::mp("out"), pmt::make_blob(c, s.length()));
 }

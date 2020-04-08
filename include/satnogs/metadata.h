@@ -25,7 +25,7 @@
 #include <satnogs/decoder.h>
 #include <string>
 #include <pmt/pmt.h>
-#include <json/json.h>
+#include <nlohmann/json.hpp>
 #include <cstdint>
 
 namespace gr {
@@ -93,7 +93,7 @@ public:
   static void
   add_decoder(pmt::pmt_t &m, const decoder *dec);
 
-  static Json::Value
+  static nlohmann::json
   to_json(const pmt::pmt_t &m);
 };
 

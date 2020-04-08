@@ -100,10 +100,10 @@ target_link_libraries(gnuradio-satnogs
     ${OGGVORBIS_LIBRARIES}
     ${PNG_LIBRARIES}
     ${png++_LIBRARIES}
-    ${JSONCPP_LIBRARY}
 )
 
 target_include_directories(gnuradio-satnogs
+    PRIVATE ${NLOHMANN_JSON_INCLUDE_DIRS}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/>
     PUBLIC $<INSTALL_INTERFACE:include>

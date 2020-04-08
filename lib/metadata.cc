@@ -179,67 +179,67 @@ metadata::add_decoder(pmt::pmt_t &m, const decoder *dec)
   m = pmt::dict_add(m, pmt::mp(value(DECODER_VERSION)), pmt::mp(dec->version()));
 }
 
-Json::Value
+nlohmann::json
 metadata::to_json(const pmt::pmt_t &m)
 {
-  Json::Value root;
+  nlohmann::json j;
   pmt::pmt_t v = pmt::dict_ref(m, pmt::mp(value(PDU)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
     uint8_t *b = (uint8_t *) pmt::blob_data(v);
     size_t len = pmt::blob_length(v);
-    root[value(PDU)] = base64_encode(b, len);
+    j[value(PDU)] = base64_encode(b, len);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(TIME)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(TIME)] = pmt::symbol_to_string(v);
+    j[value(TIME)] = pmt::symbol_to_string(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(CRC_VALID)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(CRC_VALID)] = pmt::to_bool(v);
+    j[value(CRC_VALID)] = pmt::to_bool(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(SAMPLE_START)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(SAMPLE_START)] = Json::Value::UInt64(pmt::to_uint64(v));
+    j[value(SAMPLE_START)] = pmt::to_uint64(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(SAMPLE_CNT)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(SAMPLE_CNT)] = Json::Value::UInt64(pmt::to_uint64(v));
+    j[value(SAMPLE_CNT)] = pmt::to_uint64(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(SYMBOL_ERASURES)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(SYMBOL_ERASURES)] = Json::Value::UInt64(pmt::to_uint64(v));
+    j[value(SYMBOL_ERASURES)] = pmt::to_uint64(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(CORRECTED_BITS)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(CORRECTED_BITS)] = Json::Value::UInt64(pmt::to_uint64(v));
+    j[value(CORRECTED_BITS)] = pmt::to_uint64(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(FREQ_OFFSET)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(FREQ_OFFSET)] = pmt::to_double(v);
+    j[value(FREQ_OFFSET)] = pmt::to_double(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(SNR)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(SNR)] = pmt::to_float(v);
+    j[value(SNR)] = pmt::to_float(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(DECODER_NAME)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(DECODER_NAME)] = pmt::symbol_to_string(v);
+    j[value(DECODER_NAME)] = pmt::symbol_to_string(v);
   }
 
   v = pmt::dict_ref(m, pmt::mp(value(DECODER_VERSION)), pmt::PMT_NIL);
   if (!pmt::equal(v, pmt::PMT_NIL)) {
-    root[value(DECODER_VERSION)] = pmt::symbol_to_string(v);
+    j[value(DECODER_VERSION)] = pmt::symbol_to_string(v);
   }
-  return root;
+  return j;
 }
 
 }  // namespace satnogs

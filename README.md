@@ -10,8 +10,8 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 ## Installation
 
 ### Requirements
-* GNU Radio ( > 3.8.0 )
-* CMake ( > 3.8)
+* GNU Radio ( >= 3.8.0 )
+* CMake ( >= 3.8)
 * G++ (> 4.8)
 * Boost
 * VOLK
@@ -19,12 +19,9 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 * libvorbis
 * libpng
 * libpng++
-* libjsoncpp
+* nlohmann-json (>= 3.0)
 * git
 * swig
-
-**Optional**
-* [iqzip](https://gitlab.com/librespacefoundation/sdrmakerspace/iqzip) (for compresses IQ storage)
 
 #### Debian / Ubuntu
 ```bash
@@ -47,7 +44,7 @@ sudo apt install -y \
       liborc-0.4-0 \
       liborc-0.4-dev \
       liborc-0.4-dev-bin \
-      libjsoncpp-dev \
+      nlohmann-json3-dev \
       libpng++-dev \
       libvorbis-dev \
       git
@@ -75,6 +72,7 @@ sudo zypper in -y \
       liborc-0_4-0 \
       orc \
       log4cpp-devel \
+      nlohmann_json-devel \
       git
 ```
 

@@ -141,7 +141,7 @@ find_package(Volk REQUIRED)
 find_package(OggVorbis REQUIRED)
 find_package(PNG REQUIRED)
 find_package(png++ REQUIRED)
-find_package(JsonCpp REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 ########################################################################
 # Include or not into the module blocks for debugging

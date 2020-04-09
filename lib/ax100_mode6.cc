@@ -317,7 +317,13 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
   switch (d_crc) {
   case crc::CRC_NONE:
     metadata::add_decoder(status.data, this);
-    metadata::add_pdu(status.data, payload, payload_len);
+    /*
+     * Add both the AX.25 header and the RS decoded block
+     * NOTE: The integrity of the AX.25 header is NOT guaranteed.
+     * We do not want to loose frames due to the no-FEC part of the header.
+     */
+    metadata::add_pdu(status.data, d_frame_buffer,
+                      2 + AX25_MIN_ADDR_LEN + payload_len);
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, false);
     metadata::add_sample_start(status.data, d_frame_start);
@@ -335,7 +341,13 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
     LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc32_received, crc32_c);
     if (crc32_c == crc32_received) {
       metadata::add_decoder(status.data, this);
-      metadata::add_pdu(status.data, payload, payload_len - 4);
+      /*
+       * Add both the AX.25 header and the RS decoded block
+       * NOTE: The integrity of the AX.25 header is NOT guaranteed.
+       * We do not want to loose frames due to the no-FEC part of the header.
+       */
+      metadata::add_pdu(status.data, d_frame_buffer,
+                        2 + AX25_MIN_ADDR_LEN + payload_len - 4);
       metadata::add_time_iso8601(status.data);
       metadata::add_crc_valid(status.data, true);
       metadata::add_sample_start(status.data, d_frame_start);

@@ -25,6 +25,10 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 
 #### Debian / Ubuntu
 ```bash
+(to install gnuradio > 3.8)
+ sudo add-apt-repository ppa:gnuradio/gnuradio-releases
+ sudo apt-get update
+ 
 sudo apt install -y \
       libboost-dev \
       libboost-date-time-dev \

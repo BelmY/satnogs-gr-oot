@@ -68,6 +68,7 @@ ax100_mode5::ax100_mode5(const std::vector<uint8_t> &preamble,
   d_state(SEARCHING),
   d_cnt(0),
   d_len(0),
+  d_frame_start(0),
   /* Coded Golay 24 bits */
   d_length_field_len(3),
   d_pdu(new uint8_t[1024])
@@ -172,6 +173,7 @@ ax100_mode5::search_preamble(const uint8_t *in, int len)
     if (tmp.count() <= d_preamble_thrsh) {
       d_state = SEARCHING_SYNC;
       d_cnt = 0;
+      d_frame_start = nitems_read() + i + 1;
       return i + 1;
     }
   }
@@ -283,6 +285,9 @@ ax100_mode5::decode_payload(decoder_status_t &status,
 
       metadata::add_decoder(status.data, this);
       metadata::add_time_iso8601(status.data);
+      metadata::add_sample_start(status.data, d_frame_start);
+      metadata::add_sample_cnt(status.data,
+                               nitems_read() + (i + 1) * 8 - d_frame_start);
       metadata::add_pdu(status.data, d_pdu, d_len - crc::crc_size(d_crc));
       metadata::add_crc_valid(status.data, check_crc());
       reset();

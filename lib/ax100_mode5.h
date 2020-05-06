@@ -90,6 +90,7 @@ private:
   size_t                        d_len;
   size_t                        d_length_field_len;
   uint8_t                       *d_pdu;
+  uint64_t                      d_frame_start;
 
   int
   search_preamble(const uint8_t *in, int len);

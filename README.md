@@ -24,11 +24,23 @@ telecommunication schemes. Pre-built packages for gr-satnogs are available for s
 * swig
 
 #### Debian / Ubuntu
+To install GNU Radio 3.8 on Ubuntu based distributions that do not have already an
+available package:
+
 ```bash
-(to install gnuradio > 3.8)
  sudo add-apt-repository ppa:gnuradio/gnuradio-releases
  sudo apt-get update
- 
+```
+
+For Debian you can use the the [stable](https://build.opensuse.org/project/show/home:librespace:satnogs)
+repository available from [Open Build Service](https://openbuildservice.org/).
+For latest experimental software you can use the 
+[unstable](https://build.opensuse.org/project/show/home:librespace:satnogs-unstable)
+repository.
+
+Then to build from source use:
+
+```bash 
 sudo apt install -y \
       libboost-dev \
       libboost-date-time-dev \

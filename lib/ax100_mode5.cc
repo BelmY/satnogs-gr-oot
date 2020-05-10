@@ -164,6 +164,7 @@ ax100_mode5::search_preamble(const uint8_t *in, int len)
   /* We support also cases, where a repeated preamble is not used (pure CCSDS )*/
   if (d_preamble_len == 0) {
     d_state = SEARCHING_SYNC;
+    d_frame_start = nitems_read();
     return search_sync(in, len);
   }
 

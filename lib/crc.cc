@@ -167,6 +167,16 @@ crc::crc16_ccitt(const uint8_t *data, size_t len)
 }
 
 uint16_t
+crc::crc16_aug_ccitt(const uint8_t *data, size_t len)
+{
+  uint16_t crc = 0x1D0F;
+  while (len-- != 0) {
+    crc = crc16_ccitt_table[((crc >> 8) ^ *data++) & 0xff] ^ (crc << 8);
+  }
+  return crc ^ 0xFFFF;
+}
+
+uint16_t
 crc::crc16_ax25(const uint8_t *data, size_t len)
 {
   uint16_t fcs = 0xFFFF;
@@ -214,6 +224,7 @@ crc::crc_size(crc_t t)
   case CRC_NONE:
     return 0;
   case CRC16_CCITT:
+  case CRC16_AUG_CCITT:
   case CRC16_CCITT_REVERSED:
   case CRC16_AX25:
   case CRC16_IBM:
@@ -243,6 +254,14 @@ crc::append(crc_t t, uint8_t *out, const uint8_t *data, size_t len,
   case CRC_NONE:
     return 0;
   case CRC16_CCITT: {
+    uint16_t x = crc16_ccitt(data, len);
+    if (nbo) {
+      x = htons(x);
+    }
+    memcpy(out, &x, sizeof(x));
+    return sizeof(x);
+  }
+  case CRC16_AUG_CCITT: {
     uint16_t x = crc16_ccitt(data, len);
     if (nbo) {
       x = htons(x);
@@ -289,5 +308,3 @@ crc::append(crc_t t, uint8_t *out, const uint8_t *data, size_t len,
 
 } /* namespace satnogs */
 } /* namespace gr */
-
-

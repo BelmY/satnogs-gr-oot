@@ -35,6 +35,7 @@ public:
   typedef enum crc_type {
     CRC_NONE = 0,
     CRC16_CCITT,
+    CRC16_AUG_CCITT,
     CRC16_CCITT_REVERSED,
     CRC16_AX25,
     CRC16_IBM,
@@ -47,6 +48,9 @@ public:
 
   static uint16_t
   crc16_ccitt(const uint8_t *data, size_t len);
+
+  static uint16_t
+  crc16_aug_ccitt(const uint8_t *data, size_t len);
 
   static uint16_t
   crc16_ax25(const uint8_t *data, size_t len);
@@ -73,4 +77,3 @@ private:
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_CRC_H */
-

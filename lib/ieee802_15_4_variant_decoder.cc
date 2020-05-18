@@ -348,6 +348,12 @@ ieee802_15_4_variant_decoder::check_crc()
       return true;
     }
     return false;
+  case crc::CRC16_AUG_CCITT:
+    crc16_c = crc::crc16_aug_ccitt(d_pdu, d_len + d_length_field_len - 2);
+    memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
+    crc16_received = ntohs(crc16_received);
+    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    return (crc16_c == crc16_received);
   case crc::CRC16_CCITT_REVERSED:
     crc16_c = crc::crc16_ccitt_reversed(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
@@ -382,4 +388,3 @@ ieee802_15_4_variant_decoder::check_crc()
 
 } /* namespace satnogs */
 } /* namespace gr */
-

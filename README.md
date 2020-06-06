@@ -310,22 +310,17 @@ For example, such a JSON string with information on the extra field could be lik
 
 
 ### Release Policy
-The `gr-satnogs` OOT module uses the `major.api-compatibility.minor`
-versioning scheme. is used by the 
-[satnogs-client](https://gitlab.com/librespacefoundation/satnogs/satnogs-client),
- so the release and versioning policy is based on how the
-`satnogs-client` is affected by the changes on the `gr-satnogs` software.
+The `gr-satnogs` OOT module uses the GNU Radio style `major.api.minor.patch`
+versioning scheme.
 
-* Minor changes, bug fixes or improvements that do not affect in anyway
-the `satnogs-client` advance the `minor` version.
-* The `api-compatibility` indicates changes that require modifications 
-on `satnogs-client` but do not brake the backwards compatibility 
-(e.g a new satellite decoder). 
-In other words, the `satnogs-client` should continue to operate normally 
-without any modifications. Changes on `satnogs-client` should be performed
- only to integrate the new features.
-* `major` version advances when the changes break backwards compatibility with
-the `satnogs-client`.
+* Patches, bug fixes that do not add any new features nor affect in anyway
+`satnogs-flowgraphs` advance the `patch` version.
+* Improvements and new features that do not break backwards compatibility with
+`satnogs-flowgraphs` advance the `minor` version.
+* The `api` indicates changes that require modifications
+on `satnogs-flowgraps` and break backwards compatibility.
+* `major` version advances when the are huge changes on the entire codebase which.
+Such changes break backwards compatibility with `satnogs-flowgraphs`.
 
 For every release change a tag with the corresponding version is created.
 Releases can be retrieved by the 

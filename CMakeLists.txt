@@ -43,10 +43,14 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 # Set the version information here
-set(VERSION_MAJOR 2)
-set(VERSION_API   1)
-set(VERSION_ABI   2)
-set(VERSION_PATCH git)
+if(NOT VERSION_MAJOR OR NOT VERSION_API OR NOT VERSION_ABI)
+  set(VERSION_MAJOR 2)
+  set(VERSION_API   1)
+  set(VERSION_ABI   2)
+endif()
+if(NOT VERSION_PATCH)
+  set(VERSION_PATCH git)
+endif()
 
 cmake_policy(SET CMP0011 NEW)
 

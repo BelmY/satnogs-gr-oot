@@ -112,25 +112,26 @@ deploy:
       pass = $OBS_PASS
       EOF
     - |
-      PROJECTS="${GITLAB_CI_OBS_PROJECT_UNSTABLE}${CI_COMMIT_TAG:+ ${GITLAB_CI_OBS_PROJECT}}"
-      for project in $PROJECTS; do
+      PACKAGES="${DSC_FILENAME%%_*}${CI_COMMIT_TAG:+ ${DSC_FILENAME%.dsc}}"
+      for package in $PACKAGES; do
           BASE_DIR="$(pwd)"
           OSC_WORKDIR="$BASE_DIR/osc_workdir"
           ARTIFACTS_DIR="$BASE_DIR/artifacts"
           DSC_FILENAME=$(basename $(ls "$ARTIFACTS_DIR"/*.dsc))
-          PACKAGE="${CI_COMMIT_TAG:+${DSC_FILENAME%.dsc}}"
-          PACKAGE="${PACKAGE:-${DSC_FILENAME%%_*}}"
-          mkdir -p "$OSC_WORKDIR"
-          cd "$OSC_WORKDIR"
-          [ -d "$project" ] || osc co "$project"
-          cd "$project"
-          [ -d "$PACKAGE" ] || osc mkpac "$PACKAGE"
-          rm -f "$PACKAGE"/*.{dsc,debian.tar.xz,orig.tar.gz}
-          cp -a "$ARTIFACTS_DIR"/*.{dsc,debian.tar.xz,orig.tar.gz} "$PACKAGE"
-          osc addremove -r
-          osc ci -m "$DSC_FILENAME"
-          cd "$BASE_DIR"
-          rm -r "$OSC_WORKDIR"
+          PROJECTS="${GITLAB_CI_OBS_PROJECT_UNSTABLE}${CI_COMMIT_TAG:+ ${GITLAB_CI_OBS_PROJECT}}"
+          for project in $PROJECTS; do
+              mkdir -p "$OSC_WORKDIR"
+              cd "$OSC_WORKDIR"
+              [ -d "$project" ] || osc co "$project"
+              cd "$project"
+              [ -d "$package" ] || osc mkpac "$package"
+              rm -f "$package"/*.{dsc,debian.tar.xz,orig.tar.gz}
+              cp -a "$ARTIFACTS_DIR"/*.{dsc,debian.tar.xz,orig.tar.gz} "$package"
+              osc addremove -r
+              osc ci -m "$DSC_FILENAME"
+              cd "$BASE_DIR"
+              rm -r "$OSC_WORKDIR"
+          done
       done
   only:
     refs:

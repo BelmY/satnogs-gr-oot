@@ -112,13 +112,13 @@ deploy:
       pass = $OBS_PASS
       EOF
     - |
+      BASE_DIR="$(pwd)"
+      OSC_WORKDIR="$BASE_DIR/osc_workdir"
+      ARTIFACTS_DIR="$BASE_DIR/artifacts"
+      DSC_FILENAME=$(basename $(ls "$ARTIFACTS_DIR"/*.dsc))
       PACKAGES="${DSC_FILENAME%%_*}${CI_COMMIT_TAG:+ ${DSC_FILENAME%.dsc}}"
+      PROJECTS="${GITLAB_CI_OBS_PROJECT_UNSTABLE}${CI_COMMIT_TAG:+ ${GITLAB_CI_OBS_PROJECT}}"
       for package in $PACKAGES; do
-          BASE_DIR="$(pwd)"
-          OSC_WORKDIR="$BASE_DIR/osc_workdir"
-          ARTIFACTS_DIR="$BASE_DIR/artifacts"
-          DSC_FILENAME=$(basename $(ls "$ARTIFACTS_DIR"/*.dsc))
-          PROJECTS="${GITLAB_CI_OBS_PROJECT_UNSTABLE}${CI_COMMIT_TAG:+ ${GITLAB_CI_OBS_PROJECT}}"
           for project in $PROJECTS; do
               mkdir -p "$OSC_WORKDIR"
               cd "$OSC_WORKDIR"

@@ -162,7 +162,7 @@ Make sure also that you sign your work following the rules described in the
 For the C++ code, `gr-satnogs` uses a slightly modified version of the 
 **Stroustrup** style, which is a nicer adaptation of the well known K&R style.
 In addition, we decided to decrease the indentation from 4 to 2 spaces.
-This choice was made mainly to avoid braking statements with long namespaces.
+This choice was made mainly to avoid breaking statements with long namespaces.
 We also found ourselves, that with smaller indentation we use more descriptive
 variable names, avoiding frustrating abbreviations without phoenixes etc. 
 

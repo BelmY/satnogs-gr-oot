@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2017, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2017,2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ frame_file_sink_impl::msg_handler_frame(pmt::pmt_t msg)
     std::ofstream fd(filename.c_str());
     for (size_t i = 0; i < len; i++) {
       fd << "0x" << std::hex << std::setw(2) << std::setfill('0')
-         << (uint32_t) su[i] << " ";
+         << (uint32_t(su[i]) & 0xFF) << " ";
     }
     fd.close();
     break;

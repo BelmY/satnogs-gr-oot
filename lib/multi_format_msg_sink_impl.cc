@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016,2017,2019 Libre Space Foundation <http://libre.space>
+ *  Copyright (C) 2016,2017,2019,2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
   case 1:
     for (size_t i = 0; i < len; i++) {
       d_fos << "0x" << std::hex << std::setw(2) << std::setfill('0')
-            << (uint32_t) su[i] << " ";
+            << (uint32_t(su[i]) & 0xFF) << " ";
     }
     d_fos << std::endl;
     break;
@@ -103,7 +103,6 @@ multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
   std::string s;
   char buf[256];
 
-  /* Check if the message contains the legacy or the new format */
   /* Check if the message contains the legacy or the new format */
   if (pmt::is_dict(msg)) {
     pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
@@ -136,7 +135,7 @@ multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
   case 1: // hex annotated
     for (size_t i = 0; i < len; i++) {
       std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
-                << (uint32_t) su[i] << " ";
+                << (uint32_t(su[i]) & 0xFF) << " ";
     }
     std::cout << std::endl;
     break;

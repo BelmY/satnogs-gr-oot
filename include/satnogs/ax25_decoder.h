@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2019, Libre Space Foundation <http://libre.space>
+ *  Copyright (C) 2019, 2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ private:
   const bool d_crc_check;
   const size_t d_max_frame_len;
   decoding_state_t d_state;
-  uint32_t d_shift_reg;
+  uint8_t d_shift_reg;
   uint8_t d_dec_b;
   uint8_t d_prev_bit_nrzi;
   size_t d_received_bytes;

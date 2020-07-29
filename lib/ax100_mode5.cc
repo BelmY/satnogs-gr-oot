@@ -136,6 +136,7 @@ ax100_mode5::decode(const void *in, int len)
   default:
     throw std::runtime_error("ax100_decoder: Invalid decoding state");
   }
+  incr_nitems_read(static_cast<uint64_t>(status.consumed));
   return status;
 }
 

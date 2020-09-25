@@ -9,17 +9,23 @@ stages:
   - test
   - build
   - deploy
+
+# 'style' stage
 style:
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: style
+  needs: []
   before_script:
     - apt-get -q update
     - apt-get -qy install astyle
   script:
     - 'astyle --dry-run --options=.astylerc --formatted lib/*.cc lib/*.h include/satnogs/*.h  | sed ''s/^Formatted/ERROR: Unformatted/;T;q1'''
+
+# 'test' stage
 test:
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   stage: test
+  needs: []
   before_script:
     - apt-get -q update
     - apt-get -qy install gnupg libcurl4
@@ -66,8 +72,11 @@ test:
     - make install
     - ldconfig
     - python3 -c "import satnogs"
+
+# 'build' stage
 debian:
   stage: build
+  needs: []
   image: ${GITLAB_CI_IMAGE_DEBIAN}
   before_script:
     - apt-get -q update
@@ -94,6 +103,8 @@ debian:
     when: always
     paths:
       - artifacts
+
+# 'deploy' stage
 deploy:
   stage: deploy
   image: ${GITLAB_CI_IMAGE_DEBIAN}

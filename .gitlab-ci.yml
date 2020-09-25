@@ -9,6 +9,7 @@ stages:
   - test
   - build
   - deploy
+  - security
 
 # 'style' stage
 style:
@@ -149,3 +150,17 @@ deploy:
     variables:
       - $OBS_USER
       - $OBS_PASS
+
+# 'security' stage
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+sast:
+  stage: security
+  needs: []
+secret_detection:
+  stage: security
+  needs: []
+secret_detection_default_branch:
+  stage: security
+  needs: []

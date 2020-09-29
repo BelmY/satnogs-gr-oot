@@ -4,6 +4,8 @@
  */
 #include <string.h>
 #include "fixed.h"
+#include <satnogs/api.h>
+
 #ifdef __VEC__
 #include <sys/sysctl.h>
 #endif
@@ -19,7 +21,7 @@ static void encode_rs_8_av(data_t *data, data_t *parity, int pad);
 int cpu_features(void);
 #endif
 
-void encode_rs_8(data_t *data, data_t *parity, int pad)
+SATNOGS_API void encode_rs_8(data_t *data, data_t *parity, int pad)
 {
   if (cpu_mode == UNKNOWN) {
 #ifdef __i386__

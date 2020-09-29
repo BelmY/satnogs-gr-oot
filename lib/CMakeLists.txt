@@ -41,6 +41,7 @@ list(APPEND satnogs_sources
     ax25_encoder_mb_impl.cc
     coarse_doppler_correction_cc_impl.cc
     convolutional_deinterleaver.cc
+    crc_async_impl.cc
     crc.cc
     cw_decoder_priv.cc
     cw_decoder.cc
@@ -64,6 +65,7 @@ list(APPEND satnogs_sources
     noaa_apt_sink_impl.cc
     ogg_encoder_impl.cc
     ogg_source_impl.cc
+    rs_encoder.cc
     shift_reg.cc
     sstv_pd120_sink_impl.cc
     tcp_rigctl_msg_source_impl.cc

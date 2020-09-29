@@ -67,7 +67,7 @@ pmt::pmt_t
 ieee802_15_4_encoder::encode(pmt::pmt_t msg)
 {
   pmt::pmt_t b;
-  if (pmt::is_bool(msg)) {
+  if (pmt::is_blob(msg)) {
     b = msg;
   }
   else if (pmt::is_pair(msg)) {

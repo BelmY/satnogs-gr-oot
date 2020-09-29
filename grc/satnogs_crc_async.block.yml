@@ -1,0 +1,29 @@
+id: satnogs_crc_async
+label: CRC Async
+
+parameters:
+- id: crc
+  label: CRC
+  dtype: raw
+  default: 'satnogs.crc.CRC_NONE'
+
+- id: check
+  label: Operation
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Append', 'Check']
+
+inputs:
+- id: pdu
+  domain: message
+
+outputs:
+- id: pdu
+  domain: message
+
+templates:
+  imports: import satnogs
+  make: satnogs.crc_async(${crc}, ${check})
+
+file_format: 1

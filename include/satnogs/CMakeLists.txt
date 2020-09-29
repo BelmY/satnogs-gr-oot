@@ -42,6 +42,7 @@ list(APPEND HEADER_FILES
     coarse_doppler_correction_cc.h
     config.h
     convolutional_deinterleaver.h
+    crc_async.h
     crc.h
     cw_decoder.h
     cw_to_symbol.h
@@ -70,6 +71,7 @@ list(APPEND HEADER_FILES
     ogg_encoder.h
     ogg_source.h
     qb50_deframer.h
+    rs_encoder.h
     shift_reg.h
     sstv_pd120_sink.h
     tcp_rigctl_msg_source.h

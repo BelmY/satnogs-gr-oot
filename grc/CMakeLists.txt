@@ -34,6 +34,7 @@ list(APPEND enabled_blocks
     satnogs_ax100_mode6_decoder.block.yml
     satnogs_coarse_doppler_correction_cc.block.yml
     satnogs_constellation_modulator.block.yml
+    satnogs_crc_async.block.yml
     satnogs_cw_decoder.block.yml
     satnogs_doppler_compensation.block.yml
     satnogs_doppler_correction_cc.block.yml
@@ -51,6 +52,7 @@ list(APPEND enabled_blocks
     satnogs_noaa_apt_sink.block.yml
     satnogs_ogg_encoder.block.yml
     satnogs_ogg_source.block.yml
+    satnogs_rs_encoder.block.yml
     satnogs_sstv_pd120_sink.block.yml
     satnogs_tcp_rigctl_msg_source.block.yml
     satnogs_udp_msg_sink.block.yml

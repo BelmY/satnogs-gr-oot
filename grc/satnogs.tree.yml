@@ -9,6 +9,7 @@
     - variable_cw_decoder
   - Encoders:
     - variable_ieee802_15_4_encoder
+    - variable_rs_encoder
   - Satellites:
       - NOAA:
         - satnogs_noaa_apt_sink
@@ -18,6 +19,7 @@
   - satnogs_ax25_encoder_mb
   - satnogs_coarse_doppler_correction_cc
   - satnogs_constellation_modulator
+  - satnogs_crc_async
   - satnogs_doppler_compensation
   - satnogs_doppler_correction_cc
   - satnogs_frame_decoder

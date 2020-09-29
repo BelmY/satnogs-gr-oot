@@ -81,12 +81,14 @@ doppler_correction_cc_impl::doppler_correction_cc_impl(
   set_max_noutput_items(d_samp_rate / 2.0);
   set_alignment(8);
 
-  set_msg_handler(
-    pmt::mp("freq"),
-    boost::bind(&doppler_correction_cc_impl::new_freq, this, _1));
-  set_msg_handler(
-    pmt::mp("reset"),
-    boost::bind(&doppler_correction_cc_impl::reset, this, _1));
+  set_msg_handler(pmt::mp("freq"),
+  [this](pmt::pmt_t msg) {
+    this->new_freq(msg);
+  });
+  set_msg_handler(pmt::mp("reset"),
+  [this](pmt::pmt_t msg) {
+    this->reset(msg);
+  });
 
   d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
   /* Allocate the buffer that will hold the predicted frequency differences */

@@ -62,7 +62,9 @@ frame_decoder_impl::frame_decoder_impl(decoder::decoder_sptr decoder_object,
   message_port_register_out(pmt::mp("out"));
 
   set_msg_handler(pmt::mp("reset"),
-                  boost::bind(&frame_decoder_impl::reset, this, _1));
+  [this](pmt::pmt_t msg) {
+    this->reset(msg);
+  });
 }
 
 /*

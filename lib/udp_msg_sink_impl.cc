@@ -50,8 +50,9 @@ udp_msg_sink_impl::udp_msg_sink_impl(const std::string &addr,
 {
   message_port_register_in(pmt::mp("in"));
   set_msg_handler(pmt::mp("in"),
-                  boost::bind(&udp_msg_sink_impl::msg_handler,
-                              this, _1));
+  [this](pmt::pmt_t msg) {
+    this->msg_handler(msg);
+  });
 
   /* Open the socket */
   if ((d_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {

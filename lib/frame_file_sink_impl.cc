@@ -51,9 +51,10 @@ frame_file_sink_impl::frame_file_sink_impl(const std::string &prefix_name,
   d_counter(0)
 {
   message_port_register_in(pmt::mp("frame"));
-  set_msg_handler(
-    pmt::mp("frame"),
-    boost::bind(&frame_file_sink_impl::msg_handler_frame, this, _1));
+  set_msg_handler(pmt::mp("frame"),
+  [this](pmt::pmt_t msg) {
+    this->msg_handler_frame(msg);
+  });
 
 }
 

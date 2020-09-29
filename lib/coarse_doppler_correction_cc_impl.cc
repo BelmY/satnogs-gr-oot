@@ -71,7 +71,9 @@ coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
 
   set_msg_handler(
     pmt::mp("freq"),
-    boost::bind(&coarse_doppler_correction_cc_impl::new_freq, this, _1));
+  [this](pmt::pmt_t msg) {
+    this->new_freq(msg);
+  });
 
   d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
   /* Allocate aligned memory for the NCO */

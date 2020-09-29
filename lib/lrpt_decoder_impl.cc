@@ -59,9 +59,10 @@ lrpt_decoder_impl::lrpt_decoder_impl()
   message_port_register_in(pmt::mp("cadu"));
   message_port_register_out(pmt::mp("frame"));
 
-  set_msg_handler(
-    pmt::mp("cadu"),
-    boost::bind(&lrpt_decoder_impl::decode, this, _1));
+  set_msg_handler(pmt::mp("cadu"),
+  [this](pmt::pmt_t msg) {
+    this->decode(msg);
+  });
 
   d_vt = create_viterbi27(d_cadu_len * 8);
   if (!d_vt) {

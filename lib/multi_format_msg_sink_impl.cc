@@ -167,15 +167,17 @@ multi_format_msg_sink_impl::multi_format_msg_sink_impl(
   if (out_stdout) {
     set_msg_handler(
       pmt::mp("in"),
-      boost::bind(&multi_format_msg_sink_impl::msg_handler_stdout,
-                  this, _1));
+    [this](pmt::pmt_t msg) {
+      this->msg_handler_stdout(msg);
+    });
   }
   else {
     d_fos.open(filepath);
     set_msg_handler(
       pmt::mp("in"),
-      boost::bind(&multi_format_msg_sink_impl::msg_handler_file,
-                  this, _1));
+    [this](pmt::pmt_t msg) {
+      this->msg_handler_file(msg);
+    });
   }
 }
 

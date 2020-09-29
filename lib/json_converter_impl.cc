@@ -49,7 +49,9 @@ json_converter_impl::json_converter_impl(const std::string &extra) :
   message_port_register_out(pmt::mp("out"));
 
   set_msg_handler(pmt::mp("in"),
-                  boost::bind(&json_converter_impl::convert, this, _1));
+  [this](pmt::pmt_t msg) {
+    this->convert(msg);
+  });
 }
 
 /*

@@ -25,6 +25,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "sstv_pd120_sink_impl.h"
+#include <satnogs/metadata.h>
 
 namespace gr {
 namespace satnogs {
@@ -63,8 +64,7 @@ sstv_pd120_sink_impl::sstv_pd120_sink_impl(const char *filename_png)
     d_has_sync(false),
     d_initial_sync(true),
     d_line_pos(0),
-    d_image_y(0),
-    d_num_image(0)
+    d_image_y(0)
 {
   set_history(sync_length);
   d_line = new float[line_length];
@@ -79,6 +79,21 @@ sstv_pd120_sink_impl::sstv_pd120_sink_impl(const char *filename_png)
 sstv_pd120_sink_impl::~sstv_pd120_sink_impl()
 {
   delete[] d_line;
+}
+
+bool
+sstv_pd120_sink_impl::stop()
+{
+  /*
+   * If there is an semi-decoded image, write it to
+   * a file and then exit
+   */
+  if (d_image_y) {
+    std::string file_name = std::string(d_filename_png) + "_"
+                            + metadata::time_iso8601() + ".png";
+    d_image.write(file_name.c_str());
+  }
+  return true;
 }
 
 float
@@ -166,17 +181,16 @@ sstv_pd120_sink_impl::render_line()
     ycbcr_to_rgb(ycrcb1, rgb1);
     d_image.set_pixel(x, d_image_y + 1, png::rgb_pixel(rgb1[0], rgb1[1], rgb1[2]));
   }
-
-  std::string file_name = std::string(d_filename_png) + "_" + std::to_string(
-                            d_num_image) + ".png";
-  d_image.write(file_name.c_str());
-
   d_image_y += 2;
 
   if (d_image_y >= image_height) {
+    /* Write the decoded image before moving to the next one */
+    std::string file_name = std::string(d_filename_png) + "_"
+                            + metadata::time_iso8601() + ".png";
+    d_image.write(file_name.c_str());
+
     d_image_y = 0;
     d_initial_sync = true;
-    d_num_image++;
     blank_image();
   }
 }

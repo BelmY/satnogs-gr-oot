@@ -40,7 +40,6 @@ private:
   float *d_line;
   size_t d_line_pos;
   size_t d_image_y;
-  size_t d_num_image;
 
   png::image<png::rgb_pixel> d_image;
 
@@ -55,6 +54,7 @@ private:
 public:
   sstv_pd120_sink_impl(const char *filename_png);
   ~sstv_pd120_sink_impl();
+  bool stop();
 
   // Where all the action really happens
   int work(int noutput_items,

@@ -71,12 +71,19 @@ udp_msg_sink_impl::udp_msg_sink_impl(const std::string &addr,
   }
 }
 
-void
-udp_msg_sink_impl::msg_handler(pmt::pmt_t msg)
+void udp_msg_sink_impl::msg_handler(pmt::pmt_t msg)
 {
-  const void *buf = pmt::blob_data(msg);
-  size_t len = pmt::blob_length(msg);
-
+  size_t len;
+  const void *buf;
+  if (pmt::is_dict(msg)) {
+    pmt::pmt_t pdu_v = pmt::dict_ref(msg, pmt::mp("pdu"), pmt::PMT_NIL);
+    len = pmt::blob_length(pdu_v);
+    buf = pmt::blob_data(pdu_v);
+  }
+  else {
+    buf = pmt::blob_data(msg);
+    len = pmt::blob_length(msg);
+  }
   if (len < d_mtu) {
     sendto(d_sock, buf, len, 0, (sockaddr *) &d_sin, sizeof(sockaddr_in));
   }

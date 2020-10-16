@@ -140,6 +140,7 @@ include(GrTest)
 # List all files that contain Boost.UTF unit tests here
 list(APPEND test_satnogs_sources
     qa_golay24.cc
+    qa_whitening.cc
 )
 
 # Anything we need to link to for the unit tests go here

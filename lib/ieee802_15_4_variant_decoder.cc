@@ -73,8 +73,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   d_length_field_len(0),
   d_state(SEARCHING),
   d_cnt(0),
-  d_frame_start_idx(0),
-  d_pdu(new uint8_t[max_len])
+  d_frame_start_idx(0)
 {
   for (uint8_t b : preamble) {
     d_preamble <<= (b >> 7);
@@ -126,6 +125,8 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   if (var_len) {
     d_length_field_len = 1;
   }
+
+  d_pdu = new uint8_t[d_len + d_length_field_len];
 }
 
 ieee802_15_4_variant_decoder::~ieee802_15_4_variant_decoder()
@@ -303,7 +304,7 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
     if (d_cnt == d_len + d_length_field_len) {
       if (d_descrambler) {
         d_descrambler->descramble(d_pdu + d_length_field_len,
-                                  d_pdu + d_length_field_len, d_len, false);
+                                  d_pdu + d_length_field_len, d_len, true);
       }
 
       status.decode_success = true;

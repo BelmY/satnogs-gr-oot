@@ -78,8 +78,10 @@ public:
        const std::vector<uint8_t> &sync,
        size_t sync_threshold,
        crc::crc_t crc,
-       whitening::whitening_sptr descrambler, bool var_len = true,
-       size_t max_len = 1024);
+       whitening::whitening_sptr descrambler,
+       bool var_len = true,
+       size_t max_len = 1024,
+       bool drop_invalid = true);
 
   ieee802_15_4_variant_decoder(const std::vector<uint8_t> &preamble,
                                size_t preamble_threshold,
@@ -88,7 +90,8 @@ public:
                                crc::crc_t crc,
                                whitening::whitening_sptr descrambler,
                                bool var_len = true,
-                               size_t max_len = 1024);
+                               size_t max_len = 1024,
+                               bool drop_invalid = true);
   ~ieee802_15_4_variant_decoder();
 
   decoder_status_t
@@ -122,6 +125,7 @@ private:
   crc::crc_t                    d_crc;
   whitening::whitening_sptr     d_descrambler;
   const bool                    d_var_len;
+  const bool                    d_drop_invalid;
   size_t                        d_len;
   size_t                        d_length_field_len;
   decoding_state_t              d_state;

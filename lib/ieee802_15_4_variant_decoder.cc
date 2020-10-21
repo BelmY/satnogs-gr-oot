@@ -41,12 +41,13 @@ ieee802_15_4_variant_decoder::make(const std::vector<uint8_t> &preamble,
                                    crc::crc_t crc,
                                    whitening::whitening_sptr descrambler,
                                    bool var_len,
-                                   size_t max_len)
+                                   size_t max_len,
+                                   bool drop_invalid)
 {
   return decoder::decoder_sptr(
            new ieee802_15_4_variant_decoder(preamble, preamble_threshold,
                sync, sync_threshold, crc,
-               descrambler, var_len, max_len));
+               descrambler, var_len, max_len, drop_invalid));
 }
 
 ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
@@ -56,7 +57,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   size_t sync_threshold,
   crc::crc_t crc,
   whitening::whitening_sptr descrambler,
-  bool var_len, size_t max_len) :
+  bool var_len, size_t max_len, bool drop_invalid) :
   decoder("IEEE-802.15.4", "1.0", sizeof(uint8_t), max_len),
   d_preamble(preamble.size() * 8),
   d_preamble_shift_reg(preamble.size() * 8),
@@ -69,6 +70,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   d_crc(crc),
   d_descrambler(descrambler),
   d_var_len(var_len),
+  d_drop_invalid(drop_invalid),
   d_len(max_len + crc::crc_size(crc)),
   d_length_field_len(0),
   d_state(SEARCHING),
@@ -250,7 +252,7 @@ ieee802_15_4_variant_decoder::search_sync(const uint8_t *in, int len)
     }
 
     /* The sync word should be available by now */
-    if (d_cnt > d_preamble_len * 2 + d_sync_len) {
+    if (d_cnt > d_preamble_len * 2 + d_sync_len + d_sync_thrsh) {
       reset();
       return i + 1;
     }
@@ -311,7 +313,6 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
                                   d_pdu + d_length_field_len, d_len, true);
       }
 
-      status.decode_success = true;
       status.consumed = (i + 1) * 8;
       metadata::add_decoder(status.data, this);
       metadata::add_time_iso8601(status.data);
@@ -319,11 +320,13 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
       metadata::add_sample_cnt(status.data,
                                nitems_read() + (i + 1) * 8 - d_frame_start_idx);
       if (check_crc()) {
+        status.decode_success = true;
         metadata::add_pdu(status.data, d_pdu + d_length_field_len,
                           d_len - crc::crc_size(d_crc));
         metadata::add_crc_valid(status.data, true);
       }
-      else {
+      else if (!d_drop_invalid) {
+        status.decode_success = true;
         metadata::add_pdu(status.data, d_pdu + d_length_field_len, d_len);
         metadata::add_crc_valid(status.data, false);
       }

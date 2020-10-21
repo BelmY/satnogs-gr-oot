@@ -45,10 +45,18 @@ parameters:
   dtype: raw
   default: 'satnogs.whitening_sptr(None)'
 
-value: ${satnogs.ieee802_15_4_variant_decoder_make(preamble, preamble_thrsh, sync_word, sync_thrsh, crc, whitening, var_len, frame_len)}
+- id: drop_invalid
+  label: Drop CRC failed frames
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: ['True', 'False']
+
+
+value: ${satnogs.ieee802_15_4_variant_decoder_make(preamble, preamble_thrsh, sync_word, sync_thrsh, crc, whitening, var_len, frame_len, drop_invalid)}
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.ieee802_15_4_variant_decoder_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${var_len}, ${frame_len})
+  var_make: self.${id} = ${id} = satnogs.ieee802_15_4_variant_decoder_make(${preamble}, ${preamble_thrsh}, ${sync_word}, ${sync_thrsh}, ${crc}, ${whitening}, ${var_len}, ${frame_len}, ${drop_invalid})
 
 file_format: 1

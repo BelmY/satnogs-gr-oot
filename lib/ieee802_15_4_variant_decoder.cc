@@ -106,11 +106,7 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
     throw std::invalid_argument("SYNC word should be at least 8 bits");
   }
 
-  if (d_preamble_len < 8) {
-    throw std::invalid_argument("Preamble should be at least 8 bits");
-  }
-
-  if (d_preamble_len < 2 * d_preamble_thrsh) {
+  if (d_preamble_len && d_preamble_len < 2 * d_preamble_thrsh) {
     throw std::invalid_argument(
       "Too many error bits are allowed for the preamble."
       "Consider lowering the threshold");
@@ -127,6 +123,8 @@ ieee802_15_4_variant_decoder::ieee802_15_4_variant_decoder(
   }
 
   d_pdu = new uint8_t[d_len + d_length_field_len];
+
+  reset();
 }
 
 ieee802_15_4_variant_decoder::~ieee802_15_4_variant_decoder()
@@ -150,7 +148,13 @@ ieee802_15_4_variant_decoder::reset()
     d_descrambler->reset();
   }
   d_cnt = 0;
-  d_state = SEARCHING;
+  /* There are case that no preamble is used */
+  if (d_preamble_len) {
+    d_state = SEARCHING;
+  }
+  else {
+    d_state = SEARCHING_SYNC;
+  }
   d_preamble_shift_reg.reset();
   d_sync_shift_reg.reset();
 }

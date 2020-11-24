@@ -59,19 +59,19 @@ class doppler_compensation(gr.hier_block2):
         case, this field should contain the actual frequency of the satellite.
         On the other hand, for the second case this field should be 0.
     lo_offset : double
-        The LO offset from the actuall observation frequency. In most cases,
+        The LO offset from the actual observation frequency. In most cases,
         we use a LO offset to avoid the DC spikes. This offset should be positive
         if the hardware RF frequency is less than the target frequency, negative
         otherwise.
     compensate : bool
-        This parameter instructs the Doppler correction block to apply doppler
+        This parameter instructs the Doppler correction block to apply Doppler
         compensation. The LO offset compensation is still applied regardless of
         the value of this field.
     fine_correction : bool
         This parameters defines which Doppler correction mechanism will be used.
         If set to False the coarse method is used that salters the frequency
         with the frequency offset received at the message queue with the name
-        doppler. If set to True, a curve fitting engine is added to the 
+        Doppler. If set to True, a curve fitting engine is added to the 
         coarse Doppler correction mechanism.
     """
 
@@ -85,62 +85,35 @@ class doppler_compensation(gr.hier_block2):
 
         self.message_port_register_hier_in('doppler')
 
-        # Decimate the incoming signal using the rational resampler first.
-        # Then perform the doppler correctio and a fractional resampler
-        # to a lower rate to save some CPU cycles
         if(out_samp_rate > samp_rate):
-            gr.log.info("satnogs.doppler_compensation: Output sampling rate sould be "
+            gr.log.info("satnogs.doppler_compensation: Output sampling rate should be "
                         "less or equal the device sampling rate")
             raise AttributeError
         
-        if(lo_offset > samp_rate // 4):
+        if(lo_offset > samp_rate // 2):
             gr.log.info("satnogs.doppler_compensation: The LO offset frequency "
-                        "should be less than samp_rate/4")
+                        "should be less than samp_rate/2")
             raise AttributeError
-
-        self.decimation = 1
-        # FIXME: As we now the direction of the LO offset maybe we can narrow
-        # more
-        min_s = max(abs(4 * lo_offset), out_samp_rate + 4 * abs(lo_offset)) + 48e3
-        while(samp_rate / (self.decimation + 1) > min_s):
-            self.decimation = self.decimation + 1
-
-        print(self.decimation)
-        if(self.decimation > 1):
-            # As we now that we are going to only decimate, we use a LPF
-            # filter instead of a resampler taking care of the passband
-            # to avoid aliasing. Also due to the fact that we know the output
-            # sampling rate we try to relax the transition woidth as much
-            # as possible to reduce CPU usage
-            self.dec = filter.fir_filter_ccf(self.decimation,
-                firdes.low_pass(1, samp_rate, out_samp_rate / 2.0,
-                                (samp_rate / 2.0) / self.decimation - out_samp_rate / 2.0,
-                                firdes.WIN_HAMMING))
-
-        # Even with no doppler compensation enabled we need this
-        # block to correct the LO offset
+        
         if fine_correction:
             self.doppler = satnogs.doppler_correction_cc(sat_freq,
                                                          lo_offset,
-                                                         samp_rate / self.decimation,
-                                                         min(4000, max(100, samp_rate / self.decimation / 200)))
+                                                         samp_rate,
+                                                         min(4000, max(100, samp_rate/ 200)))
         else:
             self.doppler = satnogs.coarse_doppler_correction_cc(sat_freq,
                                                                 lo_offset,
-                                                                samp_rate / self.decimation)                                                                
+                                                                samp_rate)                                                                
 
         self.pfb_rs = pfb.arb_resampler_ccf(
-            out_samp_rate / (samp_rate / self.decimation),
+            out_samp_rate / samp_rate,
             taps=None,
             flt_size=32)
         self.pfb_rs.declare_sample_delay(0)
 
-        if(self.decimation > 1):
-            self.connect((self, 0), (self.dec, 0),
-                         (self.doppler, 0), (self.pfb_rs, 0), (self, 0))
-        else:
-            self.connect((self, 0), (self.doppler, 0),
-                         (self.pfb_rs, 0),  (self, 0))
+        # We need the Doppler correction block to compensate the LO offset 
+        # even if Doppler compensation is disabled
+        self.connect((self, 0), (self.doppler, 0), (self.pfb_rs, 0), (self, 0))
 
         if(compensate):
             self.msg_connect(weakref.proxy(self), "doppler",

@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016,2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #define INCLUDED_SATNOGS_COARSE_DOPPLER_CORRECTION_CC_IMPL_H
 
 #include <satnogs/coarse_doppler_correction_cc.h>
-#include <gnuradio/fxpt_nco.h>
+#include <gnuradio/blocks/rotator.h>
 
 namespace gr {
 namespace satnogs {
@@ -34,9 +34,7 @@ private:
   const double d_samp_rate;
   const size_t d_buf_items;
   double d_freq_diff;
-
-  gr::fxpt_nco d_nco;
-  gr_complex *d_nco_buff;
+  blocks::rotator d_rot;
 
   void
   new_freq(pmt::pmt_t msg);

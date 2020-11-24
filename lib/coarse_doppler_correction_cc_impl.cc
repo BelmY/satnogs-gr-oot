@@ -2,7 +2,7 @@
 /*
  * gr-satnogs: SatNOGS GNU Radio Out-Of-Tree Module
  *
- *  Copyright (C) 2016, Libre Space Foundation <http://librespacefoundation.org/>
+ *  Copyright (C) 2016,2020 Libre Space Foundation <http://libre.space>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,8 +52,7 @@ coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
   d_offset(offset),
   d_samp_rate(sampling_rate),
   d_buf_items(std::min((size_t)8192UL, (size_t)(d_samp_rate / 4))),
-  d_freq_diff(d_offset),
-  d_nco()
+  d_freq_diff(d_offset)
 {
   message_port_register_in(pmt::mp("freq"));
 
@@ -75,13 +74,8 @@ coarse_doppler_correction_cc_impl::coarse_doppler_correction_cc_impl(
     this->new_freq(msg);
   });
 
-  d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
-  /* Allocate aligned memory for the NCO */
-  d_nco_buff = (gr_complex *) volk_malloc(
-                 (d_samp_rate / 4) * sizeof(gr_complex), 32);
-  if (!d_nco_buff) {
-    throw std::runtime_error("Could not allocate NCO memory");
-  }
+  d_rot.set_phase_incr(
+    std::exp(gr_complex(0.0, (2 * M_PI * (-d_freq_diff)) / d_samp_rate)));
 }
 
 void
@@ -90,7 +84,8 @@ coarse_doppler_correction_cc_impl::new_freq(pmt::pmt_t msg)
   double new_freq;
   new_freq = pmt::to_double(msg);
   d_freq_diff = new_freq - (d_target_freq - d_offset);
-  d_nco.set_freq((2 * M_PI * (-d_freq_diff)) / d_samp_rate);
+  d_rot.set_phase_incr(
+    std::exp(gr_complex(0.0, (2 * M_PI * (-d_freq_diff)) / d_samp_rate)));
 }
 
 /*
@@ -98,7 +93,6 @@ coarse_doppler_correction_cc_impl::new_freq(pmt::pmt_t msg)
  */
 coarse_doppler_correction_cc_impl::~coarse_doppler_correction_cc_impl()
 {
-  volk_free(d_nco_buff);
 }
 
 int
@@ -110,8 +104,7 @@ coarse_doppler_correction_cc_impl::work(
   gr_complex *out = (gr_complex *) output_items[0];
 
   /* Perform the correction */
-  d_nco.sincos(d_nco_buff, noutput_items, 1.0);
-  volk_32fc_x2_multiply_32fc(out, in, d_nco_buff, noutput_items);
+  d_rot.rotateN(out, in, noutput_items);
 
   // Tell runtime system how many output items we produced.
   return noutput_items;

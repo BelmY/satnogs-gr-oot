@@ -154,7 +154,7 @@ private:
   inline void
   decode_1b(uint8_t in);
   bool
-  frame_check();
+  is_frame_valid();
 };
 
 } // namespace satnogs

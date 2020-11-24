@@ -109,14 +109,19 @@ ax25_decoder::_decode(decoder_status_t &status)
       for (size_t i = 0; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
         if (AX25_SYNC_FLAG == d_shift_reg) {
+          /*
+           * If this was a false positive, the next possible valid AX.25 flag
+           * may start at the last 0 received of this false positive. So we
+           * empty the buffer except the last zero sample
+           */
           d_bitstream.erase(d_bitstream.begin(),
-                            d_bitstream.begin() + i + 1);
+                            d_bitstream.begin() + i);
           /* Increment the number of items read so far */
           incr_nitems_read(i + 1);
           enter_sync_state();
           /* Mark possible start of the frame */
           d_frame_start = nitems_read();
-          d_start_idx = 0;
+          d_start_idx = 1;
           cont = true;
           break;
         }
@@ -142,7 +147,11 @@ ax25_decoder::_decode(decoder_status_t &status)
             d_start_idx = i + 1;
             enter_decoding_state();
             cont = true;
+            LOG_DEBUG("Entering decode");
             break;
+          }
+          else {
+            LOG_DEBUG("Skip AX.25 flag");
           }
           d_decoded_bits = 0;
         }
@@ -174,7 +183,7 @@ ax25_decoder::_decode(decoder_status_t &status)
           cont = true;
           break;
         }
-        else if (((d_shift_reg >> 16) & 0xfc) == 0x7c) {
+        else if ((d_shift_reg & 0xfc) == 0x7c) {
           /*This was a stuffed bit */
           d_dec_b <<= 1;
         }
@@ -274,7 +283,7 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
   /*
    * Check if the frame is correct using the FCS field
    */
-  if (frame_check()) {
+  if (is_frame_valid()) {
     metadata::add_decoder(status.data, this);
     metadata::add_pdu(status.data, d_frame_buffer,
                       d_received_bytes - sizeof(uint16_t));
@@ -284,19 +293,21 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
     metadata::add_sample_cnt(status.data, d_sample_cnt);
     status.decode_success = true;
     reset_state();
+    LOG_DEBUG("CRC correct");
     return true;
   }
-  else if (!d_crc_check) {
-    metadata::add_decoder(status.data, this);
-    metadata::add_pdu(status.data, d_frame_buffer,
-                      d_received_bytes - sizeof(uint16_t));
-    metadata::add_time_iso8601(status.data);
-    metadata::add_crc_valid(status.data, false);
-    status.decode_success = true;
+  else {
     LOG_DEBUG("Wrong crc");
-    reset_state();
-    return false;
+    if (!d_crc_check) {
+      metadata::add_decoder(status.data, this);
+      metadata::add_pdu(status.data, d_frame_buffer,
+                        d_received_bytes - sizeof(uint16_t));
+      metadata::add_time_iso8601(status.data);
+      metadata::add_crc_valid(status.data, false);
+      status.decode_success = true;
+    }
   }
+  reset_state();
   return false;
 }
 
@@ -313,7 +324,7 @@ ax25_decoder::decode_1b(uint8_t in)
 }
 
 bool
-ax25_decoder::frame_check()
+ax25_decoder::is_frame_valid()
 {
   uint16_t fcs;
   uint16_t recv_fcs = 0x0;
@@ -322,6 +333,8 @@ ax25_decoder::frame_check()
   fcs = ax25_fcs(d_frame_buffer, d_received_bytes - sizeof(uint16_t));
   recv_fcs = (((uint16_t) d_frame_buffer[d_received_bytes - 1]) << 8)
              | d_frame_buffer[d_received_bytes - 2];
+  LOG_DEBUG("CRC Received: 0x%02x", recv_fcs);
+  LOG_DEBUG("CRC Calculated: 0x%02x", fcs);
   if (fcs == recv_fcs) {
     return true;
   }

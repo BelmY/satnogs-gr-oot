@@ -297,6 +297,21 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
     return true;
   }
   else {
+    /* Try to correct up to 1-bit*/
+    if (error_correction()) {
+      metadata::add_decoder(status.data, this);
+      metadata::add_pdu(status.data, d_frame_buffer,
+                        d_received_bytes - sizeof(uint16_t));
+      metadata::add_time_iso8601(status.data);
+      metadata::add_crc_valid(status.data, true);
+      metadata::add_sample_start(status.data, d_frame_start);
+      metadata::add_sample_cnt(status.data, d_sample_cnt);
+      status.decode_success = true;
+      reset_state();
+      LOG_DEBUG("CRC correct");
+      return true;
+    }
+
     LOG_DEBUG("Wrong crc");
     if (!d_crc_check) {
       metadata::add_decoder(status.data, this);
@@ -340,6 +355,67 @@ ax25_decoder::is_frame_valid()
   }
   return false;
 }
+
+bool
+ax25_decoder::error_correction()
+{
+  for (size_t i = 0; i < d_received_bytes; i++) {
+    /*
+     * Make loop un-roll to simplify the logic for toggling every bit of a
+     * specific byte
+     */
+    d_frame_buffer[i] ^= 0x1;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x1;
+
+    d_frame_buffer[i] ^= 0x2;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x2;
+
+    d_frame_buffer[i] ^= 0x4;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x4;
+
+    d_frame_buffer[i] ^= 0x8;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x8;
+
+    d_frame_buffer[i] ^= 0x10;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x10;
+
+    d_frame_buffer[i] ^= 0x20;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x20;
+
+    d_frame_buffer[i] ^= 0x40;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x40;
+
+    d_frame_buffer[i] ^= 0x80;
+    if (is_frame_valid()) {
+      return true;
+    }
+    d_frame_buffer[i] ^= 0x80;
+  }
+  return false;
+}
+
+
 
 } /* namespace satnogs */
 } /* namespace gr */

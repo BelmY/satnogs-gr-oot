@@ -41,7 +41,7 @@ ax25_decoder::make(const std::string &addr, uint8_t ssid, bool promisc,
 
 ax25_decoder::ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc,
                            bool descramble, bool crc_check, size_t max_frame_len) :
-  decoder("ax25", "1.0", sizeof(uint8_t), 2 * max_frame_len * 8),
+  decoder("ax25", "1.1", sizeof(uint8_t), 2 * max_frame_len * 8),
   d_promisc(promisc),
   d_descramble(descramble),
   d_crc_check(crc_check),
@@ -102,22 +102,24 @@ ax25_decoder::reset()
 bool
 ax25_decoder::_decode(decoder_status_t &status)
 {
-  while (1) {
+  while (d_bitstream.size()) {
     bool cont = false;
     switch (d_state) {
     case NO_SYNC:
       for (size_t i = 0; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
         if (AX25_SYNC_FLAG == d_shift_reg) {
+          LOG_DEBUG("Have SYNC");
           /*
            * If this was a false positive, the next possible valid AX.25 flag
            * may start at the last 0 received of this false positive. So we
-           * empty the buffer except the last zero sample
+           * empty the buffer until the last zero sample of the first possible
+           * AX.25 SYNC flag encountered
            */
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i);
           /* Increment the number of items read so far */
-          incr_nitems_read(i + 1);
+          incr_nitems_read(i);
           enter_sync_state();
           /* Mark possible start of the frame */
           d_frame_start = nitems_read();
@@ -144,7 +146,14 @@ ax25_decoder::_decode(decoder_status_t &status)
         if (d_decoded_bits == 8) {
           /* Perhaps we are in frame! */
           if (d_shift_reg != AX25_SYNC_FLAG) {
-            d_start_idx = i + 1;
+            /*
+             * Again, leave the 7 last processed samples inside the buffer
+             *  in case this was a false alarm of a frame start
+             */
+            d_bitstream.erase(d_bitstream.begin(),
+                              d_bitstream.begin() + i + 1 - 7);
+            incr_nitems_read(i + 1 - 7);
+            d_start_idx = 7;
             enter_decoding_state();
             cont = true;
             LOG_DEBUG("Entering decode");
@@ -165,30 +174,51 @@ ax25_decoder::_decode(decoder_status_t &status)
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
         if (d_shift_reg == AX25_SYNC_FLAG) {
-          d_sample_cnt = nitems_read() + i - d_frame_start;
-          LOG_DEBUG("Found frame end");
-          if (enter_frame_end(status)) {
-            /*
-             * Based on the AX.25 specification, the next frame may use the
-             * AX.25 termination SYNC flag of the previous frame. Thus, we
-             * delete only the data portion from the bitstream buffer
-             */
+          /*
+           * The stop flag should be at a byte boundary. If not this is a
+           * strong indication that something went wrong and possibly this
+           * AX.25 SYNC flag is a start for a new frame
+           */
+          if (d_decoded_bits != 7) {
             d_bitstream.erase(d_bitstream.begin(),
                               d_bitstream.begin() + i + 1 - 8);
+            incr_nitems_read(i + 1 - 8);
+            reset_state();
+            cont = true;
+            break;
+          }
+
+          d_sample_cnt = nitems_read() + i - d_frame_start;
+          /*
+           * Based on the AX.25 specification, the next frame may use the
+           * AX.25 termination SYNC flag of the previous frame. Thus, we
+           * delete only the data portion from the bitstream buffer
+           */
+          d_bitstream.erase(d_bitstream.begin(),
+                            d_bitstream.begin() + i + 1 - 8);
+          incr_nitems_read(i + 1 - 8);
+
+          if (enter_frame_end(status)) {
             /* Increment the number of items read so far */
-            incr_nitems_read(i + 1);
-            d_start_idx = d_bitstream.size();
             return true;
           }
-          cont = true;
-          break;
+          return false;
         }
         else if ((d_shift_reg & 0xfc) == 0x7c) {
           /*This was a stuffed bit */
           d_dec_b <<= 1;
         }
         else if ((d_shift_reg & 0xfe) == 0xfe) {
-          LOG_DEBUG("Invalid shift register value %u", d_received_bytes);
+          LOG_DEBUG("Invalid shift register value 0x%02x", d_shift_reg);
+          /*
+           * Again at this point, we have not encounter yet any AX.25 flag
+           * so it is safe to drop all processed samples, except those that
+           * led to this invalid shift register value. These maybe the start
+           * of a new frame
+           */
+          d_bitstream.erase(d_bitstream.begin(),
+                            d_bitstream.begin() + i + 1 - 8);
+          incr_nitems_read(i + 1 - 8);
           reset_state();
           cont = true;
           break;
@@ -220,6 +250,7 @@ ax25_decoder::_decode(decoder_status_t &status)
       return false;
     }
   }
+  return false;
 }
 
 
@@ -319,6 +350,8 @@ ax25_decoder::enter_frame_end(decoder_status_t &status)
                         d_received_bytes - sizeof(uint16_t));
       metadata::add_time_iso8601(status.data);
       metadata::add_crc_valid(status.data, false);
+      metadata::add_sample_start(status.data, d_frame_start);
+      metadata::add_sample_cnt(status.data, d_sample_cnt);
       status.decode_success = true;
     }
   }

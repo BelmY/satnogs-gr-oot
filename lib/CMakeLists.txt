@@ -38,7 +38,6 @@ list(APPEND satnogs_sources
     ax100_mode5.cc
     ax100_mode6.cc
     ax25_decoder.cc
-    ax25_encoder_mb_impl.cc
     ax25_encoder.cc
     coarse_doppler_correction_cc_impl.cc
     convolutional_deinterleaver.cc

@@ -29,7 +29,6 @@ list(APPEND enabled_blocks
     satnogs_amsat_duv_decoder.block.yml
     satnogs_argos_ldr_decoder.block.yml
     satnogs_ax25_decoder.block.yml
-    satnogs_ax25_encoder_mb.block.yml
     satnogs_ax25_encoder.block.yml
     satnogs_ax100_mode5_decoder.block.yml
     satnogs_ax100_mode6_decoder.block.yml

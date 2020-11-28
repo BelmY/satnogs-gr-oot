@@ -17,7 +17,6 @@
       - METEOR:
         - satnogs_lrpt_decoder
         - satnogs_lrpt_sync
-  - satnogs_ax25_encoder_mb
   - satnogs_coarse_doppler_correction_cc
   - satnogs_constellation_modulator
   - satnogs_crc_async

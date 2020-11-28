@@ -36,7 +36,6 @@ list(APPEND HEADER_FILES
     argos_ldr_decoder.h
     ax25.h
     ax25_decoder.h
-    ax25_encoder_mb.h
     ax25_encoder.h
     ax100_decoder.h
     base64.h

@@ -30,6 +30,34 @@
 namespace gr {
 
 namespace satnogs {
+
+class ax25 {
+public:
+  static const size_t min_addr_len = 14;
+  static const size_t max_addr_len = (2 * 7 + 8 * 7);
+  static const size_t max_ctrl_len = 2;
+  static const size_t pid_len = 1;
+  static const size_t max_header_len = (max_addr_len + max_ctrl_len + pid_len);
+  static const uint8_t sync_flag = 0x7e;
+  static const size_t callsign_max_len = 6;
+
+  /**
+   * AX.25 Frame types
+   */
+  typedef enum {
+    I_FRAME, //!< Information frame
+    S_FRAME, //!< Supervisory frame
+    U_FRAME, //!< Unnumbered frame
+    UI_FRAME //!< Unnumbered information frame
+  } frame_type_t;
+
+  static uint16_t
+  crc(const uint8_t *buffer, size_t len)
+  {
+    return crc::crc16_ax25(buffer, len);
+  }
+};
+
 const size_t AX25_MIN_ADDR_LEN = 14;
 const size_t AX25_MAX_ADDR_LEN = (2 * 7 + 8 * 7);
 const size_t AX25_MIN_CTRL_LEN = 1;

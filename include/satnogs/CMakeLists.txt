@@ -37,6 +37,7 @@ list(APPEND HEADER_FILES
     ax25.h
     ax25_decoder.h
     ax25_encoder_mb.h
+    ax25_encoder.h
     ax100_decoder.h
     base64.h
     coarse_doppler_correction_cc.h

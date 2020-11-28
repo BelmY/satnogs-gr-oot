@@ -8,6 +8,7 @@
     - variable_ieee802_15_4_variant_decoder
     - variable_cw_decoder
   - Encoders:
+    - variable_ax25_encoder
     - variable_ieee802_15_4_encoder
     - variable_rs_encoder
   - Satellites:

@@ -42,12 +42,17 @@ public:
   typedef boost::shared_ptr<whitening> whitening_sptr;
 
   static whitening_sptr
-  make(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false);
+  make(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false,
+       bool self_sync = false);
 
   static whitening_sptr
-  make_ccsds();
+  make_ccsds(bool msb = false);
 
-  whitening(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false);
+  static whitening_sptr
+  make_g3ruh(bool msb = false);
+
+  whitening(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false,
+            bool self_sync = false);
 
   ~whitening();
 
@@ -66,9 +71,10 @@ public:
                               size_t bits_num);
 
 private:
+  const bool            d_msb;
+  const bool            d_self_sync;
   digital::lfsr         d_lfsr;
   int                   d_id;
-  bool                  d_msb;
 };
 
 } // namespace satnogs

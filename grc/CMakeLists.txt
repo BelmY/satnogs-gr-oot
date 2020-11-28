@@ -59,6 +59,7 @@ list(APPEND enabled_blocks
     satnogs_udp_msg_source.block.yml
     satnogs_waterfall_sink.block.yml
     satnogs_whitening_ccsds.block.yml
+    satnogs_whitening_g3ruh.block.yml
     satnogs_whitening.block.yml
     satnogs.tree.yml
 )

@@ -35,6 +35,7 @@
   - satnogs_udp_msg_source
   - satnogs_waterfall_sink
   - satnogs_whitening_ccsds
+  - satnogs_whitening_g3ruh
   - satnogs_whitening
   - Debug:
     - satnogs_cw_encoder

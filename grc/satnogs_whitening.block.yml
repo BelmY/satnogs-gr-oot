@@ -22,10 +22,17 @@ parameters:
   option_labels: ['LSB', 'MSB']
   default: 'False'
 
-value: ${satnogs.whitening_make(mask, seed, order, msb)}
+- id: self_sync
+  label: Self Syncronizing
+  dtype: int
+  options: ['False', 'True']
+  option_labels: ['LSB', 'MSB']
+  default: 'False'
+
+value: ${satnogs.whitening_make(mask, seed, order, msb, self_sync)}
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.whitening_make(${mask}, ${seed}, ${order}, ${msb})
+  var_make: self.${id} = ${id} = satnogs.whitening_make(${mask}, ${seed}, ${order}, ${msb}, ${self_sync})
 
 file_format: 1

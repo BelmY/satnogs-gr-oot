@@ -276,7 +276,7 @@ ieee802_15_4_variant_decoder::decode_frame_len(const uint8_t *in)
   if (d_descrambler) {
     uint8_t descrambled = 0x0;
     d_descrambler->descramble((uint8_t *)&descrambled,
-                              (const uint8_t *)&b, 1, false);
+                              (const uint8_t *)&b, 1);
     d_len = descrambled;
     d_pdu[0] = descrambled;
   }
@@ -310,7 +310,7 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
     if (d_cnt == d_len + d_length_field_len) {
       if (d_descrambler) {
         d_descrambler->descramble(d_pdu + d_length_field_len,
-                                  d_pdu + d_length_field_len, d_len, true);
+                                  d_pdu + d_length_field_len, d_len);
       }
 
       status.consumed = (i + 1) * 8;

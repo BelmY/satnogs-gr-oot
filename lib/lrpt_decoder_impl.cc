@@ -117,7 +117,7 @@ lrpt_decoder_impl::decode(pmt::pmt_t m)
 
   /* Descrambling */
   d_scrambler.reset();
-  d_scrambler.descramble(d_cadu + 4, d_cadu + 4, d_cadu_len - 4, true);
+  d_scrambler.descramble(d_cadu + 4, d_cadu + 4, d_cadu_len - 4);
   decode_ccsds_packet(d_cadu + 4);
 }
 
@@ -166,4 +166,3 @@ lrpt_decoder_impl::decode_ccsds_packet(const uint8_t *cvcdu)
 
 } /* namespace satnogs */
 } /* namespace gr */
-

@@ -40,9 +40,9 @@ int whitening::base_unique_id = 1;
  * number of memory stages.
  */
 whitening::whitening_sptr
-whitening::make(uint32_t mask, uint32_t seed, uint32_t order)
+whitening::make(uint32_t mask, uint32_t seed, uint32_t order, bool msb)
 {
-  return whitening::whitening_sptr(new whitening(mask, seed, order));
+  return whitening::whitening_sptr(new whitening(mask, seed, order, msb));
 }
 
 
@@ -64,9 +64,10 @@ whitening::make_ccsds()
  * @param order the order of the shift register. This is equal to the
  * number of memory stages.
  */
-whitening::whitening(uint32_t mask, uint32_t seed, uint32_t order) :
+whitening::whitening(uint32_t mask, uint32_t seed, uint32_t order, bool msb) :
   d_lfsr(mask, seed, order),
-  d_id(0)
+  d_id(0),
+  d_msb(msb)
 {
   d_id = base_unique_id++;
 }
@@ -96,14 +97,13 @@ whitening::reset()
  * @param out the output buffer
  * @param in the input buffer
  * @param len the number of the bytes to be scrambled
- * @param msb if set to true, the descrambler starts from the msb
  */
 void
-whitening::scramble(uint8_t *out, const uint8_t *in, size_t len, bool msb)
+whitening::scramble(uint8_t *out, const uint8_t *in, size_t len)
 {
   size_t i;
   uint8_t b;
-  if (msb) {
+  if (d_msb) {
     for (i = 0; i < len; i++) {
       b = d_lfsr.next_bit() << 7;
       b |= d_lfsr.next_bit() << 6;
@@ -136,13 +136,11 @@ whitening::scramble(uint8_t *out, const uint8_t *in, size_t len, bool msb)
  * @param out the output buffer
  * @param in the input buffer
  * @param len the number of the bytes to be de-scrambled
- * @param msb if set to true, the descrambler starts from the msb
  */
 void
-whitening::descramble(uint8_t *out, const uint8_t *in, size_t len,
-                      bool msb)
+whitening::descramble(uint8_t *out, const uint8_t *in, size_t len)
 {
-  scramble(out, in, len, msb);
+  scramble(out, in, len);
 }
 
 /**

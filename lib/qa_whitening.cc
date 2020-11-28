@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(whitening_ccsds)
     orig[i] = 0;
   }
 
-  scr->scramble(scrambled, orig, LEN, true);
-  descr->descramble(descrambled, scrambled, LEN, true);
+  scr->scramble(scrambled, orig, LEN);
+  descr->descramble(descrambled, scrambled, LEN);
 
   printf("Original: ");
   for (size_t i = 0; i < LEN; i++) {

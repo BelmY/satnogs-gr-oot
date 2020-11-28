@@ -266,7 +266,7 @@ ax100_mode5::decode_payload(decoder_status_t &status,
 
     if (d_cnt == d_len) {
       if (d_descrambler) {
-        d_descrambler->descramble(d_pdu, d_pdu, d_len, true);
+        d_descrambler->descramble(d_pdu, d_pdu, d_len);
       }
 
       /* If RS is used try to decode the received frame */

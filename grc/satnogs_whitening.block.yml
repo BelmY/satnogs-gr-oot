@@ -15,10 +15,17 @@ parameters:
   label: Order
   dtype: int
 
-value: ${satnogs.whitening_make(mask, seed, order)}
+- id: msb
+  label: Bit Order
+  dtype: int
+  options: ['False', 'True']
+  option_labels: ['LSB', 'MSB']
+  default: 'False'
+
+value: ${satnogs.whitening_make(mask, seed, order, msb)}
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.whitening_make(${mask}, ${seed}, ${order})
+  var_make: self.${id} = ${id} = satnogs.whitening_make(${mask}, ${seed}, ${order}, ${msb})
 
 file_format: 1

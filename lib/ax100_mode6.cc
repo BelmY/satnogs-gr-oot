@@ -301,7 +301,7 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
   uint8_t *payload = d_frame_buffer + 2 + AX25_MIN_ADDR_LEN;
   LOG_DEBUG("LEN: %u", payload_len);
   if (d_descrambler) {
-    d_descrambler->descramble(payload, payload, payload_len, true);
+    d_descrambler->descramble(payload, payload, payload_len);
   }
   int ret = decode_rs_8(payload, NULL, 0, 255 - payload_len);
   /* Discard RS parity*/
@@ -377,4 +377,3 @@ ax100_mode6::decode_1b(uint8_t in)
 
 } /* namespace satnogs */
 } /* namespace gr */
-

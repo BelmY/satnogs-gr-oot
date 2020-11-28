@@ -42,12 +42,12 @@ public:
   typedef boost::shared_ptr<whitening> whitening_sptr;
 
   static whitening_sptr
-  make(uint32_t mask, uint32_t seed, uint32_t order);
+  make(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false);
 
   static whitening_sptr
   make_ccsds();
 
-  whitening(uint32_t mask, uint32_t seed, uint32_t order);
+  whitening(uint32_t mask, uint32_t seed, uint32_t order, bool msb = false);
 
   ~whitening();
 
@@ -55,9 +55,9 @@ public:
   reset();
 
   void
-  scramble(uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
+  scramble(uint8_t *out, const uint8_t *in, size_t len);
   void
-  descramble(uint8_t *out, const uint8_t *in, size_t len, bool msb = false);
+  descramble(uint8_t *out, const uint8_t *in, size_t len);
 
   void
   scramble_one_bit_per_byte(uint8_t *out, const uint8_t *in, size_t bits_num);
@@ -68,10 +68,10 @@ public:
 private:
   digital::lfsr         d_lfsr;
   int                   d_id;
+  bool                  d_msb;
 };
 
 } // namespace satnogs
 } // namespace gr
 
 #endif /* INCLUDED_SATNOGS_WHITENING_H */
-

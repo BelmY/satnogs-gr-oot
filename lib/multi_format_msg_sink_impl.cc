@@ -70,7 +70,7 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
     std::time_t t = std::time(nullptr);
     std::tm tm = *std::localtime(&t);
     strftime(buf, sizeof(buf), "%F %T %z", &tm);
-    d_fos << "[" << buf << "]";
+    d_fos << "[" << buf << "] ";
   }
 
   switch (d_format) {
@@ -107,10 +107,9 @@ multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
   if (pmt::is_dict(msg)) {
     pmt::pmt_t pdu = pmt::dict_ref(msg, pmt::mp(metadata::value(metadata::PDU)),
                                    pmt::PMT_NIL);
-    s = base64_decode(std::string((const char *) pmt::blob_data(pdu),
-                                  pmt::blob_length(pdu)));
-    su = s.c_str();
-    len = s.size();
+    su = (const char *) pmt::blob_data(pdu);
+    s = std::string((const char *) pmt::blob_data(pdu), pmt::blob_length(pdu));
+    len = pmt::blob_length(pdu);
   }
   else {
     su = (const char *) pmt::blob_data(msg), pmt::blob_length(msg);
@@ -122,7 +121,7 @@ multi_format_msg_sink_impl::msg_handler_stdout(pmt::pmt_t msg)
     std::time_t t = std::time(nullptr);
     std::tm tm = *std::localtime(&t);
     strftime(buf, sizeof(buf), "%F %T %z", &tm);
-    std::cout << "[" << buf << "]";
+    std::cout << "[" << buf << "] ";
   }
 
   switch (d_format) {

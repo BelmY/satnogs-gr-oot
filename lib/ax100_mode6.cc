@@ -56,8 +56,7 @@ ax100_mode6::ax100_mode6(crc::crc_t crc, whitening::whitening_sptr descrambler,
   d_decoded_bits(0),
   d_lfsr(0x21, 0x0, 16),
   d_frame_buffer(
-    new uint8_t[d_max_frame_len + AX25_MAX_ADDR_LEN + AX25_MAX_CTRL_LEN
-                                + sizeof(uint16_t)]),
+    new uint8_t[d_max_frame_len + ax25::max_header_len + sizeof(uint16_t)]),
   d_start_idx(0),
   d_frame_start(0),
   d_sample_cnt(0)
@@ -121,9 +120,9 @@ ax100_mode6::_decode(decoder_status_t &status)
          * It is expected however, to miss some transmissions that use only one
          * AX.25 flag. We believe that such transmissions are yet rare.
          */
-        const uint32_t test = AX25_SYNC_FLAG
-                              | (AX25_SYNC_FLAG << 8)
-                              | (AX25_SYNC_FLAG << 16);
+        const uint32_t test = ax25::sync_flag
+                              | (ax25::sync_flag << 8)
+                              | (ax25::sync_flag << 16);
         if (test == d_shift_reg) {
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);
@@ -154,7 +153,7 @@ ax100_mode6::_decode(decoder_status_t &status)
         d_decoded_bits++;
         if (d_decoded_bits == 8) {
           /* Perhaps we are in frame! */
-          if ((d_shift_reg >> 16) != AX25_SYNC_FLAG) {
+          if ((d_shift_reg >> 16) != ax25::sync_flag) {
             d_start_idx = i + 1;
             enter_decoding_state();
             cont = true;
@@ -171,7 +170,7 @@ ax100_mode6::_decode(decoder_status_t &status)
     case DECODING:
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if ((d_shift_reg >> 16) == AX25_SYNC_FLAG) {
+        if ((d_shift_reg >> 16) == ax25::sync_flag) {
           d_sample_cnt = nitems_read() + i - d_frame_start;
           LOG_DEBUG("Found frame end");
           if (enter_frame_end(status)) {
@@ -278,14 +277,14 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
    * The minimum frame is the sizeof the AX.25 header (14 bytes),
    * the AX.25 CRC and a minimum 32 byte long field for the RS
    */
-  if (d_received_bytes < AX25_MIN_ADDR_LEN + 2 + crc::crc_size(
+  if (d_received_bytes < ax25::min_addr_len + 2 + crc::crc_size(
         crc::CRC16_AX25) + 32) {
     reset_state();
     return false;
   }
 
   /* If RS is enabled and the frame is larger than the RS block mark as faulty*/
-  if (d_received_bytes > 255 + 2 + AX25_MIN_ADDR_LEN
+  if (d_received_bytes > 255 + 2 + ax25::min_addr_len
       + crc::crc_size(crc::CRC16_AX25)) {
     reset_state();
     return false;
@@ -296,9 +295,9 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
    * and the 2 byte CRC
    */
   size_t payload_len = d_received_bytes
-                       - (2 + AX25_MIN_ADDR_LEN + crc::crc_size(crc::CRC16_AX25));
+                       - (2 + ax25::min_addr_len + crc::crc_size(crc::CRC16_AX25));
   /* Skip the AX.25 header, not part of the RS block */
-  uint8_t *payload = d_frame_buffer + 2 + AX25_MIN_ADDR_LEN;
+  uint8_t *payload = d_frame_buffer + 2 + ax25::min_addr_len;
   LOG_DEBUG("LEN: %u", payload_len);
   if (d_descrambler) {
     d_descrambler->descramble(payload, payload, payload_len);
@@ -323,7 +322,7 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
      * We do not want to loose frames due to the no-FEC part of the header.
      */
     metadata::add_pdu(status.data, d_frame_buffer,
-                      2 + AX25_MIN_ADDR_LEN + payload_len);
+                      2 + ax25::min_addr_len + payload_len);
     metadata::add_time_iso8601(status.data);
     metadata::add_crc_valid(status.data, false);
     metadata::add_sample_start(status.data, d_frame_start);
@@ -347,7 +346,7 @@ ax100_mode6::enter_frame_end(decoder_status_t &status)
        * We do not want to loose frames due to the no-FEC part of the header.
        */
       metadata::add_pdu(status.data, d_frame_buffer,
-                        2 + AX25_MIN_ADDR_LEN + payload_len - 4);
+                        2 + ax25::min_addr_len + payload_len - 4);
       metadata::add_time_iso8601(status.data);
       metadata::add_crc_valid(status.data, true);
       metadata::add_sample_start(status.data, d_frame_start);

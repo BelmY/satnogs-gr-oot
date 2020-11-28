@@ -54,8 +54,7 @@ ax25_decoder::ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc,
   d_decoded_bits(0),
   d_lfsr(0x21, 0x0, 16),
   d_frame_buffer(
-    new uint8_t[max_frame_len + AX25_MAX_ADDR_LEN + AX25_MAX_CTRL_LEN
-                              + sizeof(uint16_t)]),
+    new uint8_t[max_frame_len + ax25::max_header_len + sizeof(uint16_t)]),
   d_start_idx(0),
   d_frame_start(0),
   d_sample_cnt(0)
@@ -108,7 +107,7 @@ ax25_decoder::_decode(decoder_status_t &status)
     case NO_SYNC:
       for (size_t i = 0; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if (AX25_SYNC_FLAG == d_shift_reg) {
+        if (ax25::sync_flag == d_shift_reg) {
           LOG_DEBUG("Have SYNC");
           /*
            * If this was a false positive, the next possible valid AX.25 flag
@@ -145,7 +144,7 @@ ax25_decoder::_decode(decoder_status_t &status)
         d_decoded_bits++;
         if (d_decoded_bits == 8) {
           /* Perhaps we are in frame! */
-          if (d_shift_reg != AX25_SYNC_FLAG) {
+          if (d_shift_reg != ax25::sync_flag) {
             /*
              * Again, leave the 7 last processed samples inside the buffer
              *  in case this was a false alarm of a frame start
@@ -173,7 +172,7 @@ ax25_decoder::_decode(decoder_status_t &status)
     case DECODING:
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if (d_shift_reg == AX25_SYNC_FLAG) {
+        if (d_shift_reg == ax25::sync_flag) {
           /*
            * The stop flag should be at a byte boundary. If not this is a
            * strong indication that something went wrong and possibly this
@@ -306,7 +305,7 @@ bool
 ax25_decoder::enter_frame_end(decoder_status_t &status)
 {
   /* First check if the size of the frame is valid */
-  if (d_received_bytes < AX25_MIN_ADDR_LEN + sizeof(uint16_t)) {
+  if (d_received_bytes < ax25::min_addr_len + sizeof(uint16_t)) {
     reset_state();
     return false;
   }
@@ -378,7 +377,7 @@ ax25_decoder::is_frame_valid()
   uint16_t recv_fcs = 0x0;
 
   /* Check if the frame is correct using the FCS field */
-  fcs = ax25_fcs(d_frame_buffer, d_received_bytes - sizeof(uint16_t));
+  fcs = ax25::crc(d_frame_buffer, d_received_bytes - sizeof(uint16_t));
   recv_fcs = (((uint16_t) d_frame_buffer[d_received_bytes - 1]) << 8)
              | d_frame_buffer[d_received_bytes - 2];
   LOG_DEBUG("CRC Received: 0x%02x", recv_fcs);

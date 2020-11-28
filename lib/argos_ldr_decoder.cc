@@ -88,12 +88,12 @@ argos_ldr_decoder::_decode(decoder_status_t &status)
       for (size_t i = 0; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
         /*
-         * Decrease false positives by waiting for three occurances of the
+         * Decrease false positives by waiting for three occurrences of the
          * AX.25 flag
          */
-        const uint32_t test = AX25_SYNC_FLAG
-                              | (AX25_SYNC_FLAG << 8)
-                              | (AX25_SYNC_FLAG << 16);
+        const uint32_t test = ax25::sync_flag
+                              | (ax25::sync_flag << 8)
+                              | (ax25::sync_flag << 16);
         if (test == d_shift_reg) {
           d_bitstream.erase(d_bitstream.begin(),
                             d_bitstream.begin() + i + 1);
@@ -122,7 +122,7 @@ argos_ldr_decoder::_decode(decoder_status_t &status)
         d_decoded_bits++;
         if (d_decoded_bits == 8) {
           /* Perhaps we are in frame! */
-          if ((d_shift_reg & 0xFF) != AX25_SYNC_FLAG) {
+          if ((d_shift_reg & 0xFF) != ax25::sync_flag) {
             d_start_idx = i + 1;
             enter_decoding_state();
             cont = true;
@@ -139,7 +139,7 @@ argos_ldr_decoder::_decode(decoder_status_t &status)
     case DECODING:
       for (size_t i = d_start_idx; i < d_bitstream.size(); i++) {
         decode_1b(d_bitstream[i]);
-        if ((d_shift_reg & 0xFF) == AX25_SYNC_FLAG) {
+        if ((d_shift_reg & 0xFF) == ax25::sync_flag) {
           d_sample_cnt = nitems_read() + i - d_frame_start;
           LOG_DEBUG("Found frame end");
           if (enter_frame_end(status)) {

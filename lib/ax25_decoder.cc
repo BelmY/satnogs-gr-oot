@@ -32,20 +32,23 @@ namespace satnogs {
 
 decoder::decoder_sptr
 ax25_decoder::make(const std::string &addr, uint8_t ssid, bool promisc,
-                   bool descramble, bool crc_check, size_t max_frame_len)
+                   bool descramble, bool crc_check, size_t max_frame_len,
+                   bool error_correction)
 {
   return decoder::decoder_sptr(
            new ax25_decoder(addr, ssid, promisc, descramble, crc_check,
-                            max_frame_len));
+                            max_frame_len, error_correction));
 }
 
 ax25_decoder::ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc,
-                           bool descramble, bool crc_check, size_t max_frame_len) :
-  decoder("ax25", "1.1", sizeof(uint8_t), 2 * max_frame_len * 8),
+                           bool descramble, bool crc_check, size_t max_frame_len,
+                           bool error_correction) :
+  decoder("ax25", "1.2", sizeof(uint8_t), 2 * max_frame_len * 8),
   d_promisc(promisc),
   d_descramble(descramble),
   d_crc_check(crc_check),
   d_max_frame_len(max_frame_len),
+  d_error_correction(error_correction),
   d_state(NO_SYNC),
   d_shift_reg(0x0),
   d_dec_b(0x0),
@@ -391,6 +394,9 @@ ax25_decoder::is_frame_valid()
 bool
 ax25_decoder::error_correction()
 {
+  if (!d_error_correction) {
+    return false;
+  }
   for (size_t i = 0; i < d_received_bytes; i++) {
     /*
      * Make loop un-roll to simplify the logic for toggling every bit of a

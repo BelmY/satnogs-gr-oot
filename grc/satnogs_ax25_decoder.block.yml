@@ -38,11 +38,18 @@ parameters:
   label: Maximum Frame Length
   dtype: int
   default: 512
-  
-value: ${satnogs.ax25_decoder_make(addr, ssid, promisc, descrambling, crc_check, frame_len)}
+
+- id: error_correction
+  label: Error Correction
+  dtype: bool
+  default: 'False'
+  options: ['True', 'False']
+  option_labels: ['Enable', 'Disable']
+
+value: ${satnogs.ax25_decoder_make(addr, ssid, promisc, descrambling, crc_check, frame_len, error_correction)}
 
 templates:
   imports: import satnogs
-  var_make: self.${id} = ${id} = satnogs.ax25_decoder_make(${addr}, ${ssid}, ${promisc}, ${descrambling}, ${crc_check}, ${frame_len})
+  var_make: self.${id} = ${id} = satnogs.ax25_decoder_make(${addr}, ${ssid}, ${promisc}, ${descrambling}, ${crc_check}, ${frame_len}, ${error_correction})
 
 file_format: 1

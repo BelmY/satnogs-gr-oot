@@ -72,13 +72,15 @@ public:
    * @param descramble if set to yes, the data will be descrambled prior
    * decoding using the G3RUH self-synchronizing descrambler.
    * @param max_frame_len the maximum allowed frame length
+   * @param error_correction set to true to enable the 1-bit error correction
    *
    * @return a shared pointer of the decoder instance
    */
   static decoder::decoder_sptr
   make(const std::string &addr, uint8_t ssid, bool promisc = false,
        bool descramble = true, bool crc_check = true,
-       size_t max_frame_len = 512);
+       size_t max_frame_len = 512,
+       bool error_correction = false);
 
   /**
    * The decoder take as input a quadrature demodulated bit stream.
@@ -100,10 +102,12 @@ public:
    * decoding using the G3RUH self-synchronizing descrambler.
    * @param crc_check bypass the CRC check of the frame
    * @param max_frame_len the maximum allowed frame length
+   * @param error_correction set to true to enable the 1-bit error correction
    */
   ax25_decoder(const std::string &addr, uint8_t ssid, bool promisc = false,
                bool descramble = true, bool crc_check = true,
-               size_t max_frame_len = 512);
+               size_t max_frame_len = 512,
+               bool error_correction = false);
 
   ~ax25_decoder();
 
@@ -126,6 +130,7 @@ private:
   const bool d_descramble;
   const bool d_crc_check;
   const size_t d_max_frame_len;
+  const bool d_error_correction;
   decoding_state_t d_state;
   uint8_t d_shift_reg;
   uint8_t d_dec_b;

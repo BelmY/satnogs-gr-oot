@@ -26,7 +26,7 @@ parameters:
   label: Self Syncronizing
   dtype: int
   options: ['False', 'True']
-  option_labels: ['LSB', 'MSB']
+  option_labels: ['False', 'True']
   default: 'False'
 
 value: ${satnogs.whitening_make(mask, seed, order, msb, self_sync)}

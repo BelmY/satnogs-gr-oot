@@ -57,7 +57,7 @@ golay24::~golay24()
 static inline uint32_t
 weight(uint32_t x)
 {
-  return bit_count(x & 0xFFF);
+  return utils::bit_count(x & 0xFFF);
 }
 
 static inline uint32_t

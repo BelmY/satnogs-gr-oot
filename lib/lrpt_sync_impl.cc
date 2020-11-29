@@ -106,7 +106,7 @@ lrpt_sync_impl::lrpt_sync_impl(size_t threshold) :
     throw std::runtime_error("lrpt_sync: Could not allocate memory");
   }
 
-  uint64_t asm_coded = htonll(d_asm_coded);
+  uint64_t asm_coded = utils::htonll(d_asm_coded);
   d_coded_cadu = new uint8_t[d_coded_cadu_len];
   memcpy(d_coded_cadu, &asm_coded, sizeof(uint64_t));
   d_received =  sizeof(uint64_t);
@@ -157,7 +157,7 @@ lrpt_sync_impl::work_no_sync(const gr_complex *in, int noutput_items)
       if (found_sync(d_shift_reg0)) {
         d_rotate = gr_complex(1.0, 0.0);
         d_frame_sync = true;
-        uint64_t asm_coded = htonll(d_shift_reg0);
+        uint64_t asm_coded = utils::htonll(d_shift_reg0);
         memcpy(d_coded_cadu, &asm_coded, sizeof(uint64_t));
         return i * d_window + j + 1;
       }
@@ -168,7 +168,7 @@ lrpt_sync_impl::work_no_sync(const gr_complex *in, int noutput_items)
       if (found_sync(d_shift_reg1)) {
         d_rotate = gr_complex(0.0, 1.0);
         d_frame_sync = true;
-        uint64_t asm_coded = htonll(d_shift_reg1);
+        uint64_t asm_coded = utils::htonll(d_shift_reg1);
         memcpy(d_coded_cadu, &asm_coded, sizeof(uint64_t));
         return i * d_window + j + 1;
       }
@@ -179,7 +179,7 @@ lrpt_sync_impl::work_no_sync(const gr_complex *in, int noutput_items)
       if (found_sync(d_shift_reg2)) {
         d_rotate = gr_complex(-1.0, 0.0);
         d_frame_sync = true;
-        uint64_t asm_coded = htonll(d_shift_reg2);
+        uint64_t asm_coded = utils::htonll(d_shift_reg2);
         memcpy(d_coded_cadu, &asm_coded, sizeof(uint64_t));
         return i * d_window + j + 1;
       }
@@ -190,7 +190,7 @@ lrpt_sync_impl::work_no_sync(const gr_complex *in, int noutput_items)
       if (found_sync(d_shift_reg3)) {
         d_rotate = gr_complex(0.0, -1.0);
         d_frame_sync = true;
-        uint64_t asm_coded = htonll(d_shift_reg3);
+        uint64_t asm_coded = utils::htonll(d_shift_reg3);
         memcpy(d_coded_cadu, &asm_coded, sizeof(uint64_t));
         return i * d_window + j + 1;
       }

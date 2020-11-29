@@ -70,14 +70,12 @@ list(APPEND HEADER_FILES
     noaa_apt_sink.h
     ogg_encoder.h
     ogg_source.h
-    qb50_deframer.h
     rs_encoder.h
     shift_reg.h
     sstv_pd120_sink.h
     tcp_rigctl_msg_source.h
     udp_msg_sink.h
     udp_msg_source.h
-    upsat_fsk_frame_encoder.h
     utils.h
     waterfall_sink.h
     whitening.h

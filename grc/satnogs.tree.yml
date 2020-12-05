@@ -20,6 +20,7 @@
   - satnogs_coarse_doppler_correction_cc
   - satnogs_constellation_modulator
   - satnogs_crc_async
+  - satnogs_cw_to_symbol
   - satnogs_doppler_compensation
   - satnogs_doppler_correction_cc
   - satnogs_frame_decoder

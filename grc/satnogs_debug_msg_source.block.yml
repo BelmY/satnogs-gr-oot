@@ -7,8 +7,8 @@ parameters:
   dtype: string
   default: 'HELLO WORLD'
 
-- id: Delay (seconds)
-  label: delay
+- id: delay
+  label: Delay (seconds)
   dtype: real
   default: 0.01
 

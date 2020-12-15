@@ -61,7 +61,7 @@ multi_format_msg_sink_impl::msg_handler_file(pmt::pmt_t msg)
     len = pmt::blob_length(pdu);
   }
   else {
-    su = (const char *) pmt::blob_data(msg), pmt::blob_length(msg);
+    su = (const char *) pmt::blob_data(msg);
     s = std::string((const char *) pmt::blob_data(msg), pmt::blob_length(msg));
     len = pmt::blob_length(msg);
   }

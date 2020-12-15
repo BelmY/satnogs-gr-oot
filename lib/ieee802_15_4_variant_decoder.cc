@@ -319,6 +319,7 @@ ieee802_15_4_variant_decoder::decode_payload(decoder_status_t &status,
       metadata::add_sample_start(status.data, d_frame_start_idx);
       metadata::add_sample_cnt(status.data,
                                nitems_read() + (i + 1) * 8 - d_frame_start_idx);
+
       if (check_crc()) {
         status.decode_success = true;
         metadata::add_pdu(status.data, d_pdu + d_length_field_len,
@@ -351,7 +352,7 @@ ieee802_15_4_variant_decoder::check_crc()
     crc16_c = crc::crc16_ccitt(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
     crc16_received = ntohs(crc16_received);
-    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc16_received, crc16_c);
     if (crc16_c == crc16_received) {
       return true;
     }
@@ -360,13 +361,13 @@ ieee802_15_4_variant_decoder::check_crc()
     crc16_c = crc::crc16_aug_ccitt(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
     crc16_received = ntohs(crc16_received);
-    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc16_received, crc16_c);
     return (crc16_c == crc16_received);
   case crc::CRC16_CCITT_REVERSED:
     crc16_c = crc::crc16_ccitt_reversed(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
     crc16_received = ntohs(crc16_received);
-    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc16_received, crc16_c);
     if (crc16_c == crc16_received) {
       return true;
     }
@@ -375,7 +376,7 @@ ieee802_15_4_variant_decoder::check_crc()
     crc16_c = crc::crc16_ibm(d_pdu, d_len + d_length_field_len - 2);
     memcpy(&crc16_received, d_pdu + d_length_field_len + d_len - 2, 2);
     crc16_received = ntohs(crc16_received);
-    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc16_received, crc16_c);
+    LOG_DEBUG("Received: 0x%04x Computed: 0x%04x", crc16_received, crc16_c);
     if (crc16_c == crc16_received) {
       return true;
     }
@@ -384,7 +385,7 @@ ieee802_15_4_variant_decoder::check_crc()
     crc32_c = crc::crc32_c(d_pdu, d_len + d_length_field_len - 4);
     memcpy(&crc32_received, d_pdu + d_length_field_len + d_len - 4, 4);
     crc32_received = ntohl(crc32_received);
-    LOG_DEBUG("Received: 0x%02x Computed: 0x%02x", crc32_received, crc32_c);
+    LOG_DEBUG("Received: 0x%08x Computed: 0x%08x", crc32_received, crc32_c);
     if (crc32_c == crc32_received) {
       return true;
     }

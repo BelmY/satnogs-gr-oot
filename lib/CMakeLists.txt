@@ -39,6 +39,7 @@ list(APPEND satnogs_sources
     ax100_mode6.cc
     ax25_decoder.cc
     ax25_encoder.cc
+    ber_calculator_impl.cc
     coarse_doppler_correction_cc_impl.cc
     convolutional_deinterleaver.cc
     crc_async_impl.cc
@@ -71,6 +72,7 @@ list(APPEND satnogs_sources
     tcp_rigctl_msg_source_impl.cc
     udp_msg_sink_impl.cc
     udp_msg_source_impl.cc
+    utils.cc
     waterfall_sink_impl.cc
     whitening.cc
 )
@@ -139,6 +141,7 @@ include(GrTest)
 #include_directories()
 # List all files that contain Boost.UTF unit tests here
 list(APPEND test_satnogs_sources
+    qa_crc.cc
     qa_golay24.cc
     qa_whitening.cc
 )

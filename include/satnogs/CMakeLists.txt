@@ -39,6 +39,7 @@ list(APPEND HEADER_FILES
     ax25_encoder.h
     ax100_decoder.h
     base64.h
+    ber_calculator.h
     coarse_doppler_correction_cc.h
     config.h
     convolutional_deinterleaver.h

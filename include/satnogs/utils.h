@@ -22,8 +22,7 @@
 #define INCLUDE_SATNOGS_UTILS_H_
 
 #include <cstdint>
-#include <cmath>
-#include <cstdio>
+#include <cstdlib>
 #include <arpa/inet.h>
 
 namespace gr {
@@ -37,8 +36,33 @@ namespace satnogs {
  * @ingroup satnogs
  */
 class utils {
+public:
+  static double
+  mape(double ref, double estimation);
+
+  static uint64_t
+  htonll(uint64_t x);
+
+  static uint64_t
+  ntohll(uint64_t x);
+
+  static uint32_t
+  bit_count(uint32_t x);
+
+  static uint8_t
+  reverse_byte(uint8_t b);
+
+  static uint32_t
+  reverse_uint32_bytes(uint32_t i);
+
+  static uint64_t
+  reverse_uint64_bytes(uint64_t x);
+
+  static void
+  print_pdu(const uint8_t *buf, size_t len);
+
 private:
-  static constexpr uint8_t _bytes_reversed[256] = {
+  static constexpr uint8_t s_bytes_reversed[256] = {
     0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0,
     0x30, 0xB0, 0x70, 0xF0, 0x08, 0x88, 0x48, 0xC8, 0x28, 0xA8, 0x68,
     0xE8, 0x18, 0x98, 0x58, 0xD8, 0x38, 0xB8, 0x78, 0xF8, 0x04, 0x84,
@@ -64,102 +88,6 @@ private:
     0xCF, 0x2F, 0xAF, 0x6F, 0xEF, 0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF,
     0x7F, 0xFF
   };
-
-public:
-  /**
-   * Computes the Mean Absolute Percentage Error
-   * @param ref the reference value
-   * @param estimation the estimated value
-   * @return the mean absolute percentage error
-   */
-  static double
-  mape(double ref, double estimation)
-  {
-    return std::abs(ref - estimation) / ref;
-  }
-
-
-  static uint64_t
-  htonll(uint64_t x)
-  {
-    if (1 == htonl(1)) {
-      return x;
-    }
-    return ((((uint64_t)htonl(x)) & 0xFFFFFFFF) << 32) | htonl(x >> 32);
-  }
-
-  static uint64_t
-  ntohll(uint64_t x)
-  {
-    if (1 == htonl(1)) {
-      return x;
-    }
-    return ((((uint64_t)ntohl(x)) & 0xFFFFFFFF) << 32) | ntohl(x >> 32);
-  }
-
-  /**
-   * Counts the number of active bits in x
-   * @param x the number to count the number of active bits
-   */
-  static uint32_t
-  bit_count(uint32_t x)
-  {
-    /*
-     * Some more magic from
-     * http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
-     */
-    x = x - ((x >> 1) & 0x55555555);
-    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
-    return (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
-  }
-
-  /**
-   * Reverse the bits of the byte b.
-   * @param b the byte to be mirrored.
-   */
-  static uint8_t
-  reverse_byte(uint8_t b)
-  {
-    return _bytes_reversed[b];
-  }
-
-  /**
-   * Reverse the bits of the 32-bit number i
-   * @param i the 32-bit value to mirror
-   * @return mirrored i
-   */
-  static uint32_t
-  reverse_uint32_bytes(uint32_t i)
-  {
-    return (_bytes_reversed[i & 0xff] << 24)
-           | (_bytes_reversed[(i >> 8) & 0xff] << 16)
-           | (_bytes_reversed[(i >> 16) & 0xff] << 8)
-           | (_bytes_reversed[(i >> 24) & 0xff]);
-  }
-
-  /**
-   * Reverse the bits of the 64-bit number x
-   * @param x the 64-bit value to mirror
-   * @return mirrored x
-   */
-  static uint64_t
-  reverse_uint64_bytes(uint64_t x)
-  {
-    x = (x & 0x00000000FFFFFFFF) << 32 | (x & 0xFFFFFFFF00000000) >> 32;
-    x = (x & 0x0000FFFF0000FFFF) << 16 | (x & 0xFFFF0000FFFF0000) >> 16;
-    x = (x & 0x00FF00FF00FF00FF) << 8 | (x & 0xFF00FF00FF00FF00) >> 8;
-    return x;
-  }
-
-  static void
-  print_pdu(const uint8_t *buf, size_t len)
-  {
-    for (size_t i = 0; i < len; i++) {
-      printf("0x%02x ", buf[i]);
-    }
-    printf("\n");
-  }
-
 };
 
 }  // namespace satnogs

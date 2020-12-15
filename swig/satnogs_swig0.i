@@ -22,6 +22,7 @@
 #include "satnogs/ax100_decoder.h"
 #include "satnogs/ax25_decoder.h"
 #include "satnogs/ax25_encoder.h"
+#include "satnogs/ber_calculator.h"
 #include "satnogs/morse_tree.h"
 #include "satnogs/multi_format_msg_sink.h"
 #include "satnogs/cw_decoder.h"
@@ -62,6 +63,7 @@
 %include "satnogs/argos_ldr_decoder.h"
 %include "satnogs/ax25_decoder.h"
 %include "satnogs/ax25_encoder.h"
+%include "satnogs/ber_calculator.h"
 %include "satnogs/cw_decoder.h"
 %include "satnogs/metadata.h"
 %include "satnogs/rs_encoder.h"
@@ -71,6 +73,9 @@
 %include "satnogs/ieee802_15_4_encoder.h"
 %include "satnogs/ieee802_15_4_variant_decoder.h"
 %include "satnogs/ax100_decoder.h"
+
+%include "satnogs/ber_calculator.h"
+GR_SWIG_BLOCK_MAGIC2(satnogs, ber_calculator);
 
 %include "satnogs/crc_async.h"
 GR_SWIG_BLOCK_MAGIC2(satnogs, crc_async);

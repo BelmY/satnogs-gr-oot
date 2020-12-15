@@ -87,15 +87,15 @@ ieee802_15_4_encoder::encode(pmt::pmt_t msg)
   if (d_var_len) {
     *payload++ = pdu_len;
   }
-  if (d_scrambler) {
-    d_scrambler->scramble(payload, pdu, pdu_len);
-  }
-  else {
-    std::copy(pdu, pdu + pdu_len, payload);
-  }
+  std::copy(pdu, pdu + pdu_len, payload);
   payload += pdu_len;
+
   /* CRC includes the length byte */
   payload += crc::append(d_crc, payload, d_payload, pdu_len + d_var_len);
+  if (d_scrambler) {
+    d_scrambler->reset();
+    d_scrambler->scramble(d_payload, d_payload, (size_t)(payload - d_payload));
+  }
 
   /* Make a pmt compatible with the pdu to tagged stream block */
   pmt::pmt_t vecpmt(pmt::make_blob(d_buffer, (size_t)(payload - d_buffer)));
